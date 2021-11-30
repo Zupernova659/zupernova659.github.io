@@ -21,15 +21,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.8.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="#define do{...}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下： 1. 增加代码的适应性 下面的宏定义没有使用do{...}while(0) #define FOO(x) foo(x); bar(x); 这样宏定义，单独调用不会出现问题，例如： FOO(100) 宏扩展后变成： foo(x);bar(x); 这样调用FOO没有任何问题，但是FOO（x）不能放入">
+<meta name="description" content="#define do{...}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下： 1.增加代码的适应性 下面的宏定义没有使用do{...}while(0) #define FOO(x) foo(x); bar(x); 这样宏定义，单独调用不会出现问题，例如： FOO(100) 宏扩展后变成： foo(x);bar(x); 这样调用FOO没有任何问题，但是FOO（x）不能放入控">
 <meta property="og:type" content="article">
 <meta property="og:title" content="#define do{...}while(0)形式的意义">
 <meta property="og:url" content="http://example.com/2021/11/30/define-do-while-0-%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%84%8F%E4%B9%89/index.html">
 <meta property="og:site_name" content="Zupernova&#39;s Blog">
-<meta property="og:description" content="#define do{...}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下： 1. 增加代码的适应性 下面的宏定义没有使用do{...}while(0) #define FOO(x) foo(x); bar(x); 这样宏定义，单独调用不会出现问题，例如： FOO(100) 宏扩展后变成： foo(x);bar(x); 这样调用FOO没有任何问题，但是FOO（x）不能放入">
+<meta property="og:description" content="#define do{...}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下： 1.增加代码的适应性 下面的宏定义没有使用do{...}while(0) #define FOO(x) foo(x); bar(x); 这样宏定义，单独调用不会出现问题，例如： FOO(100) 宏扩展后变成： foo(x);bar(x); 这样调用FOO没有任何问题，但是FOO（x）不能放入控">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-30T06:36:44.000Z">
-<meta property="article:modified_time" content="2021-11-30T12:16:56.076Z">
+<meta property="article:modified_time" content="2021-11-30T12:20:24.008Z">
 <meta property="article:author" content="Zupernova">
 <meta property="article:tag" content="C language">
 <meta name="twitter:card" content="summary">
@@ -89,7 +89,7 @@
 <nav class="site-nav">
   <ul class="main-menu menu">
         <li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li>
         <li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger">搜索
@@ -147,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text">1. 增加代码的适应性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text">2.增加代码的扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text">3.增加代码的灵活性</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text">1.增加代码的适应性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text">2.增加代码的扩展性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text">3.增加代码的灵活性</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -234,7 +234,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-11-30 14:36:44 / 修改时间：20:16:56" itemprop="dateCreated datePublished" datetime="2021-11-30T14:36:44+08:00">2021-11-30</time>
+      <time title="创建时间：2021-11-30 14:36:44 / 修改时间：20:20:24" itemprop="dateCreated datePublished" datetime="2021-11-30T14:36:44+08:00">2021-11-30</time>
     </span>
 
   
@@ -248,7 +248,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p data-diff-id="ct-diff-id-D9Htsp8w" data-pm-slice="0 0 []">#define do{...}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下：</p>
-<h3 data-diff-id="ct-diff-id-PHbppXn7"><strong>1. 增加代码的适应性</strong></h3>
+<h3 data-diff-id="ct-diff-id-PHbppXn7"><strong>1.增加代码的适应性</strong></h3>
 <p data-diff-id="ct-diff-id-zIVlUqma">下面的宏定义没有使用do{...}while(0)</p>
 <pre class="language-c"><code>#define FOO(x) foo(x); bar(x);</code></pre>
 <p data-diff-id="ct-diff-id-zCsP8Swy">这样宏定义，单独调用不会出现问题，例如：</p>
