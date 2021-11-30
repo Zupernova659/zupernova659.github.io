@@ -423,4 +423,26 @@ c = a+++b;</code></pre>
         <tag>嵌入式</tag>
       </tags>
   </entry>
+  <entry>
+    <title>macos新版本系统brew install报错问题</title>
+    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<div class="cnblogs_code">
+<pre>Warning: Bottle missing, falling back to the default domain...</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">tar</span>: Error opening archive: Failed to open <span style="color: #800000;">'</span><span style="color: #800000;">/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz</span><span style="color: #800000;">'</span><span style="color: #000000;">
+Error: Failure </span><span style="color: #0000ff;">while</span> executing; `<span style="color: #0000ff;">tar</span> --extract --no-same-owner --<span style="color: #0000ff;">file</span> /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-<span style="color: #800080;">1.20</span>.big_sur.bottle.<span style="color: #0000ff;">tar</span>.gz --directory /private/tmp/d20210728-<span style="color: #800080;">71473</span>-bqhpdw` exited with <span style="color: #800080;">1</span>. Here<span style="color: #800000;">'</span><span style="color: #800000;">s the output:</span>
+<span style="color: #0000ff;">tar</span>: Error opening archive: Failed to open <span style="color: #800000;">'</span><span style="color: #800000;">/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz</span><span style="color: #800000;">'</span></pre>
+</div>
+<h3 id="id-解决方案" class="ct-heading" data-diff-id="ct-diff-id-1gpbd8W7">解决方案</h3>
+<p data-diff-id="ct-diff-id-c3Xy0kEA">更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles</span><span style="color: #800000;">'</span> &gt;&gt; ~/<span style="color: #000000;">.zshrc
+source </span>~/.zshrc</pre>
+</div>
+<p data-diff-id="ct-diff-id-c3Xy0kEA"><span style="font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;">此前brew已经换源为中科大源</span></p>]]></content>
+      <tags>
+        <tag>开发小tips</tag>
+      </tags>
+  </entry>
 </search>
