@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>categoris</title>
-    <url>/2021/11/30/categoris/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>#define do{...}while(0)形式的意义</title>
     <url>/2021/11/30/define-do-while-0-%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%84%8F%E4%B9%89/</url>
     <content><![CDATA[<p data-diff-id="ct-diff-id-D9Htsp8w" data-pm-slice="0 0 []">#define do{...}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下：</p>
