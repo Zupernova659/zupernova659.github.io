@@ -235,7 +235,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-12-01 09:24:49" itemprop="dateModified" datetime="2021-12-01T09:24:49+08:00">2021-12-01</time>
+        <time title="修改时间：2021-12-01 10:24:22" itemprop="dateModified" datetime="2021-12-01T10:24:22+08:00">2021-12-01</time>
       </span>
 
   
@@ -252,7 +252,8 @@
 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
 
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
+<p><em><strong>解决方案</strong></em></p>
+<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
 
 <p>此前brew已经换源为中科大源</p>
