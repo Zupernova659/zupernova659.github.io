@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Makefile面试</title>
-    <url>/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/</url>
-    <content><![CDATA[<p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
-<p>1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作<br>2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的<br>3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件</p>
-<p>makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样编译这些文件，每条规则包含以下内容：<br>一个target，即最终创建的东西<br>一个和多个dependencies列表，通常是编译目标文件所需要的其他文件<br>需要执行的一系列commands，用于从指定的相关文件创建目标文件</p>
-<p>make执行时按顺序查找名为GNUmakefile，makefile或者Makefile文件，通常，大多数人常用Makefile<br>Makefile规则：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">target: dependency dependency [..]    command    command    [..]</span><br><span class="line">注意：command前面必须是制表符</span><br></pre></td></tr></table></figure>
-
-<p>例子：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>#define do{...}while(0)形式的意义</title>
     <url>/2021/11/30/define-do-while-0-%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%84%8F%E4%B9%89/</url>
     <content><![CDATA[<p>#define do{…}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下：</p>
@@ -63,6 +48,23 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x)  </span></span><br><span class="line"><span class="keyword">do</span>&#123; \</span><br><span class="line">    foo(x);  \</span><br><span class="line">    <span class="keyword">if</span>(condition(x)) \</span><br><span class="line">        <span class="keyword">break</span>; \</span><br><span class="line">    bar(x); \</span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>C language</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>macos新版本系统brew install报错问题</title>
+    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>解决方案</strong></em></p>
+<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>此前brew已经换源为中科大源</p>
+]]></content>
+      <tags>
+        <tag>开发小tips</tag>
       </tags>
   </entry>
   <entry>
@@ -123,20 +125,18 @@
       </tags>
   </entry>
   <entry>
-    <title>macos新版本系统brew install报错问题</title>
-    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
+    <title>Makefile面试</title>
+    <url>/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
+<p>1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作<br>2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的<br>3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件</p>
+<p>makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样编译这些文件，每条规则包含以下内容：<br>一个target，即最终创建的东西<br>一个和多个dependencies列表，通常是编译目标文件所需要的其他文件<br>需要执行的一系列commands，用于从指定的相关文件创建目标文件</p>
+<p>make执行时按顺序查找名为GNUmakefile，makefile或者Makefile文件，通常，大多数人常用Makefile<br>Makefile规则：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">target: dependency dependency [..]    command    command    [..]</span><br><span class="line">注意：command前面必须是制表符</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>解决方案</strong></em></p>
-<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<p>此前brew已经换源为中科大源</p>
-]]></content>
+<p>例子：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
-        <tag>开发小tips</tag>
+        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>
