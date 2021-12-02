@@ -20,28 +20,25 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.8.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="预处理器1.用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题） 1#define SECONDS_PER_YEAR (60UL * 60 * 24 * 365)  我在这想看到几件事情： 1). #define 语法的基本知识（例如：不能以分号结束，括号的使用，等等） 2). 懂得预处理器将为你计算常数表达式的值，因此，直接写出你是如何计算一年中有多少秒而不是计算出实">
-<meta property="og:type" content="article">
-<meta property="og:title" content="嵌入式经典面试题">
-<meta property="og:url" content="http://example.com/2021/11/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta name="description" content="只是一个兴趣使然的无名小站">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zupernova&#39;s Blog">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="Zupernova&#39;s Blog">
-<meta property="og:description" content="预处理器1.用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题） 1#define SECONDS_PER_YEAR (60UL * 60 * 24 * 365)  我在这想看到几件事情： 1). #define 语法的基本知识（例如：不能以分号结束，括号的使用，等等） 2). 懂得预处理器将为你计算常数表达式的值，因此，直接写出你是如何计算一年中有多少秒而不是计算出实">
+<meta property="og:description" content="只是一个兴趣使然的无名小站">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-11-30T12:29:10.000Z">
-<meta property="article:modified_time" content="2021-12-02T03:06:03.437Z">
 <meta property="article:author" content="Zupernova">
-<meta property="article:tag" content="嵌入式">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2021/11/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/">
+<link rel="canonical" href="http://example.com/page/2/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/11/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/","path":"2021/11/30/嵌入式经典面试题/","title":"嵌入式经典面试题"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"page/2/index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>嵌入式经典面试题 | Zupernova's Blog</title>
+<title>Zupernova's Blog - make the best of it</title>
   
 
 
@@ -133,7 +130,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -146,7 +143,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">预处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.</span> <span class="nav-text">死循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E"><span class="nav-number">3.</span> <span class="nav-text">数据声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Static"><span class="nav-number">4.</span> <span class="nav-text">Static</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Const"><span class="nav-number">5.</span> <span class="nav-text">Const</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Volatile"><span class="nav-number">6.</span> <span class="nav-text">Volatile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E6%93%8D%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">位操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%9B%BA%E5%AE%9A%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%8D%E7%BD%AE"><span class="nav-number">8.</span> <span class="nav-text">访问固定的内存位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD"><span class="nav-number">9.</span> <span class="nav-text">中断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E4%BE%8B%E5%AD%90"><span class="nav-number">10.</span> <span class="nav-text">代码例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="nav-number">11.</span> <span class="nav-text">动态内存分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Typedef"><span class="nav-number">12.</span> <span class="nav-text">Typedef</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%A6%E6%B6%A9%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="nav-number">13.</span> <span class="nav-text">晦涩的语法</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -209,17 +205,16 @@
 </noscript>
 
 
-    <div class="main-inner post posts-expand">
+    <div class="main-inner index posts-expand">
 
-
-  
+    
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -232,9 +227,9 @@
       <meta itemprop="name" content="Zupernova's Blog">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          嵌入式经典面试题
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/11/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">嵌入式经典面试题</a>
+        </h2>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -255,13 +250,6 @@
       </span>
 
   
-    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
     <span class="post-meta-break"></span>
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
@@ -286,7 +274,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="预处理器"><a href="#预处理器" class="headerlink" title="预处理器"></a>预处理器</h3><p><em><strong>1.用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）</strong></em></p>
+          <h3 id="预处理器"><a href="#预处理器" class="headerlink" title="预处理器"></a>预处理器</h3><p><em><strong>1.用预处理指令#define 声明一个常数，用以表明1年中有多少秒（忽略闰年问题）</strong></em></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SECONDS_PER_YEAR (60UL * 60 * 24 * 365)</span></span><br></pre></td></tr></table></figure>
 
 <p>我在这想看到几件事情：</p>
@@ -424,45 +412,18 @@
 <p>因此, 这段代码持行后a = 6, b = 7, c = 12。</p>
 <p>如果你知道答案，或猜出正确答案，做得好。如果你不知道答案，我也不把这个当作问题。我发现这个问题的最大好处是:这是一个关于代码编写风格，代码的可读性，代码的可修改</p>
 
+      
     </div>
 
     
     
     
       
-  <div class="popular-posts-header">相关文章</div>
-  <ul class="popular-posts">
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/Makefile面试/" rel="bookmark">Makefile面试</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/nor-flash启动与nand-flash启动的区别/" rel="bookmark">nor flash启动与nand flash启动的区别</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/嵌入c-linux书籍介绍/" rel="bookmark">嵌入c&linux书籍介绍</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/重定位知识点总结/" rel="bookmark">重定位知识点总结</a></div>
-    </li>
-  </ul>
 
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 嵌入式</a>
-          </div>
-
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-            </div>
-            <div class="post-nav-item">
-                <a href="/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/" rel="next" title="macos新版本系统brew install报错问题">
-                  macos新版本系统brew install报错问题 <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
+        <div class="post-eof"></div>
+      
     </footer>
   </article>
 </div>
@@ -470,7 +431,9 @@
 
 
 
-
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 </div>
   </main>
