@@ -112,6 +112,23 @@
       </tags>
   </entry>
   <entry>
+    <title>macos新版本系统brew install报错问题</title>
+    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>解决方案</strong></em></p>
+<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>此前brew已经换源为中科大源</p>
+]]></content>
+      <tags>
+        <tag>开发小tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>UART</title>
     <url>/2021/12/02/UART/</url>
     <content><![CDATA[<h3 id="UART接口介绍"><a href="#UART接口介绍" class="headerlink" title="UART接口介绍"></a><strong>UART接口介绍</strong></h3><p>通用异步收发传输器，通常称作UART，是一种异步收发传输器，是电脑硬件的一部分。它将要传输的资料在串行通信与并行通信之间加以转换。作为把并行输入信号转成串行输出信号的芯片，UART通常被集成于其他通讯接口的连结上。</p>
@@ -150,20 +167,30 @@
       </tags>
   </entry>
   <entry>
-    <title>macos新版本系统brew install报错问题</title>
-    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
+    <title>计算机网络面试</title>
+    <url>/2021/12/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<p>OSI:物理层,数据链路层,网络层,传输层,会话层,表示层和应用层</p>
+<p>TCP/IP:数据链路层,网络层,传输层,应用层</p>
+<p>TCP与UDP区别：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、基于连接与无连接；</span><br><span class="line"><span class="number">2</span>、对系统资源的要求（TCP较多，UDP少）；</span><br><span class="line"><span class="number">3</span>、UDP程序结构较简单；</span><br><span class="line"><span class="number">4</span>、流模式与数据报模式 ；</span><br><span class="line"><span class="number">5</span>、TCP保证数据正确性，UDP可能丢包；</span><br><span class="line"><span class="number">6</span>、TCP保证数据顺序，UDP不保证。</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>解决方案</strong></em></p>
-<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<p>此前brew已经换源为中科大源</p>
+<h3 id="Reno：一种TCP拥塞控制算法"><a href="#Reno：一种TCP拥塞控制算法" class="headerlink" title="Reno：一种TCP拥塞控制算法"></a><strong>Reno：一种TCP拥塞控制算法</strong></h3><p><strong><img src="../images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/1943620-20211118190939824-2142245455-8437323.png" alt="img"></strong></p>
+<p>Reno 被许多教材（例如：《计算机网络——自顶向下的方法》）所介绍，适用于低延时、低带宽的网络，它将拥塞控制的过程分为四个阶段：<strong>慢启动、拥塞避免、快重传和快恢复</strong>，对应的状态如下所示：</p>
+<ul>
+<li>慢启动阶段思路是不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小，在没有出现丢包时每收到一个 ACK 就将拥塞窗口大小加一（单位是 MSS，最大单个报文段长度），每轮次发送窗口增加一倍，呈指数增长，若出现丢包，则将拥塞窗口减半，进入拥塞避免阶段；</li>
+<li>当窗口达到慢启动阈值或出现丢包时，进入拥塞避免阶段，窗口每轮次加一，呈线性增长；当收到对一个报文的三个重复的 ACK 时，认为这个报文的下一个报文丢失了，进入快重传阶段，要求接收方在收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方，可提高网络吞吐量约20%）而不要等到自己发送数据时捎带确认；</li>
+<li>快重传完成后进入快恢复阶段，将慢启动阈值修改为当前拥塞窗口值的一半，同时拥塞窗口值等于慢启动阈值，然后进入拥塞避免阶段，重复上述过程。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>目前有非常多的 TCP 的拥塞控制协议，例如：</p>
+<ul>
+<li><strong>基于丢包的拥塞控制</strong>：将丢包视为出现拥塞，采取缓慢探测的方式，逐渐增大拥塞窗口，当出现丢包时，将拥塞窗口减小，如 Reno、Cubic 等。</li>
+<li><strong>基于时延的拥塞控制</strong>：将时延增加视为出现拥塞，延时增加时增大拥塞窗口，延时减小时减小拥塞窗口，如 Vegas、FastTCP 等。</li>
+<li><strong>基于链路容量的拥塞控制</strong>：实时测量网络带宽和时延，认为网络上报文总量大于带宽时延乘积时出现了拥塞，如 BBR。</li>
+<li><strong>基于学习的拥塞控制</strong>：没有特定的拥塞信号，而是借助评价函数，基于训练数据，使用机器学习的方法形成一个控制策略，如 Remy。</li>
+</ul>
 ]]></content>
       <tags>
-        <tag>开发小tips</tag>
+        <tag>网络</tag>
       </tags>
   </entry>
   <entry>
@@ -202,22 +229,6 @@
 <p><strong>15.《C语言进阶》</strong><br>这本书应该适用于学过C，但是想温习一下的人。里面有一部分基础语法，但是也有很多高级的东西。函数指针与指针函数，指针数组与数组指针，预定义，预编译，调试之类。但是感觉最后一章的常用算法有种多余的感觉。如果想应付面试，看这本书应该也没有错，里面有很多笔试喜欢考的sizeof的东西。</p>
 <p><strong>16.《实用C语言编程》</strong></p>
 <p>很老的一本C语言书,可以说是我的C语言启蒙书,里面的资料,尤其是附录是我现在还经常翻阅的原因,书写的很朴实,也如书名,确实实用,易懂.把这本书吃透了,找个工作,那是再容易不过了,所以说一本好书需要时间来检验它,在岁月中沉淀下来…岁月检验过的好书，不解释。</p>
-]]></content>
-      <tags>
-        <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nor flash启动与nand flash启动的区别</title>
-    <url>/2021/12/01/nor-flash%E5%90%AF%E5%8A%A8%E4%B8%8Enand-flash%E5%90%AF%E5%8A%A8%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<h3 id="接口区别"><a href="#接口区别" class="headerlink" title="接口区别"></a>接口区别</h3><p>NOR FLASH地址线和数据线分开，来了地址和控制信号，数据就出来。<br>NAND Flash地址线和数据线在一起，需要用程序来控制，才能出数据。<br>通俗的说，就是光给地址不行，要先命令，再给地址，才能读到NAND的数据。而且都是在一个总线完成的。<br>结论是：ARM无法从NAND直接启动。除非装载完程序，才能使用NAND Flash.</p>
-<h3 id="性能区别"><a href="#性能区别" class="headerlink" title="性能区别"></a>性能区别</h3><p>NOR的传输效率很高，在1～4MB的小容量时具有很高的成本效益，但是很低的写入和擦除速度大大影响了它的性能。 NAND结构能提供极高的单元密度，可以达到高存储密度，并且写入和擦除的速度也很快。应用NAND的困难在于flash的管理和需要特殊的系统接口。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.NOR的读速度比NAND稍快一些。</span><br><span class="line">b.NAND的写入速度比NOR快很多。</span><br><span class="line">c.NAND的<span class="number">4</span>ms擦除速度远比NOR的<span class="number">5</span>s快。</span><br><span class="line">d.大多数写入操作需要先进行擦除操作。</span><br><span class="line">e.NAND的擦除单元更小，相应的擦除电路更少。</span><br></pre></td></tr></table></figure>
-
-<h3 id="s3c2440启动过程详解"><a href="#s3c2440启动过程详解" class="headerlink" title="s3c2440启动过程详解"></a>s3c2440启动过程详解</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.地址空间的分配</span><br><span class="line">b.开发板上一般都用SDRAM做内存，flash（nor、nand）来当做ROM。其中nand flash没有地址线，一次至少要读一页(<span class="number">512B</span>).其他两个有地址线</span><br><span class="line">c.nandflash不用来运行代码，只用来存储代码，NORflash，SDRAM可以直接运行代码）</span><br><span class="line">d.s3c2440总共有<span class="number">8</span>个内存banks</span><br><span class="line">  <span class="number">6</span>个内存bank可以当作ROM或者SRAM来使用</span><br><span class="line">  留下的<span class="number">2</span>个bank除了当作ROM 或者SRAM，还可以用SDRAM(各种内存的读写方式不一样)</span><br><span class="line">  <span class="number">7</span>个bank的起始地址是固定的，还有一个灵活的bank的内存地址，并且bank大小也可以改变</span><br><span class="line">e.s3c2440支持两种启动模式：NAND和非NAND（这里是nor flash）。</span><br><span class="line">  具体采用的方式取决于OM0、OM1两个引脚</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>所决定的启动方式</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">00</span>时，处理器从NAND Flash启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">01</span>时，处理器从<span class="number">16</span>位宽度的ROM启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">10</span>时，处理器从<span class="number">32</span>位宽度的ROM启动。</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">11</span>时，处理器从Test Mode启动。</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>当从NAND启动时</strong></em><br>cpu会自动从NAND flash中读取前4KB的数据放置在片内SRAM里（s3c2440是soc），同时把这段片内SRAM映射到nGCS0片选的空间（即0x00000000）。cpu是从0x00000000开始执行，也就是NAND flash里的前4KB内容。因为NAND FLASH连地址线都没有，不能直接把NAND映射到0x00000000，只好使用片内SRAM做一个载体。通过这个载体把nandflash中大代码复制到RAM(一般是SDRAM)中去执行。</p>
-<p><em><strong>当从非NAND flash启动时</strong></em><br>nor flash被映射到0x00000000地址（就是nGCS0，这里就不需要片内SRAM来辅助了，所以片内SRAM的起始地址还是0x40000000）. 然后cpu从0x00000000开始执行（也就是在Norfalsh中执行）。</p>
 ]]></content>
       <tags>
         <tag>嵌入式</tag>
@@ -369,30 +380,19 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机网络面试</title>
-    <url>/2021/12/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/</url>
-    <content><![CDATA[<p>OSI:物理层,数据链路层,网络层,传输层,会话层,表示层和应用层</p>
-<p>TCP/IP:数据链路层,网络层,传输层,应用层</p>
-<p>TCP与UDP区别：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、基于连接与无连接；</span><br><span class="line"><span class="number">2</span>、对系统资源的要求（TCP较多，UDP少）；</span><br><span class="line"><span class="number">3</span>、UDP程序结构较简单；</span><br><span class="line"><span class="number">4</span>、流模式与数据报模式 ；</span><br><span class="line"><span class="number">5</span>、TCP保证数据正确性，UDP可能丢包；</span><br><span class="line"><span class="number">6</span>、TCP保证数据顺序，UDP不保证。</span><br></pre></td></tr></table></figure>
+    <title>nor flash启动与nand flash启动的区别</title>
+    <url>/2021/12/01/nor-flash%E5%90%AF%E5%8A%A8%E4%B8%8Enand-flash%E5%90%AF%E5%8A%A8%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h3 id="接口区别"><a href="#接口区别" class="headerlink" title="接口区别"></a>接口区别</h3><p>NOR FLASH地址线和数据线分开，来了地址和控制信号，数据就出来。<br>NAND Flash地址线和数据线在一起，需要用程序来控制，才能出数据。<br>通俗的说，就是光给地址不行，要先命令，再给地址，才能读到NAND的数据。而且都是在一个总线完成的。<br>结论是：ARM无法从NAND直接启动。除非装载完程序，才能使用NAND Flash.</p>
+<h3 id="性能区别"><a href="#性能区别" class="headerlink" title="性能区别"></a>性能区别</h3><p>NOR的传输效率很高，在1～4MB的小容量时具有很高的成本效益，但是很低的写入和擦除速度大大影响了它的性能。 NAND结构能提供极高的单元密度，可以达到高存储密度，并且写入和擦除的速度也很快。应用NAND的困难在于flash的管理和需要特殊的系统接口。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.NOR的读速度比NAND稍快一些。</span><br><span class="line">b.NAND的写入速度比NOR快很多。</span><br><span class="line">c.NAND的<span class="number">4</span>ms擦除速度远比NOR的<span class="number">5</span>s快。</span><br><span class="line">d.大多数写入操作需要先进行擦除操作。</span><br><span class="line">e.NAND的擦除单元更小，相应的擦除电路更少。</span><br></pre></td></tr></table></figure>
 
-<h3 id="Reno：一种TCP拥塞控制算法"><a href="#Reno：一种TCP拥塞控制算法" class="headerlink" title="Reno：一种TCP拥塞控制算法"></a><strong>Reno：一种TCP拥塞控制算法</strong></h3><p><strong><img src="../images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/1943620-20211118190939824-2142245455-8437323.png" alt="img"></strong></p>
-<p>Reno 被许多教材（例如：《计算机网络——自顶向下的方法》）所介绍，适用于低延时、低带宽的网络，它将拥塞控制的过程分为四个阶段：<strong>慢启动、拥塞避免、快重传和快恢复</strong>，对应的状态如下所示：</p>
-<ul>
-<li>慢启动阶段思路是不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小，在没有出现丢包时每收到一个 ACK 就将拥塞窗口大小加一（单位是 MSS，最大单个报文段长度），每轮次发送窗口增加一倍，呈指数增长，若出现丢包，则将拥塞窗口减半，进入拥塞避免阶段；</li>
-<li>当窗口达到慢启动阈值或出现丢包时，进入拥塞避免阶段，窗口每轮次加一，呈线性增长；当收到对一个报文的三个重复的 ACK 时，认为这个报文的下一个报文丢失了，进入快重传阶段，要求接收方在收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方，可提高网络吞吐量约20%）而不要等到自己发送数据时捎带确认；</li>
-<li>快重传完成后进入快恢复阶段，将慢启动阈值修改为当前拥塞窗口值的一半，同时拥塞窗口值等于慢启动阈值，然后进入拥塞避免阶段，重复上述过程。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>目前有非常多的 TCP 的拥塞控制协议，例如：</p>
-<ul>
-<li><strong>基于丢包的拥塞控制</strong>：将丢包视为出现拥塞，采取缓慢探测的方式，逐渐增大拥塞窗口，当出现丢包时，将拥塞窗口减小，如 Reno、Cubic 等。</li>
-<li><strong>基于时延的拥塞控制</strong>：将时延增加视为出现拥塞，延时增加时增大拥塞窗口，延时减小时减小拥塞窗口，如 Vegas、FastTCP 等。</li>
-<li><strong>基于链路容量的拥塞控制</strong>：实时测量网络带宽和时延，认为网络上报文总量大于带宽时延乘积时出现了拥塞，如 BBR。</li>
-<li><strong>基于学习的拥塞控制</strong>：没有特定的拥塞信号，而是借助评价函数，基于训练数据，使用机器学习的方法形成一个控制策略，如 Remy。</li>
-</ul>
+<h3 id="s3c2440启动过程详解"><a href="#s3c2440启动过程详解" class="headerlink" title="s3c2440启动过程详解"></a>s3c2440启动过程详解</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.地址空间的分配</span><br><span class="line">b.开发板上一般都用SDRAM做内存，flash（nor、nand）来当做ROM。其中nand flash没有地址线，一次至少要读一页(<span class="number">512B</span>).其他两个有地址线</span><br><span class="line">c.nandflash不用来运行代码，只用来存储代码，NORflash，SDRAM可以直接运行代码）</span><br><span class="line">d.s3c2440总共有<span class="number">8</span>个内存banks</span><br><span class="line">  <span class="number">6</span>个内存bank可以当作ROM或者SRAM来使用</span><br><span class="line">  留下的<span class="number">2</span>个bank除了当作ROM 或者SRAM，还可以用SDRAM(各种内存的读写方式不一样)</span><br><span class="line">  <span class="number">7</span>个bank的起始地址是固定的，还有一个灵活的bank的内存地址，并且bank大小也可以改变</span><br><span class="line">e.s3c2440支持两种启动模式：NAND和非NAND（这里是nor flash）。</span><br><span class="line">  具体采用的方式取决于OM0、OM1两个引脚</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>所决定的启动方式</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">00</span>时，处理器从NAND Flash启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">01</span>时，处理器从<span class="number">16</span>位宽度的ROM启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">10</span>时，处理器从<span class="number">32</span>位宽度的ROM启动。</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">11</span>时，处理器从Test Mode启动。</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>当从NAND启动时</strong></em><br>cpu会自动从NAND flash中读取前4KB的数据放置在片内SRAM里（s3c2440是soc），同时把这段片内SRAM映射到nGCS0片选的空间（即0x00000000）。cpu是从0x00000000开始执行，也就是NAND flash里的前4KB内容。因为NAND FLASH连地址线都没有，不能直接把NAND映射到0x00000000，只好使用片内SRAM做一个载体。通过这个载体把nandflash中大代码复制到RAM(一般是SDRAM)中去执行。</p>
+<p><em><strong>当从非NAND flash启动时</strong></em><br>nor flash被映射到0x00000000地址（就是nGCS0，这里就不需要片内SRAM来辅助了，所以片内SRAM的起始地址还是0x40000000）. 然后cpu从0x00000000开始执行（也就是在Norfalsh中执行）。</p>
 ]]></content>
       <tags>
-        <tag>网络</tag>
+        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>
