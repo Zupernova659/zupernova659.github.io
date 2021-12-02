@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>macos新版本系统brew install报错问题</title>
-    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>解决方案</strong></em></p>
-<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<p>此前brew已经换源为中科大源</p>
+    <title>UART</title>
+    <url>/2021/12/02/UART/</url>
+    <content><![CDATA[<h3 id="UART接口介绍"><a href="#UART接口介绍" class="headerlink" title="UART接口介绍"></a><strong>UART接口介绍</strong></h3><p>通用异步收发传输器，通常称作UART，是一种异步收发传输器，是电脑硬件的一部分。它将要传输的资料在串行通信与并行通信之间加以转换。作为把并行输入信号转成串行输出信号的芯片，UART通常被集成于其他通讯接口的连结上。</p>
+<p>UART是一种通用串行数据总线，用于异步通信。该总线双向通信，可以实现全双工传输和接收。在嵌入式设计中，UART用于主机与辅助设备通信，如汽车音响与外接AP之间的通信，与PC机通信包括与监控调试器和其它器件，如EEPROM通信。</p>
+<h3 id="UART通信协议"><a href="#UART通信协议" class="headerlink" title="UART通信协议"></a><strong>UART通信协议</strong></h3><p>UART用一条传输线将数据一位位地顺序传送，以字符为传输单位，通信中两个字符间的时间间隔多少是不固定的， 然而在同一个字符中的两个相邻位间的时间间隔是固定的。</p>
+<p>数据传送速率用波特率来表示， 指单位时间内载波参数变化的次数， 或每秒钟传送的二进制位数，如每秒钟传送240个字符，而每个字符包含10位（1个起始位， 1个停止位， 8个数据位），这时的波特率为2400Bd。</p>
+<p>传输时序如下图：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154408032-135226384.png" alt="img"></p>
+<p>在UART中，信号线上共有两种状态， 分别用逻辑1（高电平）和逻辑0（低电平）来区分</p>
+<p>在空闲时， 数据线应该保持在逻辑高电平状态</p>
+<p>其中各位的意义如下：</p>
+<p>起始位（Start Bit）：先发出一个逻辑0信号， 表示传输字符的开始</p>
+<p>数据位（Data Bits）：可以是5~8位逻辑0或1. 如ASCII码（7位）， 扩展BCD码（8位）小端传输</p>
+<p>校验位（Parity Bit）：数据位加上这一位后， 使得1的位数应为偶数（偶校验）或奇数（奇校验）</p>
+<p>停止位（Stop Bit）：它是一个字符数据的结束标志。 可以是1位、1.5位、2位的高电平</p>
+<p>空闲位：处于逻辑1状态，表示当前线路上没有资料传送</p>
+<h3 id="UART基本结构"><a href="#UART基本结构" class="headerlink" title="UART基本结构"></a><strong>UART基本结构</strong></h3><p>输出缓冲寄存器，它接收CPU从数据总线上送来的并行数据，并加以保存。</p>
+<p>输出移位寄存器，它接收从输出缓冲器送来的并行数据，以发送时钟的速率把数据逐位移出，即将并行数据转换为串行数据输出。</p>
+<p>输入移位寄存器，它以接收时钟的速率把出现在串行数据输入线上的数据逐位移入，当数据装满后，并行送往输入缓冲寄存器，即将串行数据转换成并行数据。</p>
+<p>输入缓冲寄存器，它从输入移位寄存器中接收并行数据，然后由CPU取走。</p>
+<p>控制寄存器，它接收CPU送来的控制字，由控制字的内容，决定通信时的传输方式以及数据格式等。例如采用异步方式还是同步方式，数据字符的位数，有无奇偶校验，是奇校验还是偶校验，停止位的位数等参数。</p>
+<p>状态寄存器，状态寄存器中存放着接口的各种状态信息，例如输出缓冲区是否空，输入字符是否准备好等。在通信过程中，当符合某种状态时，接口中的状态检测逻辑将状态寄存器的相应位置“1”，以便让CPU查询。</p>
+<h3 id="UART通信速率"><a href="#UART通信速率" class="headerlink" title="UART通信速率"></a><strong>UART通信速率</strong></h3><p>数据传输可以首先从最低有效位（LSB）开始。然而，有些UART允许灵活选择先发送最低有效位或最高有效位（MSB）。微控制器中的UART传送数据的 速度范围为每秒几百位到1.5Mb。</p>
+<p>例如，嵌入在ElanSC520微控制器中的高速UART通信的速度可以高达1.152Mbps。UART波特率还受发送和接收线对距离（线长度）的影响。</p>
+<p>目前，市场上有只支持异步通信和同时支持异步与同步通信的两种硬件可用于UART。前者就是UART名字本身的含义，在摩托罗拉微控制器中被称为串行通信 接口（SCI）。</p>
+<p>Microchip微控制器中的通用同步异步收发器（USART）和在富士通微控制器中的UART是后者的两个典型例子。</p>
+<h3 id="UART工作原理"><a href="#UART工作原理" class="headerlink" title="UART工作原理"></a><strong>UART工作原理</strong></h3><p>发送数据过程：空闲状态，线路处于高电位；当收到发送数据指令后，拉低线路一个数据位的时间T，接着数据按低位到高位依次发送，数据发送完毕后，接着发送奇偶校验位和停止位（停止位为高电位），一帧数据发送结束。</p>
+<p>接收数据过程：空闲状态，线路处于高电位；当检测到线路的下降沿（线路电位由高电位变为低电位）时说明线路有数据传输，按照约定的波特率从低位到高位接收数据，数据接收完毕后，接着接收并比较奇偶校验位是否正确，如果正确则通知后续设备准备接收数据或存入缓存。</p>
+<p>由于UART是异步传输，没有传输同步时钟。为了能保证数据传输的正确性，UART采用16倍数据波特率的时钟进行采样。每个数据有16个时钟采样，取中间的采样值，以保证采样不会滑码或误码。</p>
+<p>一般UART一帧的数据位数为8，这样即使每个数据有一个时钟的误差，接收端也能正确地采样到数据。</p>
+<p>UART的接收数据时序为：当检测到数据的下降沿时，表明线路上有数据进行传输，这时计数器CNT开始计数，当计数器为24=16+8时，采样的值为第0位数据。</p>
+<p>当计数器的值为40时，采样的值为第1位数据，依此类推，进行后面6个数据的采样。如果需要进行奇偶校验，则当计数器的值为152时，采样的值即为奇偶位；当计数器的值为168时，采样的值为“1”表示停止位，一帧数据接收完成。</p>
 ]]></content>
       <tags>
-        <tag>开发小tips</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Makefile面试</title>
-    <url>/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/</url>
-    <content><![CDATA[<p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
-<p>1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作<br>2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的<br>3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件</p>
-<p>makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样编译这些文件，每条规则包含以下内容：<br>一个target，即最终创建的东西<br>一个和多个dependencies列表，通常是编译目标文件所需要的其他文件<br>需要执行的一系列commands，用于从指定的相关文件创建目标文件</p>
-<p>make执行时按顺序查找名为GNUmakefile，makefile或者Makefile文件，通常，大多数人常用Makefile<br>Makefile规则：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">target: dependency dependency [..]    command    command    [..]</span><br><span class="line">注意：command前面必须是制表符</span><br></pre></td></tr></table></figure>
-
-<p>例子：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>嵌入式</tag>
+        <tag>通信协议</tag>
       </tags>
   </entry>
   <entry>
@@ -87,6 +93,33 @@
 ]]></content>
       <tags>
         <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络面试</title>
+    <url>/2021/12/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<p>OSI:物理层,数据链路层,网络层,传输层,会话层,表示层和应用层</p>
+<p>TCP/IP:数据链路层,网络层,传输层,应用层</p>
+<p>TCP与UDP区别：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、基于连接与无连接；</span><br><span class="line"><span class="number">2</span>、对系统资源的要求（TCP较多，UDP少）；</span><br><span class="line"><span class="number">3</span>、UDP程序结构较简单；</span><br><span class="line"><span class="number">4</span>、流模式与数据报模式 ；</span><br><span class="line"><span class="number">5</span>、TCP保证数据正确性，UDP可能丢包；</span><br><span class="line"><span class="number">6</span>、TCP保证数据顺序，UDP不保证。</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reno：一种TCP拥塞控制算法"><a href="#Reno：一种TCP拥塞控制算法" class="headerlink" title="Reno：一种TCP拥塞控制算法"></a><strong>Reno：一种TCP拥塞控制算法</strong></h3><p><strong><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118190939824-2142245455.png"></strong></p>
+<p>Reno 被许多教材（例如：《计算机网络——自顶向下的方法》）所介绍，适用于低延时、低带宽的网络，它将拥塞控制的过程分为四个阶段：<strong>慢启动、拥塞避免、快重传和快恢复</strong>，对应的状态如下所示：</p>
+<ul>
+<li>慢启动阶段思路是不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小，在没有出现丢包时每收到一个 ACK 就将拥塞窗口大小加一（单位是 MSS，最大单个报文段长度），每轮次发送窗口增加一倍，呈指数增长，若出现丢包，则将拥塞窗口减半，进入拥塞避免阶段；</li>
+<li>当窗口达到慢启动阈值或出现丢包时，进入拥塞避免阶段，窗口每轮次加一，呈线性增长；当收到对一个报文的三个重复的 ACK 时，认为这个报文的下一个报文丢失了，进入快重传阶段，要求接收方在收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方，可提高网络吞吐量约20%）而不要等到自己发送数据时捎带确认；</li>
+<li>快重传完成后进入快恢复阶段，将慢启动阈值修改为当前拥塞窗口值的一半，同时拥塞窗口值等于慢启动阈值，然后进入拥塞避免阶段，重复上述过程。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>目前有非常多的 TCP 的拥塞控制协议，例如：</p>
+<ul>
+<li><strong>基于丢包的拥塞控制</strong>：将丢包视为出现拥塞，采取缓慢探测的方式，逐渐增大拥塞窗口，当出现丢包时，将拥塞窗口减小，如 Reno、Cubic 等。</li>
+<li><strong>基于时延的拥塞控制</strong>：将时延增加视为出现拥塞，延时增加时增大拥塞窗口，延时减小时减小拥塞窗口，如 Vegas、FastTCP 等。</li>
+<li><strong>基于链路容量的拥塞控制</strong>：实时测量网络带宽和时延，认为网络上报文总量大于带宽时延乘积时出现了拥塞，如 BBR。</li>
+<li><strong>基于学习的拥塞控制</strong>：没有特定的拥塞信号，而是借助评价函数，基于训练数据，使用机器学习的方法形成一个控制策略，如 Remy。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>网络</tag>
       </tags>
   </entry>
   <entry>
@@ -235,30 +268,99 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机网络面试</title>
-    <url>/2021/12/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/</url>
-    <content><![CDATA[<p>OSI:物理层,数据链路层,网络层,传输层,会话层,表示层和应用层</p>
-<p>TCP/IP:数据链路层,网络层,传输层,应用层</p>
-<p>TCP与UDP区别：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、基于连接与无连接；</span><br><span class="line"><span class="number">2</span>、对系统资源的要求（TCP较多，UDP少）；</span><br><span class="line"><span class="number">3</span>、UDP程序结构较简单；</span><br><span class="line"><span class="number">4</span>、流模式与数据报模式 ；</span><br><span class="line"><span class="number">5</span>、TCP保证数据正确性，UDP可能丢包；</span><br><span class="line"><span class="number">6</span>、TCP保证数据顺序，UDP不保证。</span><br></pre></td></tr></table></figure>
-
-<h3 id="Reno：一种TCP拥塞控制算法"><a href="#Reno：一种TCP拥塞控制算法" class="headerlink" title="Reno：一种TCP拥塞控制算法"></a><strong>Reno：一种TCP拥塞控制算法</strong></h3><p><strong><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118190939824-2142245455.png"></strong></p>
-<p>Reno 被许多教材（例如：《计算机网络——自顶向下的方法》）所介绍，适用于低延时、低带宽的网络，它将拥塞控制的过程分为四个阶段：<strong>慢启动、拥塞避免、快重传和快恢复</strong>，对应的状态如下所示：</p>
-<ul>
-<li>慢启动阶段思路是不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小，在没有出现丢包时每收到一个 ACK 就将拥塞窗口大小加一（单位是 MSS，最大单个报文段长度），每轮次发送窗口增加一倍，呈指数增长，若出现丢包，则将拥塞窗口减半，进入拥塞避免阶段；</li>
-<li>当窗口达到慢启动阈值或出现丢包时，进入拥塞避免阶段，窗口每轮次加一，呈线性增长；当收到对一个报文的三个重复的 ACK 时，认为这个报文的下一个报文丢失了，进入快重传阶段，要求接收方在收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方，可提高网络吞吐量约20%）而不要等到自己发送数据时捎带确认；</li>
-<li>快重传完成后进入快恢复阶段，将慢启动阈值修改为当前拥塞窗口值的一半，同时拥塞窗口值等于慢启动阈值，然后进入拥塞避免阶段，重复上述过程。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>目前有非常多的 TCP 的拥塞控制协议，例如：</p>
-<ul>
-<li><strong>基于丢包的拥塞控制</strong>：将丢包视为出现拥塞，采取缓慢探测的方式，逐渐增大拥塞窗口，当出现丢包时，将拥塞窗口减小，如 Reno、Cubic 等。</li>
-<li><strong>基于时延的拥塞控制</strong>：将时延增加视为出现拥塞，延时增加时增大拥塞窗口，延时减小时减小拥塞窗口，如 Vegas、FastTCP 等。</li>
-<li><strong>基于链路容量的拥塞控制</strong>：实时测量网络带宽和时延，认为网络上报文总量大于带宽时延乘积时出现了拥塞，如 BBR。</li>
-<li><strong>基于学习的拥塞控制</strong>：没有特定的拥塞信号，而是借助评价函数，基于训练数据，使用机器学习的方法形成一个控制策略，如 Remy。</li>
-</ul>
+    <title>I2C</title>
+    <url>/2021/12/02/I2C/</url>
+    <content><![CDATA[<h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a><strong>一、概述</strong></h3><p><strong>1、I2C总线只有两根双向信号线。一根是数据线SDA，另一根是时钟线SCL。</strong></p>
+<p>SCL：上升沿将数据输入到每个EEPROM器件中；下降沿驱动EEPROM器件输出数据。（边沿触发）</p>
+<p>SDA：双向数据线，为OD门，与其它任意数量的OD与OC门成\线与\关系。</p>
+<p>I2C总线通过上拉电阻接正电源。当总线空闲时，两根线均为高电平（SDL=1;SCL=1）。连到总线上的任一器件输出的低电平，都将使总线的信号变低，即各器件的SDA及SCL都是线“与”关系。</p>
+<p><strong>2、主设备与从设备</strong></p>
+<p>系统中的所有外围器件都具有一个7位的从器件专用地址码，其中高4位为器件类型，由生产厂家制定，低3位为器件引脚定义地址，由使用者定义。</p>
+<p>主控器件通过地址码建立多机通信的机制，因此I2C总线省去了外围器件的片选线，这样无论总线上挂接多少个器件，其系统仍然为简约的二线结构。</p>
+<p>终端挂载在总线上，有主端和从端之分，主端必须是带有CPU的逻辑模块，在同一总线上同一时刻使能有一个主端，可以有多个从端，从端的数量受地址空间和总线的最大电容 400pF的限制。</p>
+<p>主端主要用来驱动SCL line； 从设备对主设备产生响应；</p>
+<p>二者都可以传输数据，但是从设备不能发起传输，且传输是受到主设备控制的。</p>
+<h3 id="二、协议"><a href="#二、协议" class="headerlink" title="二、协议"></a><strong>二、协议</strong></h3><p><strong>1.空闲状态</strong></p>
+<p>I2C总线总线的SDA和SCL两条信号线同时处于高电平时，规定为总线的空闲状态。</p>
+<p>此时各个器件的输出级场效应管均处在截止状态，即释放总线，由两条信号线各自的上拉电阻把电平拉高。</p>
+<p><strong>2.起始位与停止位的定义</strong></p>
+<p>起始信号：当SCL为高期间，SDA由高到低的跳变；启动信号是一种电平跳变时序信号，而不是一个电平信号。</p>
+<p>停止信号：当SCL为高期间，SDA由低到高的跳变；停止信号也是一种电平跳变时序信号，而不是一个电平信号。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154508611-1283932793.png" alt="img"></p>
+<p>起始和终止信号都是由主机发出的，在起始信号产生后，总线就处于被占用的状态；在终止信号产生后，总线就处于空闲状态。</p>
+<p>接收器件收到一个完整的数据字节后，有可能需要完成一些其它工作，如处理内部中断服务等，可能无法立刻接收下一个字节，这时接收器件可以将SCL线拉成低电平，从而使主机处于等待状态。</p>
+<p>直到接收器件准备好接收下一个字节时，再释放SCL线使之为高电平，从而使数据传送可以继续进行。</p>
+<p><strong>3.ACK</strong></p>
+<p>发送器每发送一个字节，就在时钟脉冲9期间释放数据线，由接收器反馈一个应答信号。</p>
+<p>应答信号为低电平时，规定为有效应答位（ACK简称应答位），表示接收器已经成功地接收了该字节；应答信号为高电平时，规定为非应答位（NACK），一般表示接收器接收该字节没有成功。</p>
+<p>对于反馈有效应答位ACK的要求是，接收器在第9个时钟脉冲之前的低电平期间将SDA线拉低，并且确保在该时钟的高电平期间为稳定的低电平。</p>
+<p>如果接收器是主控器，则在它收到最后一个字节后，发送一个NACK信号，以通知被控发送器结束数据发送，并释放SDA线，以便主控接收器发送一个停止信号P。</p>
+<p><strong>4.数据的有效性：</strong></p>
+<p>I2C总线进行数据传送时，时钟信号为高电平期间，数据线上的数据必须保持稳定，只有在时钟线上的信号为低电平期间，数据线上的高电平或低电平状态才允许变化。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154522863-1978594337.png" alt="img"></p>
+<p><strong>5.数据的传送：</strong></p>
+<p>在I2C总线上传送的每一位数据都有一个时钟脉冲相对应（或同步控制），即在SCL串行时钟的配合下，在SDA上逐位地串行传送每一位数据。数据位的传输是边沿触发。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154533438-1174691264.png" alt="img"></p>
+<h3 id="三、工作过程"><a href="#三、工作过程" class="headerlink" title="三、工作过程"></a><strong>三、工作过程</strong></h3><p>总线上的所有通信都是由主控器引发的。在一次通信中，主控器与被控器总是在扮演着两种不同的角色。</p>
+<p><strong>1.主设备向从设备发送数据</strong></p>
+<p>主设备发送起始位，这会通知总线上的所有设备传输开始了，接下来主机发送设备地址，与这一地址匹配的slave将继续这一传输过程，而其它slave将会忽略接下来的传输并等待下一次传输的开始。</p>
+<p>主设备寻址到从设备后，发送它所要读取或写入的从设备的内部寄存器地址； 之后，发送数据。数据发送完毕后，发送停止位。</p>
+<p>写入过程如下：</p>
+<ol>
+<li>发送起始位</li>
+<li>发送从设备的地址和读/写选择位；释放总线，等到EEPROM拉低总线进行应答；如果EEPROM接收成功，则进行应答；若没有握手成功或者发送的数据错误时EEPROM不产生应答，此时要求重发或者终止。</li>
+<li>发送想要写入的内部寄存器地址；EEPROM对其发出应答</li>
+<li>发送数据</li>
+<li>发送停止位</li>
+</ol>
+<p>EEPROM收到停止信号后，进入到一个内部的写入周期，大概需要10ms，此间任何操作都不会被EEPROM响应</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154545582-458821597.png" alt="img"></p>
+<p><strong>2.主控器读取数据的过程</strong></p>
+<p>读的过程比较复杂，在从slave读出数据前，你必须先要告诉它哪个内部寄存器是你想要读取的，因此必须先对其进行写入：</p>
+<ol>
+<li>发送起始位；</li>
+<li>发送slave地址+write bit set；</li>
+<li>发送内部寄存器地址；</li>
+<li>重新发送起始位，即restart；</li>
+<li>重新发送slave地址+read bit set；</li>
+<li>读取数据</li>
+<li>发送停止位</li>
+</ol>
+<p>主机接收器在接收到最后一个字节后，也不会发出ACK信号。于是，从机发送器释放 SDA线，以允许主机发出P信号结束传输。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154556618-176659016.png" alt="img"></p>
+<p><strong>3、数据传送格式</strong></p>
+<p>每一个字节必须保证是8位长度。数据传送时，先传送最高位（MSB），每一个被传送的字节后面都必须跟随一位应答位（即一帧共有9位）。</p>
+<p>由于某种原因从机不对主机寻址信号应答时（如从机正在进行实时性的处理工作而无法接收总线上的数据），它必须将数据线置于高电平，而由主机产生一个终止信号以结束总线的数据传送。</p>
+<p>如果从机对主机进行了应答，但在数据传送一段时间后无法继续接收更多的数据时，从机可以通过对无法接收的第一个数据字节的“非应答”通知主机，主机则应发出终止信号以结束数据的继续传送。</p>
+<p>当主机接收数据时，它收到最后一个数据字节后，必须向从机发出一个结束传送的信号。这个信号是由对从机的“非应答”来实现的。然后，从机释放SDA线，以允许主机产生终止信号。</p>
+<p><strong>4、总线的寻址</strong></p>
+<p>I2C总线协议有明确的规定：采用7位的寻址字节（寻址字节是起始信号后的第一个字节）。</p>
+<p>（1）寻址字节的位定义</p>
+<p>D7～D1位组成从机的地址。D0位是数据传送方向位，为“0”时表示主机向从机写数据，为“1”时表示主机由从机读数据。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154609194-1022219369.png" alt="img"></p>
+<p>主机发送地址时，总线上的每个从机都将这7位地址码与自己的地址进行比较，如果相同，则认为自己正被主机寻址，根据R/位将自己确定为发送器或接收器。</p>
+<p>从机的地址由固定部分和可编程部分组成。在一个系统中可能希望接入多个相同的从机，从机地址中可编程部分决定了可接入总线该类器件的最大数目。</p>
+<p>如一个从机的7位寻址位有4位是固定位，3位是可编程位，这时仅能寻址8个同样的器件，即可以有8个同样的器件接入到该I2C总线系统中。</p>
+<p>（2）寻址字节中的特殊地址</p>
+<p>固定地址编号0000和1111已被保留作为特殊用途。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154620663-712911954.png" alt="img"></p>
+<p>起始信号后的第一字节的8位为“0000 0000”时，称为通用呼叫地址。通用呼叫地址的用意在第二字节中加以说明。格式为：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211119154631711-548685008.png" alt="img"></p>
+<p>第二字节为 06H（0110）时，所有能响应通用呼叫地址的从机器件复位，并由硬件装入从机地址的可编程部分。能响应命令的从机器件复位时不拉低SDA和SCL线，以免堵塞总线。</p>
+<p>第二字节为 04H（0100）时，所有能响应通用呼叫地址并通过硬件来定义其可编程地址的从机器件将锁定地址中的可编程位，但不进行复位。</p>
+<p>如果第二字节的方向位B为“1”，则这两个字节命令称为硬件通用呼叫命令。 在这第二字节的高7位说明自己的地址。接在总线上的智能器件，如单片机或其他微处理器能识别这个地址，并与之传送数据。硬件主器件作为从机使用时，也用这个地址作为从机地址。格式为：</p>
+<p>在系统中另一种选择可能是系统复位时硬件主机器件工作在从机接收器方式，这时由系统中的主机先告诉硬件主机器件数据应送往的从机器件地址，当硬件主机器件要发送数据时就可以直接向指定从机器件发送数据了。</p>
+<p>（3）起始字节</p>
+<p>起始字节是提供给没有I2C总线接口的单片机查询I2C总线时使用的特殊字节。</p>
+<p>不具备I2C总线接口的单片机，则必须通过软件不断地检测总线，以便及时地响应总线的请求。</p>
+<p>单片机的速度与硬件接口器件的速度就出现了较大的差别，为此，I2C总线上的数据传送要由一个较长的起始过程加以引导。</p>
+<p>引导过程由起始信号、起始字节、应答位、重复起始信号（Sr）组成。</p>
+<p>请求访问总线的主机发出起始信号后，发送起始字节（0000 0001），另一个单片机可以用一个比较低的速率采样SDA线，直到检测到起始字节中的7个“0”中的一个为止。</p>
+<p>在检测到SDA线上的高电平后，单片机就可以用较高的采样速率，以便寻找作为同步信号使用的第二个起始信号Sr。</p>
+<p>在起始信号后的应答时钟脉冲仅仅是为了和总线所使用的格式一致，并不要求器件在这个脉冲期间作应答。</p>
 ]]></content>
       <tags>
-        <tag>网络</tag>
+        <tag>通信协议</tag>
       </tags>
   </entry>
   <entry>
@@ -280,6 +382,38 @@
 <p><strong>4、为什么需要重定位？</strong></p>
 <p>答：就是链接地址跟运行地址不同，在这个情况下我们可以有两种方案：<br>a.全部使用位置无关码。<br>b.进行重定位让这两个地址相同。<br>我们知道，如果是一个小代码，使用a时可以的，但是一个大的代码文件很难保证全部都使用位置无关码的，这也是不现实的，所以必须使用重定位解决这个问题。</p>
 ]]></content>
+      <tags>
+        <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>macos新版本系统brew install报错问题</title>
+    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>解决方案</strong></em></p>
+<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>此前brew已经换源为中科大源</p>
+]]></content>
+      <tags>
+        <tag>开发小tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Makefile面试</title>
+    <url>/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
+<p>1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作<br>2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的<br>3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件</p>
+<p>makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样编译这些文件，每条规则包含以下内容：<br>一个target，即最终创建的东西<br>一个和多个dependencies列表，通常是编译目标文件所需要的其他文件<br>需要执行的一系列commands，用于从指定的相关文件创建目标文件</p>
+<p>make执行时按顺序查找名为GNUmakefile，makefile或者Makefile文件，通常，大多数人常用Makefile<br>Makefile规则：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">target: dependency dependency [..]    command    command    [..]</span><br><span class="line">注意：command前面必须是制表符</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>嵌入式</tag>
       </tags>
