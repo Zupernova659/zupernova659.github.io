@@ -16,23 +16,6 @@
       </tags>
   </entry>
   <entry>
-    <title>macos新版本系统brew install报错问题</title>
-    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>解决方案</strong></em></p>
-<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<p>此前brew已经换源为中科大源</p>
-]]></content>
-      <tags>
-        <tag>开发小tips</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>#define do{...}while(0)形式的意义</title>
     <url>/2021/11/30/define-do-while-0-%E5%BD%A2%E5%BC%8F%E7%9A%84%E6%84%8F%E4%B9%89/</url>
     <content><![CDATA[<p>#define do{…}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下：</p>
@@ -80,6 +63,23 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x)  </span></span><br><span class="line"><span class="keyword">do</span>&#123; \</span><br><span class="line">    foo(x);  \</span><br><span class="line">    <span class="keyword">if</span>(condition(x)) \</span><br><span class="line">        <span class="keyword">break</span>; \</span><br><span class="line">    bar(x); \</span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>C language</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>macos新版本系统brew install报错问题</title>
+    <url>/2021/11/30/macos%E6%96%B0%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9Fbrew-install%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Warning: Bottle missing, falling back to the default domain...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br><span class="line">Error: Failure while executing; `tar --extract --no-same-owner --file /Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz --directory /private/tmp/d20210728-71473-bqhpdw` exited with 1. Here&#x27;s the output:</span><br><span class="line">tar: Error opening archive: Failed to open &#x27;/Users/zupernova/Library/Caches/Homebrew/downloads/551f73f417594bd810c1d61e1cacd24de3cc3e4cce825f0b9f763c0e0d32d84d--gdbm-1.20.big_sur.bottle.tar.gz&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>解决方案</strong></em></p>
+<p>更改环境变量，将HOMEBREW_BOTTLE_DOMAIN改正确即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>此前brew已经换源为中科大源</p>
+]]></content>
+      <tags>
+        <tag>开发小tips</tag>
       </tags>
   </entry>
   <entry>
