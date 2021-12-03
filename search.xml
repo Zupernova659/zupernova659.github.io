@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Git过滤规则</title>
+    <url>/2021/12/03/Git%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99/</url>
+    <content><![CDATA[<p>一般我们总会有些文件无需纳入 Git 的管理，也不希望它们总出现在未跟踪文件列表。 通常都是些自动生成的文件，比如日志文件，或者编译过程中创建的临时文件等。</p>
+<p>在这种情况下，我们可以创建一个名为.gitignore的文件，列出要忽略的文件的模式。</p>
+<p>文件 .gitignore 的格式规范如下：</p>
+<p>• 所有空行或者以 # 开头的行都会被 Git 忽略。</p>
+<p>• 可以使用标准的 glob 模式匹配，它会递归地应用在整个工作区中。</p>
+<p>• 匹配模式可以以（/）开头防止递归。</p>
+<p>• 匹配模式可以以（/）结尾指定目录。</p>
+<p>• 要忽略指定模式以外的文件或目录，可以在模式前加上叹号（!）取反。</p>
+<p>所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。 星号（*）匹配零个或多个任意字符；[abc] 匹配任何一个列在方括号中的字符 （这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）；</p>
+<p>问号（?）只匹配一个任意字符；如果在方括号中使用短划线分隔两个字符， 表示所有在这两个字符范围内的都可以匹配（比如 [0-9] 表示匹配所有 0 到 9 的数字）。</p>
+<p>使用两个星号（<strong>）表示匹配任意中间目录，比如 a/</strong>/z 可以匹配 a/z 、 a/b/z 或 a/b/c/z 等。</p>
+<p><strong>.gitignore文件使用示例如下：</strong></p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 忽略所有的 .a 文件</span></span><br><span class="line">*<span class="string">.a</span></span><br><span class="line"><span class="comment"># 但跟踪所有的 lib.a，即便你在前面忽略了 .a 文件</span></span><br><span class="line">!lib.a</span><br><span class="line"><span class="comment"># 只忽略当前目录下的 TODO 文件，而不忽略 subdir/TODO</span></span><br><span class="line"><span class="string">/TODO</span></span><br><span class="line"><span class="comment"># 忽略任何目录下名为 build 的文件夹</span></span><br><span class="line">build/</span><br><span class="line"><span class="comment"># 忽略 doc/notes.txt，但不忽略 doc/server/arch.txt</span></span><br><span class="line">doc/*<span class="string">.txt</span></span><br><span class="line"><span class="comment"># 忽略 doc/ 目录及其所有子目录下的 .pdf 文件</span></span><br><span class="line">doc/**/*<span class="string">.pdf</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>I2C</title>
     <url>/2021/12/02/I2C/</url>
     <content><![CDATA[<h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a><strong>一、概述</strong></h3><p><strong>1、I2C总线只有两根双向信号线。一根是数据线SDA，另一根是时钟线SCL。</strong></p>
@@ -97,6 +118,18 @@
       </tags>
   </entry>
   <entry>
+    <title>Makefile通用模版</title>
+    <url>/2021/12/03/Makefile%E9%80%9A%E7%94%A8%E6%A8%A1%E7%89%88/</url>
+    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 编译一个或者多个.c（.cc）</span></span><br><span class="line"><span class="comment">#                            </span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CROSS_COMPILE := </span><br><span class="line"><span class="comment">#arm-linux-gnueabihf-</span></span><br><span class="line">CC = <span class="variable">$(CROSS_COMPILE)</span>gcc</span><br><span class="line">CPP = <span class="variable">$(CROSS_COMPILE)</span>g++</span><br><span class="line">LD = <span class="variable">$(CROSS_COMPILE)</span>ld</span><br><span class="line">AR = <span class="variable">$(CROSS_COMPILE)</span>ar</span><br><span class="line">RANLIB  = <span class="variable">$(CROSS_COMPILE)</span>ranlib</span><br><span class="line">STRIP   = <span class="variable">$(CROSS_COMPILE)</span>strip</span><br><span class="line"></span><br><span class="line"><span class="comment">##include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span>/librtmp</span><br><span class="line"></span><br><span class="line"><span class="comment">##lib</span></span><br><span class="line">LDFLAGS        += -L ./lib/ -lrtmp</span><br><span class="line">LDFLAGS        += -lm -lpthread -lz</span><br><span class="line"></span><br><span class="line">CFLAGS        += -Wall -O2 -Os</span><br><span class="line"></span><br><span class="line">SRC         += ./*.cc</span><br><span class="line">OBJ         = <span class="variable">$(<span class="built_in">patsubst</span> %.cc, %.o, $(<span class="built_in">wildcard</span> <span class="variable">$(SRC)</span>)</span>)</span><br><span class="line"><span class="comment">#SRC          = $(wildcard *.cc) </span></span><br><span class="line"><span class="comment">#OBJ          = $(SRC:%.cc=%.o)</span></span><br><span class="line"></span><br><span class="line">TARGET         = ./bin/rtmp_test</span><br><span class="line"></span><br><span class="line"><span class="comment">##make </span></span><br><span class="line"><span class="section">all: <span class="variable">$(TARGET)</span></span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJ)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> <span class="variable">$(CFLAGS)</span> -o <span class="variable">$(TARGET)</span> <span class="variable">$(OBJ)</span> <span class="variable">$(LDFLAGS)</span>    </span><br><span class="line">    @rm ./*.o</span><br><span class="line">    </span><br><span class="line"><span class="variable">$(OBJ)</span>:%.o:%.cc</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$(INCFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># c.cpp混合编译的makefile模板</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">BIN = foyerserver.exe</span><br><span class="line">CC = gcc</span><br><span class="line">CPP = g++</span><br><span class="line"><span class="comment">#这里只加入库头文件路径及库路径</span></span><br><span class="line">INCS = </span><br><span class="line">LIBS = </span><br><span class="line">SUBDIRS =</span><br><span class="line"><span class="comment">#生成依赖信息时的搜索目录，比如到下列目录中搜索一个依赖文件(比如.h文件)</span></span><br><span class="line">DEFINC = -I<span class="string">&quot;./../../base/&quot;</span> -I<span class="string">&quot;./../common&quot;</span> -I<span class="string">&quot;./../../lib/lxnet/&quot;</span> -I<span class="string">&quot;./../../lib/tinyxml/src/&quot;</span></span><br><span class="line"><span class="comment">#给INCS加上依赖搜索路径，分开写可能会产生不一致情况，而且繁琐</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#maintest.c tree/rbtree.c  多了子目录，那就直接添加 目录/*.c即可   所有的源文件--  .c文件列表</span></span><br><span class="line">CSRCS = <span class="variable">$(<span class="built_in">wildcard</span>  ./*.c ./../../base/log.c ./../../base/corsslib.c ./../../base/idmgr.c ./../../base/pool.c)</span></span><br><span class="line">CPPSRCS = <span class="variable">$(<span class="built_in">wildcard</span> ./*.cpp ./../common/backcommand.cpp ./../common/connector.cpp)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#所有的.o文件列表</span></span><br><span class="line">COBJS := $(CSRCS:.c=.o)</span><br><span class="line">CPPOBJS := $(CPPSRCS:.cpp=.o)</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#生成依赖信息 -MM是只生成自己的头文件信息，-M 包含了标准库头文件信息。</span></span><br><span class="line"><span class="comment">#-MT 或 -MQ都可以改变生成的依赖  xxx.o:src/xxx.h 为 src/xxx.o:src/xxx.h 当然。前面的 src/xxx.o需自己指定</span></span><br><span class="line"><span class="comment">#格式为 -MM 输入.c或.cpp  查找依赖路径  -MT或-MQ  生成规则，比如src/xxx.o </span></span><br><span class="line">MAKEDEPEND = gcc -MM -MT</span><br><span class="line">CFLAGS =</span><br><span class="line"><span class="comment">#CFLAGS += -Wall -ansi -DWIN32 -DNDEBUG -O2</span></span><br><span class="line">CPPFLAGS =</span><br><span class="line"><span class="comment">#CPPFLAGS += -Wall -DWIN32 -DNDEBUG -O2</span></span><br><span class="line"><span class="comment">#-g 生成调试信息</span></span><br><span class="line"><span class="comment">#-pedantic参数与-ansi一起使用 会自动拒绝编译非ANSI程序</span></span><br><span class="line"><span class="comment">#-fomit-frame-pointer 去除函数框架</span></span><br><span class="line"><span class="comment">#-Wmissing-prototypes -Wstrict-prototypes 检查函数原型</span></span><br><span class="line"><span class="comment">#针对每个.c文件的.d依赖文件列表</span></span><br><span class="line">CDEF = $(CSRCS:.c=.d)</span><br><span class="line">CPPDEF = $(CPPSRCS:.cpp=.d)</span><br><span class="line">PLATS = win32-debug win32-release linux-debug linux-release</span><br><span class="line"><span class="section">none:</span></span><br><span class="line">    @echo <span class="string">&quot;Please choose a platform:&quot;</span></span><br><span class="line">    @echo <span class="string">&quot; <span class="variable">$(PLATS)</span>&quot;</span></span><br><span class="line"><span class="section">win32-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">win32-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">linux-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">linux-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">all:<span class="variable">$(BIN)</span></span></span><br><span class="line"><span class="comment">#生成.o的对自己目录中.h .c的依赖信息.d文件到.c所在的路径中</span></span><br><span class="line"><span class="comment">#$(DEF)文件是.d文件名列表(含目录)，比如tree.d 匹配成功那么%就是tree，然后在尝试%.c，如果成功。则执行规则</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)是获取此.c文件的名字(含路径)，然后变为.o比如 src/xxx.o。 以形成如下</span></span><br><span class="line"><span class="comment"># src/xxx.o : src/xxx.c ***.h  ***.h  最前面！！注意。  </span></span><br><span class="line"><span class="comment"># 此做法是每个.d都和生成他的.c在一个目录里，所以需要这样做。</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)之类的 。此时的&lt;相当于变量$&lt; 。切记</span></span><br><span class="line"><span class="comment"># : : :  含义同下</span></span><br><span class="line"><span class="variable">$(CDEF)</span> : %.d : %.c</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.c=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="variable">$(CPPDEF)</span> : %.d : %.cpp</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.cpp=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="comment">#先删除依赖信息</span></span><br><span class="line"><span class="comment">#重新生成依赖信息</span></span><br><span class="line"><span class="comment">#这里出现了一个 $(MAKE) 没有定义的变量。这个变量是由 Make 自己定义的，它的值即为自己的位置，方便 Make 递归调用自己。</span></span><br><span class="line"><span class="section">depend:</span></span><br><span class="line">    -rm <span class="variable">$(CDEF)</span></span><br><span class="line">    -rm <span class="variable">$(CPPDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CPPDEF)</span></span><br><span class="line"><span class="comment">#$(OBJS):%.o :%.c  先用$(OBJS)中的一项，比如foo.o: %.o : %.c  含义为:试着用%.o匹配foo.o。如果成功%就等于foo。如果不成功，</span></span><br><span class="line"><span class="comment"># Make就会警告，然后。给foo.o添加依赖文件foo.c(用foo替换了%.c里的%)</span></span><br><span class="line"><span class="comment"># 也可以不要下面的这个生成规则，因为下面的 include $(DEF)  就隐含了。此处为了明了，易懂。故留着</span></span><br><span class="line"><span class="variable">$(COBJS)</span> : %.o: %.c</span><br><span class="line">    <span class="variable">$(CC)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CFLAGS)</span></span><br><span class="line"><span class="variable">$(CPPOBJS)</span> : %.o: %.cpp</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CPPFLAGS)</span></span><br><span class="line"><span class="comment"># $@--目标文件，$^--所有的依赖文件，$&lt;--第一个依赖文件。每次$&lt; $@ 代表的值就是列表中的</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="variable">$(BIN)</span> : <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> -o <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span> <span class="variable">$(LIBS)</span></span><br><span class="line">    -rm <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment"># 链接为最终目标</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#引入了.o文件对.c和.h的依赖情况。以后.h被修改也会重新生成，可看看.d文件内容即知道为何</span></span><br><span class="line"><span class="comment">#引入了依赖就相当于引入了一系列的规则，因为依赖内容例如： 目录/xxx.o:目录/xxx.c 目录/xxx.h 也相当于隐含的引入了生成规则</span></span><br><span class="line"><span class="comment">#故上面不能在出现如： $(OBJS) : $(DEF)之类。切记</span></span><br><span class="line"><span class="comment">#include $(CDEF) $(CPPDEF)</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>:clean cleanall</span></span><br><span class="line"><span class="comment">#清除所有目标文件以及生成的最终目标文件</span></span><br><span class="line"><span class="section">clean:            </span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment">#rm *.d</span></span><br><span class="line"><span class="section">cleanall:</span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Makefile面试</title>
     <url>/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/</url>
     <content><![CDATA[<p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
@@ -109,6 +142,30 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vim常用命令</title>
+    <url>/2021/12/02/Vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>vim 中有三种工作模式，分别是命令模式，输入模式，末行模式</p>
+<p>刚进入编辑器是处于命令模式，切换到输入模式可以输入：i，I，o，O，a，C</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span>：在光标之后插入</span><br><span class="line"><span class="selector-tag">A</span>：在光标所在行末插入</span><br><span class="line"><span class="selector-tag">i</span>：在光标处插入</span><br><span class="line"><span class="selector-tag">I</span>：在光标所在行首插入</span><br><span class="line">o：跳转到光标下一行插入行</span><br><span class="line">O：跳转到光标上一行插入行</span><br><span class="line">C：清除光标所在位置后的所有内容进入输入模式</span><br></pre></td></tr></table></figure>
+
+<p>由命令模式切换到末行模式按shift+：</p>
+<p>按esc回退到命令模式<br>输入模式和末行模式无法直接切换</p>
+<p>在命令行状态下的快捷操作：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">dd</span>：剪切光标所在的行（在前加数字表示剪切多少行***慎用）</span><br><span class="line">yy：复制光标所在的行（在前加数字表示复制多少行）</span><br><span class="line"><span class="selector-tag">p</span>：粘贴复制的行</span><br><span class="line">gg：光标切换到第一行</span><br><span class="line">G：光标切换到最后一行</span><br><span class="line">行号+G：光标切换到指定的行</span><br><span class="line">u 恢复最后一个指令之前的结果。</span><br><span class="line">Ctrl+r 可以恢复撤消前内容，按多次可恢复多次。</span><br></pre></td></tr></table></figure>
+
+<p>视窗调整：</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Ctrl</span>+f 视窗往下卷一页。</span><br><span class="line"><span class="symbol">Ctrl</span>+<span class="keyword">b</span> 视窗往上卷一页。</span><br><span class="line"><span class="symbol">Ctrl</span>+d 视窗往下卷半页。</span><br><span class="line"><span class="symbol">Ctrl</span>+u 视窗往上卷半页。</span><br><span class="line"><span class="symbol">Ctrl</span>+e 视窗往下卷一行。</span><br><span class="line"><span class="symbol">Ctrl</span>+y 视窗往上卷一行。</span><br></pre></td></tr></table></figure>
+
+<p>在命令行状态下的快捷操作：</p>
+<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">Ctrl+w：删除一个字符串，按标点或单词分割</span><br><span class="line">Ctrl+u：删除到行首</span><br><span class="line">Ctrl+<span class="built_in">Shift</span>+c：复制所选的内容</span><br><span class="line">Ctrl+<span class="built_in">Shift</span>+v：粘贴所选的内容</span><br></pre></td></tr></table></figure>
+
+<p>TIPS：在粘贴了一些代码之后，vim变得比较乱，只要执行gg=G就能搞定</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -150,27 +207,38 @@
       </tags>
   </entry>
   <entry>
-    <title>Vim常用命令</title>
-    <url>/2021/12/02/Vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>vim 中有三种工作模式，分别是命令模式，输入模式，末行模式</p>
-<p>刚进入编辑器是处于命令模式，切换到输入模式可以输入：i，I，o，O，a，C</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span>：在光标之后插入</span><br><span class="line"><span class="selector-tag">A</span>：在光标所在行末插入</span><br><span class="line"><span class="selector-tag">i</span>：在光标处插入</span><br><span class="line"><span class="selector-tag">I</span>：在光标所在行首插入</span><br><span class="line">o：跳转到光标下一行插入行</span><br><span class="line">O：跳转到光标上一行插入行</span><br><span class="line">C：清除光标所在位置后的所有内容进入输入模式</span><br></pre></td></tr></table></figure>
+    <title>git同时拉取更新所有远程分支</title>
+    <url>/2021/12/03/git%E5%90%8C%E6%97%B6%E6%8B%89%E5%8F%96%E6%9B%B4%E6%96%B0%E6%89%80%E6%9C%89%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin master/git pull</span><br></pre></td></tr></table></figure>
 
-<p>由命令模式切换到末行模式按shift+：</p>
-<p>按esc回退到命令模式<br>输入模式和末行模式无法直接切换</p>
-<p>在命令行状态下的快捷操作：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">dd</span>：剪切光标所在的行（在前加数字表示剪切多少行***慎用）</span><br><span class="line">yy：复制光标所在的行（在前加数字表示复制多少行）</span><br><span class="line"><span class="selector-tag">p</span>：粘贴复制的行</span><br><span class="line">gg：光标切换到第一行</span><br><span class="line">G：光标切换到最后一行</span><br><span class="line">行号+G：光标切换到指定的行</span><br><span class="line">u 恢复最后一个指令之前的结果。</span><br><span class="line">Ctrl+r 可以恢复撤消前内容，按多次可恢复多次。</span><br></pre></td></tr></table></figure>
+<p>只能更新当前所在分支</p>
+<p>想要一次性更新仓库所有分支，可以</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull --all</span><br></pre></td></tr></table></figure>
 
-<p>视窗调整：</p>
-<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Ctrl</span>+f 视窗往下卷一页。</span><br><span class="line"><span class="symbol">Ctrl</span>+<span class="keyword">b</span> 视窗往上卷一页。</span><br><span class="line"><span class="symbol">Ctrl</span>+d 视窗往下卷半页。</span><br><span class="line"><span class="symbol">Ctrl</span>+u 视窗往上卷半页。</span><br><span class="line"><span class="symbol">Ctrl</span>+e 视窗往下卷一行。</span><br><span class="line"><span class="symbol">Ctrl</span>+y 视窗往上卷一行。</span><br></pre></td></tr></table></figure>
+<p>千万和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull -a</span><br></pre></td></tr></table></figure>
 
-<p>在命令行状态下的快捷操作：</p>
-<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">Ctrl+w：删除一个字符串，按标点或单词分割</span><br><span class="line">Ctrl+u：删除到行首</span><br><span class="line">Ctrl+<span class="built_in">Shift</span>+c：复制所选的内容</span><br><span class="line">Ctrl+<span class="built_in">Shift</span>+v：粘贴所选的内容</span><br></pre></td></tr></table></figure>
-
-<p>TIPS：在粘贴了一些代码之后，vim变得比较乱，只要执行gg=G就能搞定</p>
+<p>区分开</p>
 ]]></content>
       <tags>
-        <tag>Linux</tag>
+        <tag>tips</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯</title>
+    <url>/2021/12/03/macos%E4%BB%85%E6%94%B9%E5%8F%98%E9%BC%A0%E6%A0%87%E6%BB%9A%E5%8A%A8%E6%96%B9%E5%90%91%E5%90%8C%E6%97%B6%E4%B8%8D%E6%94%B9%E5%8F%98%E8%A7%A6%E6%8E%A7%E6%9D%BF%E4%BD%BF%E5%85%B6%E7%AC%A6%E5%90%88windows%E4%BD%BF%E7%94%A8%E4%B9%A0%E6%83%AF/</url>
+    <content><![CDATA[<p>在网址<a href="https://pilotmoon.com/scrollreverser/%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%ACscroll">https://pilotmoon.com/scrollreverser/下载最新版本scroll</a> reverser</p>
+<p>该文件免安装，下载后先将文件手动拖动到系统application文件夹中再打开运行</p>
+<ol>
+<li>授予两项系统权限</li>
+<li>设置登录自启动</li>
+<li>软件其他详细设置见下图：</li>
+</ol>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211129102500448-1773687420.png" alt="img"></p>
+<p>修改成功后即可在您的mac上获得同windows系统相同的鼠标与触控板使用体验</p>
+]]></content>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
@@ -187,7 +255,7 @@
 <p>此前brew已经换源为中科大源</p>
 ]]></content>
       <tags>
-        <tag>开发小tips</tag>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
@@ -204,6 +272,53 @@
 ]]></content>
       <tags>
         <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于git add操作时总会上传mac系统隐藏文件.DS_store的解决方案</title>
+    <url>/2021/12/03/%E5%85%B3%E4%BA%8Egit-add%E6%93%8D%E4%BD%9C%E6%97%B6%E6%80%BB%E4%BC%9A%E4%B8%8A%E4%BC%A0mac%E7%B3%BB%E7%BB%9F%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6-DS-store%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<p>.DS_Store是Mac OS保存文件夹的自定义属性的隐藏文件，如文件的图标位置或背景色，相当于Windows的desktop.ini。</p>
+<p>当git仓库中进行了多项文件修改时，传统的方法为了剔除大量的.DS_Store文件只能手动一项一项添加待加入的文件，很麻烦。</p>
+<p>为了解决这一问题，有如下两种方案：</p>
+<p><strong>方案一：禁止.DS_store生成</strong></p>
+<p>打开 “终端” ，复制黏贴下面的命令，回车执行，重启Mac即可生效。</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">defaults <span class="keyword">write</span> com.apple.desktopservices DSDontWriteNetworkStores -<span class="type">bool</span> <span class="keyword">TRUE</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方案二：设置git过滤规则</strong></p>
+<p>具体参考<a href="https://www.cnblogs.com/zupernova/p/15529106.html">Git过滤规则</a></p>
+<p>在根目录下创建文件.gitignore，写入内容</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="string">.DS_Store</span></span><br><span class="line">*<span class="string">.code-workspace</span></span><br></pre></td></tr></table></figure>
+
+<p>即可让git在执行add操作时屏蔽所有符合条件的文件，使其不出现在未追踪文件列表中</p>
+]]></content>
+      <tags>
+        <tag>tips</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于malloc和free链表节点遇到的问题</title>
+    <url>/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>链表初始化代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function">Node* <span class="title">list_init</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    Node *head = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p1 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p2 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p3 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p4 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p5 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    head-&gt;val = <span class="number">-1</span>;</span><br><span class="line">    p1-&gt;val = <span class="number">11</span>;</span><br><span class="line">    p2-&gt;val = <span class="number">5</span>;</span><br><span class="line">    p3-&gt;val = <span class="number">7</span>;</span><br><span class="line">    p4-&gt;val = <span class="number">10</span>;</span><br><span class="line">    p5-&gt;val = <span class="number">1</span>;</span><br><span class="line">    head-&gt;next = p1;</span><br><span class="line">    p1-&gt;next = p2;</span><br><span class="line">    p2-&gt;next = p3;</span><br><span class="line">    p3-&gt;next = p4;</span><br><span class="line">    p4-&gt;next = p5;</span><br><span class="line">    p5-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>链表删除代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_deinit</span><span class="params">(Node* head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(head)&#123;</span><br><span class="line">        Node* tmp = head;</span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(tmp);</span><br><span class="line">        tmp = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>链表打印代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_print</span><span class="params">(Node* head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> first = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(first)&#123;</span><br><span class="line">            first=<span class="number">0</span>;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;head-&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;(%d)-&gt;&quot;</span>, head-&gt;val);</span><br><span class="line">        &#125;       </span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;NULL\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时，在主函数中：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">Node *head = list_init();</span><br><span class="line">list_deinit(head);</span><br><span class="line">list_print(head);</span><br></pre></td></tr></table></figure>
+
+<p>运行程序会报段错误，疑问点在于：list_print函数中已经加入了head=NULL的特殊情况判断逻辑，但还是在deinit调用之后报错</p>
+<p>经过在init和deinit函数中打印链表各节点地址发现，deinit函数中传入的只是head指针的一个副本；因此，在deinit函数中，head指针的副本以及链表其他节点已经全部释放空间并指向了NULL</p>
+<p>但是在主函数中，head指针指向的结构体被释放了空间，但是并没有赋值为NULL，因此，在deinit之后再调用list_print,实际上是传入了一个野指针（此时的head），因此报了段错误。</p>
+<p>修改后的程序代码源文件如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_deinit</span><span class="params">(Node **head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (*head)</span><br><span class="line">    &#123;</span><br><span class="line">        Node** tmp = head;</span><br><span class="line">        *head = (*head)-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(*tmp);</span><br><span class="line">        *tmp = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="comment">//二级指针方法可以销毁head本身，并不是传入的副本</span></span><br><span class="line"></span><br><span class="line">list_deinit(&amp;head);<span class="comment">//采用此方法调用</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
@@ -245,6 +360,16 @@
 ]]></content>
       <tags>
         <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>同时批量编译同一文件夹里的.c文件为同名的目标文件</title>
+    <url>/2021/12/03/%E5%90%8C%E6%97%B6%E6%89%B9%E9%87%8F%E7%BC%96%E8%AF%91%E5%90%8C%E4%B8%80%E6%96%87%E4%BB%B6%E5%A4%B9%E9%87%8C%E7%9A%84-c%E6%96%87%E4%BB%B6%E4%B8%BA%E5%90%8C%E5%90%8D%E7%9A%84%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">SRC=<span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> //同时将文件夹内所有.c编译为同名的目标文件</span><br><span class="line">OBJ=<span class="variable">$(<span class="built_in">patsubst</span> %.c,%,<span class="variable">$(SRC)</span>)</span></span><br><span class="line"><span class="section">%:%.c//此处使用了内建隐含规则</span></span><br><span class="line">    cc -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">all:<span class="variable">$(OBJ)</span></span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>tips</tag>
       </tags>
   </entry>
   <entry>
@@ -420,6 +545,29 @@
       </tags>
   </entry>
   <entry>
+    <title>重定位知识点总结</title>
+    <url>/2021/12/01/%E9%87%8D%E5%AE%9A%E4%BD%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p><strong>什么是重定位？为什么需要重定位？</strong></p>
+<h3 id="一、必须知道的几个概念。"><a href="#一、必须知道的几个概念。" class="headerlink" title="一、必须知道的几个概念。"></a><strong>一、必须知道的几个概念。</strong></h3><p><strong>1、链接地址和运行地址。</strong></p>
+<p>a.运行地址，顾名思义就是程序运行的时候的地址，也就是你用工具将代码下载到RAM的那个地址，也叫加载地址。</p>
+<p>b.链接地址，由链接脚本指定的地址。为什么需要链接脚本指定地址呢？你想一下，在c语言编程中，当我们需要调用一个A函数的时候，编译器是怎么找到这个A函数？编译器肯定是知道它被放在哪里才可以找到它。那就是链接脚本的作用，链接脚本其实在程序被执行之前都已经指定A函数一个地址编号，以后所有的函数调用我们都会去这个地址编号那里寻找A函数。有点类似于c语言的指针变量。</p>
+<p><strong>2、位置有关码与位置无关码。</strong></p>
+<p>a.位置有关码，就是这句代码的执行正确与否还需要取决于当前的地址，也就是说跟地址已经绑定了的，例如：ldr PC, _main，就是PC指针必须跳转到_main（函数名就是一个地址）这个地址去，代码执行成功与否就相当于受到了这个地址的约束，假如这个地址的内容不存放_main这个函数，就会出错了。</p>
+<p>b.位置无关码，就是这句代码在哪里运行都可以的，跟所处的地址无关，跟位置有关码相反。</p>
+<h3 id="二、重定位需要理解的一些问题。"><a href="#二、重定位需要理解的一些问题。" class="headerlink" title="二、重定位需要理解的一些问题。"></a><strong>二、重定位需要理解的一些问题。</strong></h3><p><strong>1、链接地址跟运行地址不同的情况下会出现什么情况？</strong></p>
+<p>答：以上面举的函数A为例，当链接地址跟运行地址不同的时候，假如链接地址是0x1000，运行地址（加载地址）是0x0000，链接脚本指定函数A将来是要存放到（基地址+偏移量）=0x1000+0x0001=0x1001地址的，但是程序在下载的时候却把这个程序下载到0x0000，所以函数A的地址实际上是存放在（基地址+偏移量）=0x0000+0x0001=0x0001这个地址的。当程序运行到一行位置有关码例如：ldr PC, A ，编译器首先就会按照链接脚本指定的A的那个地址0x1001寻找A函数，但是因为加载地址跟链接地址不同的原因，实际上A函数已经被放到了0x0001，所以执行就会出错。所以，当这两个地址不同的时候，执行一段位置有关码的时候就会发生不可预估的错误。</p>
+<p><strong>2、为什么会出现链接地址跟运行地址不同的情况？</strong></p>
+<p>答：当一块芯片启动的时候，依靠内部的SRAM，可以运行一小段代码，而因为DDR还没初始化，注定了开始的运行地址是在内部SRAM中的。当我们需要运行一个操作系统，那么点的内存怎么够运行呢？所以这时候就需要初始化DDR才可，而因为我们知道这代码将来都是在DDR上面运行的，所以链接脚本指定的链接地址肯定是DDR上面的地址，所以这就出现了链接地址跟运行地址不同的情况了。</p>
+<p><strong>3、什么是重定位？</strong></p>
+<p>答：由于出现1这样的问题，就需要使用重定位这种方式解决上面的问题了。那什么是重定位呢？重定位就是在链接地址跟运行地址不同的情况下，执行一段位置无关码，这段位置无关码的作用就是将原来的那份代码全部复制到链接地址那里去，然后自己再长跳转到新的那份代码的刚刚执行的那个位置。这样就实现了链接地址跟运行地址一致的情况了。</p>
+<p><strong>4、为什么需要重定位？</strong></p>
+<p>答：就是链接地址跟运行地址不同，在这个情况下我们可以有两种方案：<br>a.全部使用位置无关码。<br>b.进行重定位让这两个地址相同。<br>我们知道，如果是一个小代码，使用a时可以的，但是一个大的代码文件很难保证全部都使用位置无关码的，这也是不现实的，所以必须使用重定位解决这个问题。</p>
+]]></content>
+      <tags>
+        <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>进程间通信方式</title>
     <url>/2021/12/02/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/</url>
     <content><![CDATA[<p><strong>1、无名管道通信</strong></p>
@@ -453,29 +601,6 @@
 ]]></content>
       <tags>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>重定位知识点总结</title>
-    <url>/2021/12/01/%E9%87%8D%E5%AE%9A%E4%BD%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p><strong>什么是重定位？为什么需要重定位？</strong></p>
-<h3 id="一、必须知道的几个概念。"><a href="#一、必须知道的几个概念。" class="headerlink" title="一、必须知道的几个概念。"></a><strong>一、必须知道的几个概念。</strong></h3><p><strong>1、链接地址和运行地址。</strong></p>
-<p>a.运行地址，顾名思义就是程序运行的时候的地址，也就是你用工具将代码下载到RAM的那个地址，也叫加载地址。</p>
-<p>b.链接地址，由链接脚本指定的地址。为什么需要链接脚本指定地址呢？你想一下，在c语言编程中，当我们需要调用一个A函数的时候，编译器是怎么找到这个A函数？编译器肯定是知道它被放在哪里才可以找到它。那就是链接脚本的作用，链接脚本其实在程序被执行之前都已经指定A函数一个地址编号，以后所有的函数调用我们都会去这个地址编号那里寻找A函数。有点类似于c语言的指针变量。</p>
-<p><strong>2、位置有关码与位置无关码。</strong></p>
-<p>a.位置有关码，就是这句代码的执行正确与否还需要取决于当前的地址，也就是说跟地址已经绑定了的，例如：ldr PC, _main，就是PC指针必须跳转到_main（函数名就是一个地址）这个地址去，代码执行成功与否就相当于受到了这个地址的约束，假如这个地址的内容不存放_main这个函数，就会出错了。</p>
-<p>b.位置无关码，就是这句代码在哪里运行都可以的，跟所处的地址无关，跟位置有关码相反。</p>
-<h3 id="二、重定位需要理解的一些问题。"><a href="#二、重定位需要理解的一些问题。" class="headerlink" title="二、重定位需要理解的一些问题。"></a><strong>二、重定位需要理解的一些问题。</strong></h3><p><strong>1、链接地址跟运行地址不同的情况下会出现什么情况？</strong></p>
-<p>答：以上面举的函数A为例，当链接地址跟运行地址不同的时候，假如链接地址是0x1000，运行地址（加载地址）是0x0000，链接脚本指定函数A将来是要存放到（基地址+偏移量）=0x1000+0x0001=0x1001地址的，但是程序在下载的时候却把这个程序下载到0x0000，所以函数A的地址实际上是存放在（基地址+偏移量）=0x0000+0x0001=0x0001这个地址的。当程序运行到一行位置有关码例如：ldr PC, A ，编译器首先就会按照链接脚本指定的A的那个地址0x1001寻找A函数，但是因为加载地址跟链接地址不同的原因，实际上A函数已经被放到了0x0001，所以执行就会出错。所以，当这两个地址不同的时候，执行一段位置有关码的时候就会发生不可预估的错误。</p>
-<p><strong>2、为什么会出现链接地址跟运行地址不同的情况？</strong></p>
-<p>答：当一块芯片启动的时候，依靠内部的SRAM，可以运行一小段代码，而因为DDR还没初始化，注定了开始的运行地址是在内部SRAM中的。当我们需要运行一个操作系统，那么点的内存怎么够运行呢？所以这时候就需要初始化DDR才可，而因为我们知道这代码将来都是在DDR上面运行的，所以链接脚本指定的链接地址肯定是DDR上面的地址，所以这就出现了链接地址跟运行地址不同的情况了。</p>
-<p><strong>3、什么是重定位？</strong></p>
-<p>答：由于出现1这样的问题，就需要使用重定位这种方式解决上面的问题了。那什么是重定位呢？重定位就是在链接地址跟运行地址不同的情况下，执行一段位置无关码，这段位置无关码的作用就是将原来的那份代码全部复制到链接地址那里去，然后自己再长跳转到新的那份代码的刚刚执行的那个位置。这样就实现了链接地址跟运行地址一致的情况了。</p>
-<p><strong>4、为什么需要重定位？</strong></p>
-<p>答：就是链接地址跟运行地址不同，在这个情况下我们可以有两种方案：<br>a.全部使用位置无关码。<br>b.进行重定位让这两个地址相同。<br>我们知道，如果是一个小代码，使用a时可以的，但是一个大的代码文件很难保证全部都使用位置无关码的，这也是不现实的，所以必须使用重定位解决这个问题。</p>
-]]></content>
-      <tags>
-        <tag>嵌入式</tag>
       </tags>
   </entry>
 </search>

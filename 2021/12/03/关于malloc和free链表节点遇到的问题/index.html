@@ -20,28 +20,28 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.8.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="介绍一下make? 为什么使用make 1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件 makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样">
+<meta name="description" content="链表初始化代码： 123456789101112131415161718192021Node* list_init(void)&amp;#123;    Node *head &#x3D; (Node *)malloc(sizeof(Node));    Node *p1 &#x3D; (Node *)malloc(sizeof(Node));    Node *p2 &#x3D; (Node *)malloc(sizeof(Node">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Makefile面试">
-<meta property="og:url" content="http://example.com/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/index.html">
+<meta property="og:title" content="关于malloc和free链表节点遇到的问题">
+<meta property="og:url" content="http://example.com/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="Zupernova&#39;s Blog">
-<meta property="og:description" content="介绍一下make? 为什么使用make 1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件 makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样">
+<meta property="og:description" content="链表初始化代码： 123456789101112131415161718192021Node* list_init(void)&amp;#123;    Node *head &#x3D; (Node *)malloc(sizeof(Node));    Node *p1 &#x3D; (Node *)malloc(sizeof(Node));    Node *p2 &#x3D; (Node *)malloc(sizeof(Node">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-12-01T05:10:50.000Z">
-<meta property="article:modified_time" content="2021-12-01T05:12:44.540Z">
+<meta property="article:published_time" content="2021-12-03T08:40:25.000Z">
+<meta property="article:modified_time" content="2021-12-03T08:41:20.938Z">
 <meta property="article:author" content="Zupernova">
-<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="tips">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/">
+<link rel="canonical" href="http://example.com/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/","path":"2021/12/01/Makefile面试/","title":"Makefile面试"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/","path":"2021/12/03/关于malloc和free链表节点遇到的问题/","title":"关于malloc和free链表节点遇到的问题"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Makefile面试 | Zupernova's Blog</title>
+<title>关于malloc和free链表节点遇到的问题 | Zupernova's Blog</title>
   
 
 
@@ -219,7 +219,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -232,7 +232,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Makefile面试
+          关于malloc和free链表节点遇到的问题
         </h1>
 
         <div class="post-meta-container">
@@ -244,7 +244,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-12-01 13:10:50 / 修改时间：13:12:44" itemprop="dateCreated datePublished" datetime="2021-12-01T13:10:50+08:00">2021-12-01</time>
+      <time title="创建时间：2021-12-03 16:40:25 / 修改时间：16:41:20" itemprop="dateCreated datePublished" datetime="2021-12-03T16:40:25+08:00">2021-12-03</time>
     </span>
 
   
@@ -261,7 +261,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>687</span>
+      <span>1.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -279,14 +279,24 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
-<p>1、包含多个源文件的项目在编译时有长而复杂的命令行，可以通过makefile保存这些命令行来简化该工作<br>2、make可以减少重新编译所需要的时间，因为make可以识别出哪些文件是新修改的<br>3、make维护了当前项目中各文件的相关关系，从而可以在编译前检查是否可以找到所有的文件</p>
-<p>makefile：一个文本形式的文件，其中包含一些规则告诉make编译哪些文件以及怎样编译这些文件，每条规则包含以下内容：<br>一个target，即最终创建的东西<br>一个和多个dependencies列表，通常是编译目标文件所需要的其他文件<br>需要执行的一系列commands，用于从指定的相关文件创建目标文件</p>
-<p>make执行时按顺序查找名为GNUmakefile，makefile或者Makefile文件，通常，大多数人常用Makefile<br>Makefile规则：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">target: dependency dependency [..]    command    command    [..]</span><br><span class="line">注意：command前面必须是制表符</span><br></pre></td></tr></table></figure>
+        <p>链表初始化代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Node* <span class="title">list_init</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    Node *head = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p1 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p2 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p3 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p4 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p5 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    head-&gt;val = <span class="number">-1</span>;</span><br><span class="line">    p1-&gt;val = <span class="number">11</span>;</span><br><span class="line">    p2-&gt;val = <span class="number">5</span>;</span><br><span class="line">    p3-&gt;val = <span class="number">7</span>;</span><br><span class="line">    p4-&gt;val = <span class="number">10</span>;</span><br><span class="line">    p5-&gt;val = <span class="number">1</span>;</span><br><span class="line">    head-&gt;next = p1;</span><br><span class="line">    p1-&gt;next = p2;</span><br><span class="line">    p2-&gt;next = p3;</span><br><span class="line">    p3-&gt;next = p4;</span><br><span class="line">    p4-&gt;next = p5;</span><br><span class="line">    p5-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>例子：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>
+<p>链表删除代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_deinit</span><span class="params">(Node* head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(head)&#123;</span><br><span class="line">        Node* tmp = head;</span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(tmp);</span><br><span class="line">        tmp = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>链表打印代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_print</span><span class="params">(Node* head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> first = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(first)&#123;</span><br><span class="line">            first=<span class="number">0</span>;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;head-&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;(%d)-&gt;&quot;</span>, head-&gt;val);</span><br><span class="line">        &#125;       </span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;NULL\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时，在主函数中：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Node *head = list_init();</span><br><span class="line">list_deinit(head);</span><br><span class="line">list_print(head);</span><br></pre></td></tr></table></figure>
+
+<p>运行程序会报段错误，疑问点在于：list_print函数中已经加入了head=NULL的特殊情况判断逻辑，但还是在deinit调用之后报错</p>
+<p>经过在init和deinit函数中打印链表各节点地址发现，deinit函数中传入的只是head指针的一个副本；因此，在deinit函数中，head指针的副本以及链表其他节点已经全部释放空间并指向了NULL</p>
+<p>但是在主函数中，head指针指向的结构体被释放了空间，但是并没有赋值为NULL，因此，在deinit之后再调用list_print,实际上是传入了一个野指针（此时的head），因此报了段错误。</p>
+<p>修改后的程序代码源文件如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_deinit</span><span class="params">(Node **head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (*head)</span><br><span class="line">    &#123;</span><br><span class="line">        Node** tmp = head;</span><br><span class="line">        *head = (*head)-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(*tmp);</span><br><span class="line">        *tmp = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="comment">//二级指针方法可以销毁head本身，并不是传入的副本</span></span><br><span class="line"></span><br><span class="line">list_deinit(&amp;head);<span class="comment">//采用此方法调用</span></span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -296,36 +306,39 @@
   <div class="popular-posts-header">相关文章</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/nor-flash启动与nand-flash启动的区别/" rel="bookmark">nor flash启动与nand flash启动的区别</a></div>
+      <div class="popular-posts-title"><a href="/2021/12/03/Git过滤规则/" rel="bookmark">Git过滤规则</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/嵌入c-linux书籍介绍/" rel="bookmark">嵌入c&linux书籍介绍</a></div>
+      <div class="popular-posts-title"><a href="/2021/12/03/Makefile通用模版/" rel="bookmark">Makefile通用模版</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/11/30/嵌入式经典面试题/" rel="bookmark">嵌入式经典面试题</a></div>
+      <div class="popular-posts-title"><a href="/2021/12/03/git同时拉取更新所有远程分支/" rel="bookmark">git同时拉取更新所有远程分支</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/01/重定位知识点总结/" rel="bookmark">重定位知识点总结</a></div>
+      <div class="popular-posts-title"><a href="/2021/12/03/macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯/" rel="bookmark">macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/30/macos新版本系统brew-install报错问题/" rel="bookmark">macos新版本系统brew install报错问题</a></div>
     </li>
   </ul>
 
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 嵌入式</a>
+              <a href="/tags/tips/" rel="tag"><i class="fa fa-tag"></i> tips</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/12/01/%E9%87%8D%E5%AE%9A%E4%BD%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" rel="prev" title="重定位知识点总结">
-                  <i class="fa fa-chevron-left"></i> 重定位知识点总结
+                <a href="/2021/12/03/%E5%85%B3%E4%BA%8Egit-add%E6%93%8D%E4%BD%9C%E6%97%B6%E6%80%BB%E4%BC%9A%E4%B8%8A%E4%BC%A0mac%E7%B3%BB%E7%BB%9F%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6-DS-store%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" rel="prev" title="关于git add操作时总会上传mac系统隐藏文件.DS_store的解决方案">
+                  <i class="fa fa-chevron-left"></i> 关于git add操作时总会上传mac系统隐藏文件.DS_store的解决方案
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/12/01/nor-flash%E5%90%AF%E5%8A%A8%E4%B8%8Enand-flash%E5%90%AF%E5%8A%A8%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="next" title="nor flash启动与nand flash启动的区别">
-                  nor flash启动与nand flash启动的区别 <i class="fa fa-chevron-right"></i>
+                <a href="/2021/12/03/macos%E4%BB%85%E6%94%B9%E5%8F%98%E9%BC%A0%E6%A0%87%E6%BB%9A%E5%8A%A8%E6%96%B9%E5%90%91%E5%90%8C%E6%97%B6%E4%B8%8D%E6%94%B9%E5%8F%98%E8%A7%A6%E6%8E%A7%E6%9D%BF%E4%BD%BF%E5%85%B6%E7%AC%A6%E5%90%88windows%E4%BD%BF%E7%94%A8%E4%B9%A0%E6%83%AF/" rel="next" title="macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯">
+                  macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
