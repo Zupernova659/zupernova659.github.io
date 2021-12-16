@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.8.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="基本选项一般来讲，C&#x2F;C++从源代码到可执行程序之间要经历四个步骤： 预处理：展开头文件&#x2F;宏替换&#x2F;去掉注释&#x2F;条件编译 编译：检查语法，生成汇编 汇编：汇编代码转换机器码 链接：链接到一起生成可执行程序 -E：只进行预处理，不编译 执行指令 1gcc -E test.c  命令行显示出预处理信息，但不生成文件 1gcc -E hello.c &gt; 1.txt  将相关预处理信息重定向到文件1.t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译选项学习总结">
+<meta property="og:url" content="http://example.com/2021/12/16/%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Zupernova&#39;s Blog">
+<meta property="og:description" content="基本选项一般来讲，C&#x2F;C++从源代码到可执行程序之间要经历四个步骤： 预处理：展开头文件&#x2F;宏替换&#x2F;去掉注释&#x2F;条件编译 编译：检查语法，生成汇编 汇编：汇编代码转换机器码 链接：链接到一起生成可执行程序 -E：只进行预处理，不编译 执行指令 1gcc -E test.c  命令行显示出预处理信息，但不生成文件 1gcc -E hello.c &gt; 1.txt  将相关预处理信息重定向到文件1.t">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-16T08:07:25.000Z">
+<meta property="article:modified_time" content="2021-12-16T08:13:18.016Z">
+<meta property="article:author" content="Zupernova">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="GCC">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2021/12/16/%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/12/16/%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/","path":"2021/12/16/编译选项学习总结/","title":"编译选项学习总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>编译选项学习总结 | Zupernova's Blog</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Zupernova's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">make the best of it</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%80%89%E9%A1%B9"><span class="nav-number">1.</span> <span class="nav-text">基本选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E9%80%89%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">高级选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%93%E7%9A%84%E5%88%9B%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">库的创建与使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BA%E9%94%99%E6%8F%90%E7%A4%BA%E9%80%89%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">出错提示选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gcc%E5%B8%B8%E8%A7%81%E8%AD%A6%E5%91%8A%E5%90%AB%E4%B9%89"><span class="nav-number">5.</span> <span class="nav-text">gcc常见警告含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E9%80%89%E9%A1%B9"><span class="nav-number">6.</span> <span class="nav-text">其它选项</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zupernova"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zupernova</p>
+  <div class="site-description" itemprop="description">只是一个兴趣使然的无名小站</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Zupernova659" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Zupernova659" rel="noopener" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/zupernova" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;zupernova" rel="noopener" target="_blank">Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/zupernova/" title="博客园 → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zupernova&#x2F;" rel="noopener" target="_blank">博客园</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/zupernova" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;zupernova" rel="noopener" target="_blank">知乎</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/16/%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zupernova">
+      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zupernova's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          编译选项学习总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-12-16 16:07:25 / 修改时间：16:13:18" itemprop="dateCreated datePublished" datetime="2021-12-16T16:07:25+08:00">2021-12-16</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h3><p>一般来讲，C/C++从源代码到可执行程序之间要经历四个步骤：</p>
+<p>预处理：展开头文件/宏替换/去掉注释/条件编译</p>
+<p>编译：检查语法，生成汇编</p>
+<p>汇编：汇编代码转换机器码</p>
+<p>链接：链接到一起生成可执行程序</p>
+<p><em><strong>-E：只进行预处理，不编译</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -E <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>命令行显示出预处理信息，但不生成文件</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gcc</span> -E hello.c &gt; <span class="number">1</span>.txt</span><br></pre></td></tr></table></figure>
+
+<p>将相关预处理信息重定向到文件1.txt中，文件内容显示如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">signed</span> <span class="keyword">char</span> <span class="keyword">__int8_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="keyword">__uint8_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">short</span> <span class="keyword">__int16_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">short</span> <span class="keyword">__uint16_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">__int32_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">__uint32_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> <span class="keyword">__int64_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> <span class="keyword">__uint64_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">__darwin_intptr_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">__darwin_natural_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">__darwin_ct_rune_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line"> <span class="keyword">char</span> __mbstate8[<span class="number">128</span>];</span><br><span class="line"> <span class="keyword">long</span> <span class="keyword">long</span> _mbstateL;</span><br><span class="line">&#125; <span class="keyword">__mbstate_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">__mbstate_t</span> <span class="keyword">__darwin_mbstate_t</span>;</span><br><span class="line">									.</span><br><span class="line">                  .</span><br><span class="line">                  .</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>-S：只编译，不汇编</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>生成文件test.s，文件内容如下：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">	.section	__TEXT,__text,regular,pure_instructions</span><br><span class="line">	.build_version macos, <span class="number">11</span>, <span class="number">0</span>	sdk_version <span class="number">11</span>, <span class="number">3</span></span><br><span class="line">	.globl	_main                           <span class="comment">## -- Begin function main</span></span><br><span class="line">	.p2align	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_main:                                  <span class="comment">## @main</span></span><br><span class="line">	.cfi_startproc</span><br><span class="line"><span class="comment">## %bb.0:</span></span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">	.cfi_offset %rbp, -<span class="number">16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	subq	$16, %rsp</span><br><span class="line">	movl	$0, -<span class="number">4</span>(%rbp)</span><br><span class="line">	leaq	L<span class="number">_</span>.str(%rip), %rdi</span><br><span class="line">	movb	$0, %al</span><br><span class="line">	callq	_printf</span><br><span class="line">	xorl	%ecx, %ecx</span><br><span class="line">	movl	%eax, -<span class="number">8</span>(%rbp)                  <span class="comment">## 4-byte Spill</span></span><br><span class="line">	movl	%ecx, %eax</span><br><span class="line">	addq	$16, %rsp</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        <span class="comment">## -- End function</span></span><br><span class="line">	.section	__TEXT,__cstring,cstring_literals</span><br><span class="line">L<span class="number">_</span>.str:                                 <span class="comment">## @.str</span></span><br><span class="line">	.asciz	<span class="string">&quot;hello\n&quot;</span></span><br><span class="line">.subsections_via_symbols</span><br></pre></td></tr></table></figure>
+
+<p>表明此时根据源文件生成了汇编代码</p>
+<p><em><strong>-c：只编译、汇编，不链接</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -<span class="keyword">c</span> test.<span class="keyword">c</span></span><br></pre></td></tr></table></figure>
+
+<p>此时源文件经过编译和汇编直接生成二进制文件test.o，没有其他中间文件生成</p>
+<p><em><strong>-g：包含调试信息</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -g <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>可见不光生成了可执行文件a.out，同时还在当前文件夹下生成了具备调试信息的文件a.out.dSYM，此时可以使用调试工具gdb对可执行文件进行调试</p>
+<p><em><strong>-I：指定include包含文件的搜索目录</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -I <span class="keyword">include</span>/  -c <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>表明在gcc执行过程中，除了标准库中的头文件，还可以从指定的目录去搜索头文件</p>
+<p><em><strong>-o：输出成指定文件名</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">gcc</span> -o <span class="keyword">b</span> test.c</span><br></pre></td></tr></table></figure>
+
+<p>表明指定生成的二进制文件名称为b，之后运行程序b，和a.out运行是同样的结果</p>
+<p><em><strong>-lpthread：多线程编程</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc <span class="keyword">test</span>.c -lpthread</span><br></pre></td></tr></table></figure>
+
+<p>指明gcc在链接阶段链接pthread库，从而编译包含多线程头文件的程序</p>
+<p><em><strong>-lm：程序使用了math.h中声明的库函数</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc <span class="keyword">test</span>.c -lm</span><br></pre></td></tr></table></figure>
+
+<h3 id="高级选项"><a href="#高级选项" class="headerlink" title="高级选项"></a>高级选项</h3><p><em><strong>-v：详细输出编译过程中所采用的每一个选项</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gcc -v</span></span><br></pre></td></tr></table></figure>
+
+<p>得到结果</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Configured with: --prefix=<span class="regexp">/Applications/</span>Xcode.app<span class="regexp">/Contents/</span>Developer<span class="regexp">/usr --with-gxx-include-dir=/</span>Applications<span class="regexp">/Xcode.app/</span>Contents<span class="regexp">/Developer/</span>Platforms<span class="regexp">/MacOSX.platform/</span>Developer<span class="regexp">/SDKs/</span>MacOSX.sdk<span class="regexp">/usr/i</span>nclude<span class="regexp">/c++/</span><span class="number">4.2</span>.<span class="number">1</span></span><br><span class="line">Apple clang version <span class="number">12.0</span>.<span class="number">5</span> (clang-<span class="number">1205.0</span>.<span class="number">22.11</span>)</span><br><span class="line">Target: x86_64-apple-darwin20.<span class="number">5.0</span></span><br><span class="line">Thread model: posix</span><br><span class="line">InstalledDir: <span class="regexp">/Applications/</span>Xcode.app<span class="regexp">/Contents/</span>Developer<span class="regexp">/Toolchains/</span>XcodeDefault.xctoolchain<span class="regexp">/usr/</span>bin</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>-C：预处理时保留注释信息</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">gcc</span> <span class="operator">-</span><span class="built_in">E</span> <span class="operator">-</span><span class="built_in">C</span> <span class="variable">test</span><span class="operator">.</span><span class="variable">c</span> </span><br></pre></td></tr></table></figure>
+
+<p>得到结果</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">* <span class="keyword">Version</span> <span class="number">2.0</span> (the <span class="string">&#x27;License&#x27;</span>). You may <span class="keyword">not</span> use this file <span class="keyword">except</span> <span class="keyword">in</span></span><br><span class="line"> * compliance <span class="keyword">with</span> the License. The rights granted <span class="keyword">to</span> you under the License</span><br><span class="line"> * may <span class="keyword">not</span> be used <span class="keyword">to</span> <span class="keyword">create</span>, <span class="keyword">or</span> <span class="keyword">enable</span> the creation <span class="keyword">or</span> redistribution <span class="keyword">of</span>,</span><br><span class="line"> * unlawful <span class="keyword">or</span> unlicensed copies <span class="keyword">of</span> an Apple operating <span class="keyword">system</span>, <span class="keyword">or</span> <span class="keyword">to</span></span><br><span class="line"> * circumvent, violate, <span class="keyword">or</span> <span class="keyword">enable</span> the circumvention <span class="keyword">or</span> violation <span class="keyword">of</span>, <span class="keyword">any</span></span><br><span class="line"> * terms <span class="keyword">of</span> an Apple operating <span class="keyword">system</span> software license agreement.</span><br><span class="line"> *</span><br><span class="line"> * Please obtain a <span class="keyword">copy</span> <span class="keyword">of</span> the License at</span><br><span class="line"> * http://www.opensource.apple.com/apsl/ <span class="keyword">and</span> <span class="keyword">read</span> it <span class="keyword">before</span> <span class="keyword">using</span> this file.</span><br><span class="line">																			.</span><br><span class="line">                                      .</span><br><span class="line"><span class="type">void</span> clearerr(FILE *);</span><br><span class="line"><span class="type">int</span> fclose(FILE *);</span><br><span class="line"><span class="type">int</span> feof(FILE *);</span><br><span class="line"><span class="type">int</span> ferror(FILE *);</span><br><span class="line"><span class="type">int</span> fflush(FILE *);</span><br><span class="line"><span class="type">int</span> fgetc(FILE *);</span><br><span class="line"><span class="type">int</span> fgetpos(FILE * <span class="keyword">restrict</span>, fpos_t *);</span><br><span class="line"><span class="type">char</span> *fgets(<span class="type">char</span> * <span class="keyword">restrict</span>, <span class="type">int</span>, FILE *);</span><br><span class="line">																			.</span><br><span class="line">                                      .</span><br><span class="line">                                      .</span><br></pre></td></tr></table></figure>
+
+<p>可见和单纯执行-E选项时相比，还多加了注释信息</p>
+<p><em><strong>-ggdb：在可执行文件中包含可供GDB使用的调试信息</strong></em></p>
+<p>-g选项和-ggdb选项只有细微的差别：</p>
+<p>-g以OS本地格式（stabs，COFF，XCOFF或DWARF 2）产生调试信息。</p>
+<p>-ggdb生成专门用于gdb的调试信息。</p>
+<p><em><strong>-fverbose-asm：在编译成汇编语言时，把C变量的名称作为汇编语言中的注释</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test.<span class="keyword">c</span> -S -fverbose-<span class="keyword">asm</span></span><br></pre></td></tr></table></figure>
+
+<p>得到结果</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> 	.section	__TEXT,__text,regular,pure_instructions</span><br><span class="line">	.build_version macos, <span class="number">11</span>, <span class="number">0</span>	sdk_version <span class="number">11</span>, <span class="number">3</span></span><br><span class="line">	.globl	_main                           <span class="comment">## -- Begin function main</span></span><br><span class="line">	.p2align	<span class="number">4</span>, <span class="number">0x90</span></span><br><span class="line">_main:                                  <span class="comment">## @main</span></span><br><span class="line">	.cfi_startproc</span><br><span class="line"><span class="comment">## %bb.0:</span></span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset <span class="number">16</span></span><br><span class="line">	.cfi_offset %rbp, -<span class="number">16</span></span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register %rbp</span><br><span class="line">	subq	$16, %rsp</span><br><span class="line">	movl	$0, -<span class="number">4</span>(%rbp)</span><br><span class="line">	movl	$0, -<span class="number">8</span>(%rbp)</span><br><span class="line">	movl	$1, -<span class="number">12</span>(%rbp)</span><br><span class="line">	leaq	L<span class="number">_</span>.str(%rip), %rdi</span><br><span class="line">	movb	$0, %al</span><br><span class="line">	callq	_printf</span><br><span class="line">	xorl	%ecx, %ecx</span><br><span class="line">	movl	%eax, -<span class="number">16</span>(%rbp)                 <span class="comment">## 4-byte Spill</span></span><br><span class="line">	movl	%ecx, %eax</span><br><span class="line">	addq	$16, %rsp</span><br><span class="line">	popq	%rbp</span><br><span class="line">	retq</span><br><span class="line">	.cfi_endproc</span><br><span class="line">                                        <span class="comment">## -- End function</span></span><br><span class="line">	.section	__TEXT,__cstring,cstring_literals</span><br><span class="line">L<span class="number">_</span>.str:                                 <span class="comment">## @.str</span></span><br><span class="line">	.asciz	<span class="string">&quot;hello\n&quot;</span></span><br><span class="line"></span><br><span class="line">.subsections_via_symbols</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>-save-temps：自动输出预处理文件、汇编文件、对象文件，编译正常进行</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -<span class="keyword">save</span>-temps <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>之后使用ls命令查看目录中文件状态</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.<span class="keyword">out</span>   <span class="keyword">test</span>.bc <span class="keyword">test</span>.c  <span class="keyword">test</span>.i  <span class="keyword">test</span>.o  <span class="keyword">test</span>.s</span><br></pre></td></tr></table></figure>
+
+<p>可见保留了所有的中间文件</p>
+<p><em><strong>-fsyntax-only：只测试源文件语法是否正确，不会进行任何编译操作</strong></em></p>
+<p>执行指令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -fsyntax-only <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>当源文件没有语法错误时，没有任何输出，当故意修改出一处语法错误时，得到结果</p>
+<figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test.c:<span class="number">4</span>:<span class="number">21</span>: <span class="built_in">error</span>: expected <span class="string">&#x27;;&#x27;</span> at <span class="keyword">end</span> of declaration</span><br><span class="line">    int i = <span class="number">0</span>, j = <span class="number">1</span> <span class="built_in">printf</span>(<span class="string">&quot;hello\n&quot;</span>);</span><br><span class="line">                    ^</span><br><span class="line">                    ;</span><br><span class="line"><span class="number">1</span> <span class="built_in">error</span> generated.</span><br></pre></td></tr></table></figure>
+
+<p>显示出源文件语法中存在的错误</p>
+<p><em><strong>-llibrary：连接时搜索指定的函数库</strong></em></p>
+<p>例如：多线程编程例子</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc <span class="keyword">test</span>.c -lpthread</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>-Idirectory：指定额外的头文件搜索路径</strong></em></p>
+<p>例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -I ../<span class="keyword">include</span> <span class="keyword">test</span>.c</span><br></pre></td></tr></table></figure>
+
+<p>添加目录../include为头文件搜索路径</p>
+<p><em><strong>-Ldirectory：指定额外的函数库搜索路径</strong></em></p>
+<p>例如：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">gcc</span></span> -L ../lib test.c</span><br></pre></td></tr></table></figure>
+
+<p>添加目录../iib为函数库搜索路径</p>
+<p><em><strong>-static：禁止使用动态库</strong></em></p>
+<p>详见下节</p>
+<p><em><strong>-shared：尽量使用动态库</strong></em></p>
+<p>详见下节</p>
+<h3 id="库的创建与使用"><a href="#库的创建与使用" class="headerlink" title="库的创建与使用"></a>库的创建与使用</h3><p><em><strong>静态库</strong></em></p>
+<p>以创建静态库static_lib.a为例</p>
+<p>1、编写C源文件static_lib.c，其中写入需要重复调用的函数，执行命令</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -<span class="keyword">c</span> static_lib.<span class="keyword">c</span></span><br></pre></td></tr></table></figure>
+
+<p>生成目标文件static_lib.o</p>
+<p>2、使用ar工具创建静态库</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ar rcs<span class="keyword"> static</span>_lib.a<span class="keyword"> static</span>_lib.o</span><br></pre></td></tr></table></figure>
+
+<p>3、编写C头文件static_lib.h，其中写入这些函数的原型声明</p>
+<p>4、编写主函数app.c，引入头文件static_lib.h，这样就可以正常使用那些自定义的可复用函数了</p>
+<p>5、执行命令</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc <span class="keyword">app</span>.c -static ./static_lib.a -o <span class="keyword">app</span></span><br></pre></td></tr></table></figure>
+
+<p>编译生成可执行文件app</p>
+<p><em><strong>动态库</strong></em></p>
+<p>以创建动态库share_lib.so为例</p>
+<p>1、编写C源文件share_lib.c，写入需要重复调用的函数，执行命令</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -<span class="keyword">shared </span>-fPIC -o <span class="keyword">share_lib.so </span><span class="keyword">share_lib.c</span></span><br></pre></td></tr></table></figure>
+
+<p>生成动态库文件share_lib.so</p>
+<p>2、编写C头文件share_lib.h，写入函数的原型声明</p>
+<p>3、编写主函数app.c，引入头文件share_lib.h，之后就可以调用在动态库中自定义的函数了</p>
+<p>4、执行命令</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc <span class="keyword">app</span>.c ./share_lib.<span class="keyword">so</span> -o <span class="keyword">app</span></span><br></pre></td></tr></table></figure>
+
+<p>编译生成可执行文件app</p>
+<h3 id="出错提示选项"><a href="#出错提示选项" class="headerlink" title="出错提示选项"></a>出错提示选项</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">Wall：会打开一些很有用的警告选项，建议编译时加此选项。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">W </span></span><br><span class="line"><span class="ruby"></span>-<span class="ruby">Wextra：打印一些额外的警告信息。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">w：禁止显示所有警告信息。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wshadow：当一个局部变量遮盖住了另一个局部变量，或者全局变量时，给出警告。很有用的选项，建议打开。 -Wall 并不会打开此项。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wpointer-arith：对函数指针或者void *类型的指针进行算术操作时给出警告。也很有用。 -Wall 并不会打开此项。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wcast-qual：当强制转化丢掉了类型修饰符时给出警告。 -Wall 并不会打开此项。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Waggregate-<span class="keyword">return</span>：如果定义或调用了返回结构体或联合体的函数，编译器就发出警告。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Winline：无论是声明为 inline 或者是指定了-finline-functions 选项，如果某函数不能内联，编译器都将发出警告。如果你的代码含有很多 inline 函数的话，这是很有用的选项。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Werror：把警告当作错误。出现任何警告就放弃编译。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wunreachable-code：如果编译器探测到永远不会执行到的代码，就给出警告。也是比较有用的选项。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wcast-align：一旦某个指针类型强制转换导致目标所需的地址对齐增加时，编译器就发出警告。</span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wundef：当一个没有定义的符号出现在 <span class="comment">#if 中时，给出警告。</span></span></span><br><span class="line"><span class="ruby"></span></span><br><span class="line">-<span class="ruby">Wredundant-decls：如果在同一个可见域内某定义多次声明，编译器就发出警告，即使这些重复声明有效并且毫无差别。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="gcc常见警告含义"><a href="#gcc常见警告含义" class="headerlink" title="gcc常见警告含义"></a>gcc常见警告含义</h3><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">unused-<span class="function"><span class="keyword">function</span></span>:警告声明但是没有定义的static函数;</span><br><span class="line">unused- label:声明但是未使用的标签;</span><br><span class="line">unused-<span class="keyword">parameter</span>:警告未使用的函数参数;</span><br><span class="line">unused-variable:声明但是未使用的本地变量;</span><br><span class="line">unused-<span class="keyword">value</span>:计算了但是未使用的值;</span><br><span class="line"><span class="keyword">format</span>:printf和scanf这样的函数中的格式字符串的使用不当;</span><br><span class="line"><span class="keyword">implicit</span>-<span class="built_in">int</span>:未指定类型;</span><br><span class="line"><span class="keyword">implicit</span>-<span class="function"><span class="keyword">function</span></span>:函数在声明前使用;</span><br><span class="line"><span class="built_in">char</span>- subscripts:使用<span class="built_in">char</span>类作为数组下标(因为<span class="built_in">char</span>可能是有符号数);</span><br><span class="line">missingbraces:大括号不匹配;</span><br><span class="line">parentheses: 圆括号不匹配;</span><br><span class="line"><span class="keyword">return</span>-<span class="keyword">type</span>:函数有无返回值以及返回值类型不匹配;</span><br><span class="line"><span class="keyword">sequence</span>-point:违反顺序点的代码,比如 a[i] = c[i++];</span><br><span class="line">switch:switch语句缺少<span class="keyword">default</span>或者switch使用枚举变量为索引时缺少某个变量的<span class="keyword">case</span>;</span><br><span class="line">strict- aliasing=n:使用n设置对指针变量指向的对象类型产生警告的限制程度,默认n=<span class="number">3</span>;只有在-fstrict-aliasing设置的情况下有效;</span><br><span class="line">unknow-pragmas:使用未知的#pragma指令;</span><br><span class="line">uninitialized:使用的变量为初始化,只在-O2时有效;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="其它选项"><a href="#其它选项" class="headerlink" title="其它选项"></a>其它选项</h3><p><em><strong>语言标准</strong></em></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-ansi：ANSI标准</span><br><span class="line"><span class="attribute">-std</span>=c99：C99标准</span><br><span class="line"><span class="attribute">-std</span>=gnu89：ISO/IEC 9899:1990 以及GNU扩充</span><br><span class="line"><span class="attribute">-std</span>=gnu99：ISO/IEC 9899:1999 以及GNU扩充</span><br><span class="line">-trigraphs：支持ISO C三字符组</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>优化选项</strong></em></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-O0：关闭所有优化选项</span></span><br><span class="line"><span class="deletion">-O1：第一级别优化，使用此选项可使可执行文件更小、运行更快，并不会增加太多编译时间，可以简写为-O</span></span><br><span class="line"><span class="deletion">-O2：第二级别优化，采用了几乎所有的优化技术，使用此选项会延长编译时间</span></span><br><span class="line"><span class="deletion">-O3：第三级别优化，在-O2的基础上增加了产生inline函数、使用寄存器等优化技术</span></span><br><span class="line"><span class="deletion">-Os：此选项类似于-O2，作用是优化所占用的空间，但不会进行性能优化，常用于生成最终版本</span></span><br></pre></td></tr></table></figure>
+
+<p><em><strong>自定义扩展名</strong></em></p>
+<p>-x：使用此选项可以指定自定义的源文件扩展名，类型有c、c-header、cpp-output、assembler、assembler-with-cpp、none</p>
+<p>凡-x后面所列的所有文件都会被视为其指定的类型，要想改变类型可以再一次使用-x选项，或者使用-x none回到默认设置</p>
+<p>示例：gcc -o test test.c -x assembler test.asm -x c test2.c</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/12/16/C语言面试基础/" rel="bookmark">C语言面试基础</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/12/16/new与malloc的10点区别/" rel="bookmark">new与malloc的10点区别</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/12/16/static作用/" rel="bookmark">static作用</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/12/03/关于malloc和free链表节点遇到的问题/" rel="bookmark">关于malloc和free链表节点遇到的问题</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/12/01/嵌入c-linux书籍介绍/" rel="bookmark">嵌入c&linux书籍介绍</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C</a>
+              <a href="/tags/GCC/" rel="tag"><i class="fa fa-tag"></i> GCC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/12/16/%E7%BB%8F%E5%85%B8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%96%91%E9%9A%BE%E6%9D%82%E4%BE%8B/" rel="prev" title="经典C内存管理疑难杂例">
+                  <i class="fa fa-chevron-left"></i> 经典C内存管理疑难杂例
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zupernova</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">52k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">47 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
