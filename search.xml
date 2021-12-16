@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>C语言面试基础</title>
-    <url>/2021/12/16/C%E8%AF%AD%E8%A8%80%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h3 id="include两种声明区别"><a href="#include两种声明区别" class="headerlink" title="#include两种声明区别"></a><strong>#include两种声明区别</strong></h3><p><strong>引用的头文件不同</strong><br>#include &lt; &gt; 引用的是编译器的类库路径里面的头文件。<br>#include“ ”引用的是你程序目录的相对路径中的头文件。<br><strong>用法不同</strong><br>#include &lt; &gt; 用来包含标准头文件(例如stdio.h或stdlib.h).<br>#include“ ”用来包含非标准头文件。<br><strong>调用文件的顺序不同</strong><br>#include &lt; &gt; 编译程序会先到标准函数库中调用文件。<br>#include“ ”编译程序会先从当前目录中调用文件。<br><strong>预处理程序的指示不同</strong><br>#include &lt; &gt; 指示预处理程序到预定义的缺省路径下寻找文件。<br>#include“ ”指示预处理程序先到当前目录下寻找文件，再到预定义的缺省路径下寻找文件。</p>
-<h3 id="通用gcc编译过程"><a href="#通用gcc编译过程" class="headerlink" title="通用gcc编译过程"></a>通用gcc编译过程</h3><p>预处理 gcc/g++ -E hello.c/.cpp -o hello.i<br>编译 gcc/g++ -S hello.i -o hello.s<br>汇编 gcc/g++ -c hello.s -o hello.o<br>链接 gcc/g++ hello.o -o hello</p>
-<h3 id="leetcode刷题sort函数第三个参数cmp必须声明为static的原因"><a href="#leetcode刷题sort函数第三个参数cmp必须声明为static的原因" class="headerlink" title="leetcode刷题sort函数第三个参数cmp必须声明为static的原因"></a>leetcode刷题sort函数第三个参数cmp必须声明为static的原因</h3><p>可以知道其实我们写参数cmp时，是把函数名作为实参传递给了sort函数，而sort函数内部是用一个函数指针去调用这个cmp函数的</p>
-<p>我们知道class普通类成员函数cmp需要通过对象名.cmp()来调用，而sort()函数早就定义好了，那个时候哪知道你定义的是什么对象，所以内部是直接cmp()的，那你不加static时，去让sort()直接用cmp()当然会报错</p>
-<p>static静态成员函数不用加对象名，就能直接访问函数（这也是静态成员函数的一大优点）所以加了static就不会报错</p>
+    <title>C语言多语句宏的妙用</title>
+    <url>/2021/12/16/C%E8%AF%AD%E8%A8%80%E5%A4%9A%E8%AF%AD%E5%8F%A5%E5%AE%8F%E7%9A%84%E5%A6%99%E7%94%A8/</url>
+    <content><![CDATA[<p>#define do{…}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下：</p>
+<h3 id="1-增加代码的适应性"><a href="#1-增加代码的适应性" class="headerlink" title="1. 增加代码的适应性"></a><strong>1. 增加代码的适应性</strong></h3><p>下面的宏定义没有使用do{…}while(0)</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x) foo(x); bar(x);</span></span><br></pre></td></tr></table></figure>
+
+<p>这样宏定义，单独调用不会出现问题，例如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">FOO(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+<p>宏扩展后变成：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">foo(x);bar(x);</span><br></pre></td></tr></table></figure>
+
+<p>这样调用FOO没有任何问题，但是FOO（x）不能放入控制语句中，例如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) FOO(x); </span><br><span class="line"><span class="keyword">else</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>经过宏扩展后，变成了</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) </span><br><span class="line">    foo(x);</span><br><span class="line">    bar(x);</span><br><span class="line"><span class="keyword">else</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>这样就导致了<strong>语法错误</strong>，语法错误并不可怕，在编译阶段就能发现，更致命的是他有可能导致<strong>逻辑错误，</strong>例如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">    FOO(x);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码经过扩展后变成：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">    foo(x); bar(x);</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，无论condition是true还是false，bar(x)都会被调用。</p>
+<p>这时候do{…}while(0)的价值就体现出来了，修改一下FOO的定义</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x) do &#123;</span></span><br><span class="line">        foo(x); </span><br><span class="line">        bar(x); </span><br><span class="line">    &#125; <span class="keyword">while</span> (<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样FOO,放入控制语句中就没有问题了。</p>
+<p>也许有人说：把foo(x);bar(x)用大括号括起来不就行了吗？比如这样定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x)&#123;</span></span><br><span class="line">                foo(x); </span><br><span class="line">                bar(x); </span><br><span class="line">              &#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看下面代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) </span><br><span class="line">    FOO(x); </span><br><span class="line"><span class="keyword">else</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>扩展后：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">&#123;</span><br><span class="line">    foo(x);</span><br><span class="line">    bar(x);</span><br><span class="line">&#125; ; <span class="comment">//注意最后这个分号，语法错误 else ...;</span></span><br></pre></td></tr></table></figure>
+
+<p>照样语法错误；</p>
+<h3 id="2-增加代码的扩展性"><a href="#2-增加代码的扩展性" class="headerlink" title="2.增加代码的扩展性"></a><strong>2.增加代码的扩展性</strong></h3><p>我理解的扩展性，主要是宏定义中还可以引用其他宏，比如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x) do&#123;</span></span><br><span class="line">    OTHER_FOO(x)</span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样我们不用管OTHER_FOO是但语句还是符合语句，都不会出现问题</p>
+<h3 id="3-增加代码的灵活性"><a href="#3-增加代码的灵活性" class="headerlink" title="3.增加代码的灵活性"></a><strong>3.增加代码的灵活性</strong></h3><p> 灵活性主要体现在，我们可以从宏中break出来，例如下面的定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x)  do&#123; \</span></span><br><span class="line"><span class="meta">    foo(x);  \</span></span><br><span class="line"><span class="meta">    <span class="meta-keyword">if</span>(condition(x)) \</span></span><br><span class="line"><span class="meta">        break; \</span></span><br><span class="line"><span class="meta">    bar(x) \</span></span><br><span class="line"><span class="meta">    ..... \&#125; while(0)</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>C</tag>
@@ -32,6 +70,31 @@
 ]]></content>
       <tags>
         <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言面试基础</title>
+    <url>/2021/12/16/C%E8%AF%AD%E8%A8%80%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h3 id="include两种声明区别"><a href="#include两种声明区别" class="headerlink" title="#include两种声明区别"></a><strong>#include两种声明区别</strong></h3><p><strong>引用的头文件不同</strong><br>#include &lt; &gt; 引用的是编译器的类库路径里面的头文件。<br>#include“ ”引用的是你程序目录的相对路径中的头文件。<br><strong>用法不同</strong><br>#include &lt; &gt; 用来包含标准头文件(例如stdio.h或stdlib.h).<br>#include“ ”用来包含非标准头文件。<br><strong>调用文件的顺序不同</strong><br>#include &lt; &gt; 编译程序会先到标准函数库中调用文件。<br>#include“ ”编译程序会先从当前目录中调用文件。<br><strong>预处理程序的指示不同</strong><br>#include &lt; &gt; 指示预处理程序到预定义的缺省路径下寻找文件。<br>#include“ ”指示预处理程序先到当前目录下寻找文件，再到预定义的缺省路径下寻找文件。</p>
+<h3 id="通用gcc编译过程"><a href="#通用gcc编译过程" class="headerlink" title="通用gcc编译过程"></a>通用gcc编译过程</h3><p>预处理 gcc/g++ -E hello.c/.cpp -o hello.i<br>编译 gcc/g++ -S hello.i -o hello.s<br>汇编 gcc/g++ -c hello.s -o hello.o<br>链接 gcc/g++ hello.o -o hello</p>
+<h3 id="leetcode刷题sort函数第三个参数cmp必须声明为static的原因"><a href="#leetcode刷题sort函数第三个参数cmp必须声明为static的原因" class="headerlink" title="leetcode刷题sort函数第三个参数cmp必须声明为static的原因"></a>leetcode刷题sort函数第三个参数cmp必须声明为static的原因</h3><p>可以知道其实我们写参数cmp时，是把函数名作为实参传递给了sort函数，而sort函数内部是用一个函数指针去调用这个cmp函数的</p>
+<p>我们知道class普通类成员函数cmp需要通过对象名.cmp()来调用，而sort()函数早就定义好了，那个时候哪知道你定义的是什么对象，所以内部是直接cmp()的，那你不加static时，去让sort()直接用cmp()当然会报错</p>
+<p>static静态成员函数不用加对象名，就能直接访问函数（这也是静态成员函数的一大优点）所以加了static就不会报错</p>
+]]></content>
+      <tags>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Makefile通用模版</title>
+    <url>/2021/12/03/Makefile%E9%80%9A%E7%94%A8%E6%A8%A1%E7%89%88/</url>
+    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 编译一个或者多个.c（.cc）</span></span><br><span class="line"><span class="comment">#                            </span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CROSS_COMPILE := </span><br><span class="line"><span class="comment">#arm-linux-gnueabihf-</span></span><br><span class="line">CC = <span class="variable">$(CROSS_COMPILE)</span>gcc</span><br><span class="line">CPP = <span class="variable">$(CROSS_COMPILE)</span>g++</span><br><span class="line">LD = <span class="variable">$(CROSS_COMPILE)</span>ld</span><br><span class="line">AR = <span class="variable">$(CROSS_COMPILE)</span>ar</span><br><span class="line">RANLIB  = <span class="variable">$(CROSS_COMPILE)</span>ranlib</span><br><span class="line">STRIP   = <span class="variable">$(CROSS_COMPILE)</span>strip</span><br><span class="line"></span><br><span class="line"><span class="comment">##include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span>/librtmp</span><br><span class="line"></span><br><span class="line"><span class="comment">##lib</span></span><br><span class="line">LDFLAGS        += -L ./lib/ -lrtmp</span><br><span class="line">LDFLAGS        += -lm -lpthread -lz</span><br><span class="line"></span><br><span class="line">CFLAGS        += -Wall -O2 -Os</span><br><span class="line"></span><br><span class="line">SRC         += ./*.cc</span><br><span class="line">OBJ         = <span class="variable">$(<span class="built_in">patsubst</span> %.cc, %.o, $(<span class="built_in">wildcard</span> <span class="variable">$(SRC)</span>)</span>)</span><br><span class="line"><span class="comment">#SRC          = $(wildcard *.cc) </span></span><br><span class="line"><span class="comment">#OBJ          = $(SRC:%.cc=%.o)</span></span><br><span class="line"></span><br><span class="line">TARGET         = ./bin/rtmp_test</span><br><span class="line"></span><br><span class="line"><span class="comment">##make </span></span><br><span class="line"><span class="section">all: <span class="variable">$(TARGET)</span></span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJ)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> <span class="variable">$(CFLAGS)</span> -o <span class="variable">$(TARGET)</span> <span class="variable">$(OBJ)</span> <span class="variable">$(LDFLAGS)</span>    </span><br><span class="line">    @rm ./*.o</span><br><span class="line">    </span><br><span class="line"><span class="variable">$(OBJ)</span>:%.o:%.cc</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$(INCFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># c.cpp混合编译的makefile模板</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">BIN = foyerserver.exe</span><br><span class="line">CC = gcc</span><br><span class="line">CPP = g++</span><br><span class="line"><span class="comment">#这里只加入库头文件路径及库路径</span></span><br><span class="line">INCS = </span><br><span class="line">LIBS = </span><br><span class="line">SUBDIRS =</span><br><span class="line"><span class="comment">#生成依赖信息时的搜索目录，比如到下列目录中搜索一个依赖文件(比如.h文件)</span></span><br><span class="line">DEFINC = -I<span class="string">&quot;./../../base/&quot;</span> -I<span class="string">&quot;./../common&quot;</span> -I<span class="string">&quot;./../../lib/lxnet/&quot;</span> -I<span class="string">&quot;./../../lib/tinyxml/src/&quot;</span></span><br><span class="line"><span class="comment">#给INCS加上依赖搜索路径，分开写可能会产生不一致情况，而且繁琐</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#maintest.c tree/rbtree.c  多了子目录，那就直接添加 目录/*.c即可   所有的源文件--  .c文件列表</span></span><br><span class="line">CSRCS = <span class="variable">$(<span class="built_in">wildcard</span>  ./*.c ./../../base/log.c ./../../base/corsslib.c ./../../base/idmgr.c ./../../base/pool.c)</span></span><br><span class="line">CPPSRCS = <span class="variable">$(<span class="built_in">wildcard</span> ./*.cpp ./../common/backcommand.cpp ./../common/connector.cpp)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#所有的.o文件列表</span></span><br><span class="line">COBJS := $(CSRCS:.c=.o)</span><br><span class="line">CPPOBJS := $(CPPSRCS:.cpp=.o)</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#生成依赖信息 -MM是只生成自己的头文件信息，-M 包含了标准库头文件信息。</span></span><br><span class="line"><span class="comment">#-MT 或 -MQ都可以改变生成的依赖  xxx.o:src/xxx.h 为 src/xxx.o:src/xxx.h 当然。前面的 src/xxx.o需自己指定</span></span><br><span class="line"><span class="comment">#格式为 -MM 输入.c或.cpp  查找依赖路径  -MT或-MQ  生成规则，比如src/xxx.o </span></span><br><span class="line">MAKEDEPEND = gcc -MM -MT</span><br><span class="line">CFLAGS =</span><br><span class="line"><span class="comment">#CFLAGS += -Wall -ansi -DWIN32 -DNDEBUG -O2</span></span><br><span class="line">CPPFLAGS =</span><br><span class="line"><span class="comment">#CPPFLAGS += -Wall -DWIN32 -DNDEBUG -O2</span></span><br><span class="line"><span class="comment">#-g 生成调试信息</span></span><br><span class="line"><span class="comment">#-pedantic参数与-ansi一起使用 会自动拒绝编译非ANSI程序</span></span><br><span class="line"><span class="comment">#-fomit-frame-pointer 去除函数框架</span></span><br><span class="line"><span class="comment">#-Wmissing-prototypes -Wstrict-prototypes 检查函数原型</span></span><br><span class="line"><span class="comment">#针对每个.c文件的.d依赖文件列表</span></span><br><span class="line">CDEF = $(CSRCS:.c=.d)</span><br><span class="line">CPPDEF = $(CPPSRCS:.cpp=.d)</span><br><span class="line">PLATS = win32-debug win32-release linux-debug linux-release</span><br><span class="line"><span class="section">none:</span></span><br><span class="line">    @echo <span class="string">&quot;Please choose a platform:&quot;</span></span><br><span class="line">    @echo <span class="string">&quot; <span class="variable">$(PLATS)</span>&quot;</span></span><br><span class="line"><span class="section">win32-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">win32-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">linux-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">linux-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">all:<span class="variable">$(BIN)</span></span></span><br><span class="line"><span class="comment">#生成.o的对自己目录中.h .c的依赖信息.d文件到.c所在的路径中</span></span><br><span class="line"><span class="comment">#$(DEF)文件是.d文件名列表(含目录)，比如tree.d 匹配成功那么%就是tree，然后在尝试%.c，如果成功。则执行规则</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)是获取此.c文件的名字(含路径)，然后变为.o比如 src/xxx.o。 以形成如下</span></span><br><span class="line"><span class="comment"># src/xxx.o : src/xxx.c ***.h  ***.h  最前面！！注意。  </span></span><br><span class="line"><span class="comment"># 此做法是每个.d都和生成他的.c在一个目录里，所以需要这样做。</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)之类的 。此时的&lt;相当于变量$&lt; 。切记</span></span><br><span class="line"><span class="comment"># : : :  含义同下</span></span><br><span class="line"><span class="variable">$(CDEF)</span> : %.d : %.c</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.c=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="variable">$(CPPDEF)</span> : %.d : %.cpp</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.cpp=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="comment">#先删除依赖信息</span></span><br><span class="line"><span class="comment">#重新生成依赖信息</span></span><br><span class="line"><span class="comment">#这里出现了一个 $(MAKE) 没有定义的变量。这个变量是由 Make 自己定义的，它的值即为自己的位置，方便 Make 递归调用自己。</span></span><br><span class="line"><span class="section">depend:</span></span><br><span class="line">    -rm <span class="variable">$(CDEF)</span></span><br><span class="line">    -rm <span class="variable">$(CPPDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CPPDEF)</span></span><br><span class="line"><span class="comment">#$(OBJS):%.o :%.c  先用$(OBJS)中的一项，比如foo.o: %.o : %.c  含义为:试着用%.o匹配foo.o。如果成功%就等于foo。如果不成功，</span></span><br><span class="line"><span class="comment"># Make就会警告，然后。给foo.o添加依赖文件foo.c(用foo替换了%.c里的%)</span></span><br><span class="line"><span class="comment"># 也可以不要下面的这个生成规则，因为下面的 include $(DEF)  就隐含了。此处为了明了，易懂。故留着</span></span><br><span class="line"><span class="variable">$(COBJS)</span> : %.o: %.c</span><br><span class="line">    <span class="variable">$(CC)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CFLAGS)</span></span><br><span class="line"><span class="variable">$(CPPOBJS)</span> : %.o: %.cpp</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CPPFLAGS)</span></span><br><span class="line"><span class="comment"># $@--目标文件，$^--所有的依赖文件，$&lt;--第一个依赖文件。每次$&lt; $@ 代表的值就是列表中的</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="variable">$(BIN)</span> : <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> -o <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span> <span class="variable">$(LIBS)</span></span><br><span class="line">    -rm <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment"># 链接为最终目标</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#引入了.o文件对.c和.h的依赖情况。以后.h被修改也会重新生成，可看看.d文件内容即知道为何</span></span><br><span class="line"><span class="comment">#引入了依赖就相当于引入了一系列的规则，因为依赖内容例如： 目录/xxx.o:目录/xxx.c 目录/xxx.h 也相当于隐含的引入了生成规则</span></span><br><span class="line"><span class="comment">#故上面不能在出现如： $(OBJS) : $(DEF)之类。切记</span></span><br><span class="line"><span class="comment">#include $(CDEF) $(CPPDEF)</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>:clean cleanall</span></span><br><span class="line"><span class="comment">#清除所有目标文件以及生成的最终目标文件</span></span><br><span class="line"><span class="section">clean:            </span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment">#rm *.d</span></span><br><span class="line"><span class="section">cleanall:</span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Makefile</tag>
       </tags>
   </entry>
   <entry>
@@ -131,18 +194,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Makefile通用模版</title>
-    <url>/2021/12/03/Makefile%E9%80%9A%E7%94%A8%E6%A8%A1%E7%89%88/</url>
-    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 编译一个或者多个.c（.cc）</span></span><br><span class="line"><span class="comment">#                            </span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CROSS_COMPILE := </span><br><span class="line"><span class="comment">#arm-linux-gnueabihf-</span></span><br><span class="line">CC = <span class="variable">$(CROSS_COMPILE)</span>gcc</span><br><span class="line">CPP = <span class="variable">$(CROSS_COMPILE)</span>g++</span><br><span class="line">LD = <span class="variable">$(CROSS_COMPILE)</span>ld</span><br><span class="line">AR = <span class="variable">$(CROSS_COMPILE)</span>ar</span><br><span class="line">RANLIB  = <span class="variable">$(CROSS_COMPILE)</span>ranlib</span><br><span class="line">STRIP   = <span class="variable">$(CROSS_COMPILE)</span>strip</span><br><span class="line"></span><br><span class="line"><span class="comment">##include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span>/librtmp</span><br><span class="line"></span><br><span class="line"><span class="comment">##lib</span></span><br><span class="line">LDFLAGS        += -L ./lib/ -lrtmp</span><br><span class="line">LDFLAGS        += -lm -lpthread -lz</span><br><span class="line"></span><br><span class="line">CFLAGS        += -Wall -O2 -Os</span><br><span class="line"></span><br><span class="line">SRC         += ./*.cc</span><br><span class="line">OBJ         = <span class="variable">$(<span class="built_in">patsubst</span> %.cc, %.o, $(<span class="built_in">wildcard</span> <span class="variable">$(SRC)</span>)</span>)</span><br><span class="line"><span class="comment">#SRC          = $(wildcard *.cc) </span></span><br><span class="line"><span class="comment">#OBJ          = $(SRC:%.cc=%.o)</span></span><br><span class="line"></span><br><span class="line">TARGET         = ./bin/rtmp_test</span><br><span class="line"></span><br><span class="line"><span class="comment">##make </span></span><br><span class="line"><span class="section">all: <span class="variable">$(TARGET)</span></span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJ)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> <span class="variable">$(CFLAGS)</span> -o <span class="variable">$(TARGET)</span> <span class="variable">$(OBJ)</span> <span class="variable">$(LDFLAGS)</span>    </span><br><span class="line">    @rm ./*.o</span><br><span class="line">    </span><br><span class="line"><span class="variable">$(OBJ)</span>:%.o:%.cc</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$(INCFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># c.cpp混合编译的makefile模板</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">BIN = foyerserver.exe</span><br><span class="line">CC = gcc</span><br><span class="line">CPP = g++</span><br><span class="line"><span class="comment">#这里只加入库头文件路径及库路径</span></span><br><span class="line">INCS = </span><br><span class="line">LIBS = </span><br><span class="line">SUBDIRS =</span><br><span class="line"><span class="comment">#生成依赖信息时的搜索目录，比如到下列目录中搜索一个依赖文件(比如.h文件)</span></span><br><span class="line">DEFINC = -I<span class="string">&quot;./../../base/&quot;</span> -I<span class="string">&quot;./../common&quot;</span> -I<span class="string">&quot;./../../lib/lxnet/&quot;</span> -I<span class="string">&quot;./../../lib/tinyxml/src/&quot;</span></span><br><span class="line"><span class="comment">#给INCS加上依赖搜索路径，分开写可能会产生不一致情况，而且繁琐</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#maintest.c tree/rbtree.c  多了子目录，那就直接添加 目录/*.c即可   所有的源文件--  .c文件列表</span></span><br><span class="line">CSRCS = <span class="variable">$(<span class="built_in">wildcard</span>  ./*.c ./../../base/log.c ./../../base/corsslib.c ./../../base/idmgr.c ./../../base/pool.c)</span></span><br><span class="line">CPPSRCS = <span class="variable">$(<span class="built_in">wildcard</span> ./*.cpp ./../common/backcommand.cpp ./../common/connector.cpp)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#所有的.o文件列表</span></span><br><span class="line">COBJS := $(CSRCS:.c=.o)</span><br><span class="line">CPPOBJS := $(CPPSRCS:.cpp=.o)</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#生成依赖信息 -MM是只生成自己的头文件信息，-M 包含了标准库头文件信息。</span></span><br><span class="line"><span class="comment">#-MT 或 -MQ都可以改变生成的依赖  xxx.o:src/xxx.h 为 src/xxx.o:src/xxx.h 当然。前面的 src/xxx.o需自己指定</span></span><br><span class="line"><span class="comment">#格式为 -MM 输入.c或.cpp  查找依赖路径  -MT或-MQ  生成规则，比如src/xxx.o </span></span><br><span class="line">MAKEDEPEND = gcc -MM -MT</span><br><span class="line">CFLAGS =</span><br><span class="line"><span class="comment">#CFLAGS += -Wall -ansi -DWIN32 -DNDEBUG -O2</span></span><br><span class="line">CPPFLAGS =</span><br><span class="line"><span class="comment">#CPPFLAGS += -Wall -DWIN32 -DNDEBUG -O2</span></span><br><span class="line"><span class="comment">#-g 生成调试信息</span></span><br><span class="line"><span class="comment">#-pedantic参数与-ansi一起使用 会自动拒绝编译非ANSI程序</span></span><br><span class="line"><span class="comment">#-fomit-frame-pointer 去除函数框架</span></span><br><span class="line"><span class="comment">#-Wmissing-prototypes -Wstrict-prototypes 检查函数原型</span></span><br><span class="line"><span class="comment">#针对每个.c文件的.d依赖文件列表</span></span><br><span class="line">CDEF = $(CSRCS:.c=.d)</span><br><span class="line">CPPDEF = $(CPPSRCS:.cpp=.d)</span><br><span class="line">PLATS = win32-debug win32-release linux-debug linux-release</span><br><span class="line"><span class="section">none:</span></span><br><span class="line">    @echo <span class="string">&quot;Please choose a platform:&quot;</span></span><br><span class="line">    @echo <span class="string">&quot; <span class="variable">$(PLATS)</span>&quot;</span></span><br><span class="line"><span class="section">win32-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">win32-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">linux-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">linux-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">all:<span class="variable">$(BIN)</span></span></span><br><span class="line"><span class="comment">#生成.o的对自己目录中.h .c的依赖信息.d文件到.c所在的路径中</span></span><br><span class="line"><span class="comment">#$(DEF)文件是.d文件名列表(含目录)，比如tree.d 匹配成功那么%就是tree，然后在尝试%.c，如果成功。则执行规则</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)是获取此.c文件的名字(含路径)，然后变为.o比如 src/xxx.o。 以形成如下</span></span><br><span class="line"><span class="comment"># src/xxx.o : src/xxx.c ***.h  ***.h  最前面！！注意。  </span></span><br><span class="line"><span class="comment"># 此做法是每个.d都和生成他的.c在一个目录里，所以需要这样做。</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)之类的 。此时的&lt;相当于变量$&lt; 。切记</span></span><br><span class="line"><span class="comment"># : : :  含义同下</span></span><br><span class="line"><span class="variable">$(CDEF)</span> : %.d : %.c</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.c=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="variable">$(CPPDEF)</span> : %.d : %.cpp</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.cpp=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="comment">#先删除依赖信息</span></span><br><span class="line"><span class="comment">#重新生成依赖信息</span></span><br><span class="line"><span class="comment">#这里出现了一个 $(MAKE) 没有定义的变量。这个变量是由 Make 自己定义的，它的值即为自己的位置，方便 Make 递归调用自己。</span></span><br><span class="line"><span class="section">depend:</span></span><br><span class="line">    -rm <span class="variable">$(CDEF)</span></span><br><span class="line">    -rm <span class="variable">$(CPPDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CPPDEF)</span></span><br><span class="line"><span class="comment">#$(OBJS):%.o :%.c  先用$(OBJS)中的一项，比如foo.o: %.o : %.c  含义为:试着用%.o匹配foo.o。如果成功%就等于foo。如果不成功，</span></span><br><span class="line"><span class="comment"># Make就会警告，然后。给foo.o添加依赖文件foo.c(用foo替换了%.c里的%)</span></span><br><span class="line"><span class="comment"># 也可以不要下面的这个生成规则，因为下面的 include $(DEF)  就隐含了。此处为了明了，易懂。故留着</span></span><br><span class="line"><span class="variable">$(COBJS)</span> : %.o: %.c</span><br><span class="line">    <span class="variable">$(CC)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CFLAGS)</span></span><br><span class="line"><span class="variable">$(CPPOBJS)</span> : %.o: %.cpp</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CPPFLAGS)</span></span><br><span class="line"><span class="comment"># $@--目标文件，$^--所有的依赖文件，$&lt;--第一个依赖文件。每次$&lt; $@ 代表的值就是列表中的</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="variable">$(BIN)</span> : <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> -o <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span> <span class="variable">$(LIBS)</span></span><br><span class="line">    -rm <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment"># 链接为最终目标</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#引入了.o文件对.c和.h的依赖情况。以后.h被修改也会重新生成，可看看.d文件内容即知道为何</span></span><br><span class="line"><span class="comment">#引入了依赖就相当于引入了一系列的规则，因为依赖内容例如： 目录/xxx.o:目录/xxx.c 目录/xxx.h 也相当于隐含的引入了生成规则</span></span><br><span class="line"><span class="comment">#故上面不能在出现如： $(OBJS) : $(DEF)之类。切记</span></span><br><span class="line"><span class="comment">#include $(CDEF) $(CPPDEF)</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>:clean cleanall</span></span><br><span class="line"><span class="comment">#清除所有目标文件以及生成的最终目标文件</span></span><br><span class="line"><span class="section">clean:            </span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment">#rm *.d</span></span><br><span class="line"><span class="section">cleanall:</span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>Makefile</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Makefile面试</title>
     <url>/2021/12/01/Makefile%E9%9D%A2%E8%AF%95/</url>
     <content><![CDATA[<p><em><strong>介绍一下make? 为什么使用make</strong></em></p>
@@ -196,6 +247,174 @@
       </tags>
   </entry>
   <entry>
+    <title>c编译器预定义宏</title>
+    <url>/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/</url>
+    <content><![CDATA[<p>为了方便处理一些有用的信息，预处理器定义了一些预处理标识符，也就是预定义宏。预定义宏的名称都是以&ldquo;__&rdquo;（两条下划线）开头和结尾的，如果宏名是由两个单词组成，那么中间以&ldquo;_&rdquo;（一条下划线）进行连接。并且，宏名称一般都由大写字符组成。<br />在日常项目编程中，预定义宏尤其对多目标平台代码的编写通常具有重大意义。通过预定义宏，程序员使用&ldquo;#ifdef&rdquo;与&ldquo;#endif&rdquo;等预处理指令，就可使平台相关代码只在适合于当前平台的代码上编译，从而在同一套代码中完成对多平台的支持。从这个意义上讲，平台信息相关的宏越丰富，代码的多平台支持越准确。<br />标准 C 语言提供的一些标准预定义宏如表 1 所示。</p>
+<table><caption>表 1 常用的标准预定义宏</caption>
+<tbody>
+<tr>
+<th>宏</th>
+<th>描&nbsp;述</th>
+</tr>
+<tr>
+<td>__DATE__</td>
+<td>丐前源文件的编泽口期，用&nbsp;&ldquo;Mmm dd yyy&rdquo;形式的字符串常量表示</td>
+</tr>
+<tr>
+<td>__FILE__</td>
+<td>当前源文件的名称，用字符串常量表示</td>
+</tr>
+<tr>
+<td>__LINE__</td>
+<td>当前源义件中的行号，用十进制整数常量表示，它可以随#line指令改变</td>
+</tr>
+<tr>
+<td>__TIME__</td>
+<td>当前源文件的最新编译吋间，用&ldquo;hh:mm:ss&rdquo;形式的宁符串常量表示</td>
+</tr>
+<tr>
+<td>__STDC__</td>
+<td>如果今前编泽器符合ISO标准，那么该宏的值为1，否则未定义</td>
+</tr>
+<tr>
+<td>__STDC_VERSION__</td>
+<td>如果当前编译器符合C89，那么它被定义为199409L;如果符合C99，那么它被定义为199901L:在其他情况下，该宏为宋定义</td>
+</tr>
+<tr>
+<td>__STDC_HOSTED__</td>
+<td>(C99)如果当前是宿主系统，则该宏的值为1;如果当前是独立系统，则该宏的值为0</td>
+</tr>
+<tr>
+<td>__STDC_IEC_559_</td>
+<td>(C99)如果浮点数的实现符合IEC 60559标准时，则该宏的值为1，否则为未定义</td>
+</tr>
+<tr>
+<td>__STDC_IEC_559_COMPLEX__</td>
+<td>(C99)如果复数运算实现符合IEC60559标准时，则该宏的伉为1,否则为未定义</td>
+</tr>
+<tr>
+<td>__STDC_ISO_10646__</td>
+<td>(C99 )定义为长整型常量，yyyymmL表示wchai_t值遵循ISO 10646标准及其指定年月的修订补充，否则该宏为未定义</td>
+</tr>
+</tbody>
+</table>
+<p>除标准 C 语言提供的标准宏之外，各种编译器也都提供了自己的自定义预定义宏。可以通过表 2 所示的指令来查看不同编译器对预定义宏的支持情况。</p>
+<table><caption>表 2 不同编译器的预定义宏查看指令</caption>
+<tbody>
+<tr>
+<th>编译器</th>
+<th>宏指令（c)</th>
+<th>宏指令（<a href="http://c.biancheng.net/cplus/" target="_blank" rel="noopener">C++</a>)</th>
+</tr>
+<tr>
+<td>Clang/LLVM</td>
+<td>clang -dM -E -x c /dev/null</td>
+<td>clang++ -dM -E -x C++ /dev/null</td>
+</tr>
+<tr>
+<td>GNU&nbsp;<a href="http://c.biancheng.net/gcc/" target="_blank" rel="noopener">GCC</a>/G++</td>
+<td>gcc -dM -E -x c /dev/null</td>
+<td>g++ -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
+</tr>
+<tr>
+<td>Hewlett-Packard C/aC++</td>
+<td>cc -dM -E -x c /clev/null</td>
+<td>aCC -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
+</tr>
+<tr>
+<td>IBM XL C/C++</td>
+<td>xlc -qshowmacros -E /dev/null</td>
+<td>xlc++ -qshowmacros -E /dev/null</td>
+</tr>
+<tr>
+<td>Intel ICC7ICPC</td>
+<td>icc -dM -E -x c /dev/null</td>
+<td>icpc -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
+</tr>
+<tr>
+<td>Oracle Solaris Studio</td>
+<td>cc -xduinpmacros -E /dev/null</td>
+<td>CC -xduinpmacros -E /clev/null</td>
+</tr>
+<tr>
+<td>Portland Group PGCC/PGCPP</td>
+<td>pgcc -dM -E</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>对于这些预定义宏的应用，基本上随处可见，下面举例介绍。<br />利用&ldquo;__DATE__&rdquo;和&ldquo;__TIME__&rdquo;宏可以用来确定程序编译的时间。如下面的示例代码所示：</p>
+<div class="snippet-container">
+<div class="sh_bright snippet-wrap">
+<pre class="language-c"><code>int main (void)
+&#123;
+  printf("Copyright (c) Powered by www.develhome.com\n");
+  printf("Compiled on %s at %s\n", __DATE__,__TIME__);
+  return 0;
+&#125;</code></pre>
+</div>
+</div>
+<p>利用&ldquo;__STDC__&rdquo;与&ldquo;__STDC_VERSION__&rdquo;宏可以编写那些需要兼容标准 C 和非标准 C 编译器的程序，如下面的示例代码所示：</p>
+<div class="snippet-container">
+<div class="sh_bright snippet-wrap">
+<pre class="language-c"><code>#ifdef __STDC__
+/* Some version of standard C */
+#if defined(__STDC__VERSION__)&amp;&amp;__STDC_VERSION__&gt;=199901L
+/* C99 */
+#elif defined(__STDC_VERSION__)&amp;&amp;__STDC_VERSION__&gt;=199409L
+/* C89 and amendment 1 */
+#else
+/* C89 but not amendment 1*/
+#endif
+#else /* __STDC__not defined */
+/*Not Standard C*/
+#endif</code></pre>
+</div>
+</div>
+<p>利用__FILE__、__LINE__与__FUNCTION__（或者__func__）预定义宏的组合，在调试程序的时候可以很简单地在程序运行期进行异常跟踪。如下面的示例代码所示：</p>
+<div class="snippet-container">
+<div class="sh_bright snippet-wrap">
+<pre class="language-c"><code>#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#define MESSAGE(message,assertion) \
+do&#123;\
+  if(!(assertion))&#123;\
+    printf("line %d in %s(%s)", __LINE__, __FILE__,__FUNCTION__);\
+    if(message)&#123;\
+      printf(":%s",message);\
+    &#125;\
+    printf("\n");\
+    abort();\
+  &#125;\
+&#125;while(0)
+int OpenFile(const char *filename)
+&#123;
+  int fd;
+  MESSAGE("文件名称不能够为空",filename);
+  MESSAGE("文件不存在",0==access(filename,F_OK));
+  fd = open(filename,O_RDONLY);
+  close(fd);
+  return 0;
+&#125;
+int main(int argc,char **argv)
+&#123;
+  MESSAGE("命令参数不能够为空",argc==2);
+  OpenFile(argv[1]);
+  return 0;
+&#125;</code></pre>
+</div>
+</div>
+<p>最后还需要注意的是，如果用户重定义&ldquo;#define&ldquo;或取消了&ldquo;#undef&rdquo;预定义宏，那么其结果是&ldquo;未定义&rdquo;的。因此，在代码编写中，应该尽量避免自定义宏与预定义宏名称相同的情况发生。</p>
+]]></content>
+      <tags>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vim常用命令</title>
     <url>/2021/12/02/Vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<p>vim 中有三种工作模式，分别是命令模式，输入模式，末行模式</p>
@@ -217,6 +436,24 @@
 ]]></content>
       <tags>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git同时拉取更新所有远程分支</title>
+    <url>/2021/12/03/git%E5%90%8C%E6%97%B6%E6%8B%89%E5%8F%96%E6%9B%B4%E6%96%B0%E6%89%80%E6%9C%89%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin master/git pull</span><br></pre></td></tr></table></figure>
+
+<p>只能更新当前所在分支</p>
+<p>想要一次性更新仓库所有分支，可以</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull --all</span><br></pre></td></tr></table></figure>
+
+<p>千万和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull -a</span><br></pre></td></tr></table></figure>
+
+<p>区分开</p>
+]]></content>
+      <tags>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -254,21 +491,19 @@
       </tags>
   </entry>
   <entry>
-    <title>git同时拉取更新所有远程分支</title>
-    <url>/2021/12/03/git%E5%90%8C%E6%97%B6%E6%8B%89%E5%8F%96%E6%9B%B4%E6%96%B0%E6%89%80%E6%9C%89%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</url>
-    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin master/git pull</span><br></pre></td></tr></table></figure>
+    <title>nor flash启动与nand flash启动的区别</title>
+    <url>/2021/12/01/nor-flash%E5%90%AF%E5%8A%A8%E4%B8%8Enand-flash%E5%90%AF%E5%8A%A8%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h3 id="接口区别"><a href="#接口区别" class="headerlink" title="接口区别"></a>接口区别</h3><p>NOR FLASH地址线和数据线分开，来了地址和控制信号，数据就出来。<br>NAND Flash地址线和数据线在一起，需要用程序来控制，才能出数据。<br>通俗的说，就是光给地址不行，要先命令，再给地址，才能读到NAND的数据。而且都是在一个总线完成的。<br>结论是：ARM无法从NAND直接启动。除非装载完程序，才能使用NAND Flash.</p>
+<h3 id="性能区别"><a href="#性能区别" class="headerlink" title="性能区别"></a>性能区别</h3><p>NOR的传输效率很高，在1～4MB的小容量时具有很高的成本效益，但是很低的写入和擦除速度大大影响了它的性能。 NAND结构能提供极高的单元密度，可以达到高存储密度，并且写入和擦除的速度也很快。应用NAND的困难在于flash的管理和需要特殊的系统接口。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.NOR的读速度比NAND稍快一些。</span><br><span class="line">b.NAND的写入速度比NOR快很多。</span><br><span class="line">c.NAND的<span class="number">4</span>ms擦除速度远比NOR的<span class="number">5</span>s快。</span><br><span class="line">d.大多数写入操作需要先进行擦除操作。</span><br><span class="line">e.NAND的擦除单元更小，相应的擦除电路更少。</span><br></pre></td></tr></table></figure>
 
-<p>只能更新当前所在分支</p>
-<p>想要一次性更新仓库所有分支，可以</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull --all</span><br></pre></td></tr></table></figure>
+<h3 id="s3c2440启动过程详解"><a href="#s3c2440启动过程详解" class="headerlink" title="s3c2440启动过程详解"></a>s3c2440启动过程详解</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.地址空间的分配</span><br><span class="line">b.开发板上一般都用SDRAM做内存，flash（nor、nand）来当做ROM。其中nand flash没有地址线，一次至少要读一页(<span class="number">512B</span>).其他两个有地址线</span><br><span class="line">c.nandflash不用来运行代码，只用来存储代码，NORflash，SDRAM可以直接运行代码）</span><br><span class="line">d.s3c2440总共有<span class="number">8</span>个内存banks</span><br><span class="line">  <span class="number">6</span>个内存bank可以当作ROM或者SRAM来使用</span><br><span class="line">  留下的<span class="number">2</span>个bank除了当作ROM 或者SRAM，还可以用SDRAM(各种内存的读写方式不一样)</span><br><span class="line">  <span class="number">7</span>个bank的起始地址是固定的，还有一个灵活的bank的内存地址，并且bank大小也可以改变</span><br><span class="line">e.s3c2440支持两种启动模式：NAND和非NAND（这里是nor flash）。</span><br><span class="line">  具体采用的方式取决于OM0、OM1两个引脚</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>所决定的启动方式</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">00</span>时，处理器从NAND Flash启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">01</span>时，处理器从<span class="number">16</span>位宽度的ROM启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">10</span>时，处理器从<span class="number">32</span>位宽度的ROM启动。</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">11</span>时，处理器从Test Mode启动。</span><br></pre></td></tr></table></figure>
 
-<p>千万和</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull -a</span><br></pre></td></tr></table></figure>
-
-<p>区分开</p>
+<p><em><strong>当从NAND启动时</strong></em><br>cpu会自动从NAND flash中读取前4KB的数据放置在片内SRAM里（s3c2440是soc），同时把这段片内SRAM映射到nGCS0片选的空间（即0x00000000）。cpu是从0x00000000开始执行，也就是NAND flash里的前4KB内容。因为NAND FLASH连地址线都没有，不能直接把NAND映射到0x00000000，只好使用片内SRAM做一个载体。通过这个载体把nandflash中大代码复制到RAM(一般是SDRAM)中去执行。</p>
+<p><em><strong>当从非NAND flash启动时</strong></em><br>nor flash被映射到0x00000000地址（就是nGCS0，这里就不需要片内SRAM来辅助了，所以片内SRAM的起始地址还是0x40000000）. 然后cpu从0x00000000开始执行（也就是在Norfalsh中执行）。</p>
 ]]></content>
       <tags>
-        <tag>git</tag>
+        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>
@@ -424,19 +659,22 @@
       </tags>
   </entry>
   <entry>
-    <title>nor flash启动与nand flash启动的区别</title>
-    <url>/2021/12/01/nor-flash%E5%90%AF%E5%8A%A8%E4%B8%8Enand-flash%E5%90%AF%E5%8A%A8%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<h3 id="接口区别"><a href="#接口区别" class="headerlink" title="接口区别"></a>接口区别</h3><p>NOR FLASH地址线和数据线分开，来了地址和控制信号，数据就出来。<br>NAND Flash地址线和数据线在一起，需要用程序来控制，才能出数据。<br>通俗的说，就是光给地址不行，要先命令，再给地址，才能读到NAND的数据。而且都是在一个总线完成的。<br>结论是：ARM无法从NAND直接启动。除非装载完程序，才能使用NAND Flash.</p>
-<h3 id="性能区别"><a href="#性能区别" class="headerlink" title="性能区别"></a>性能区别</h3><p>NOR的传输效率很高，在1～4MB的小容量时具有很高的成本效益，但是很低的写入和擦除速度大大影响了它的性能。 NAND结构能提供极高的单元密度，可以达到高存储密度，并且写入和擦除的速度也很快。应用NAND的困难在于flash的管理和需要特殊的系统接口。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.NOR的读速度比NAND稍快一些。</span><br><span class="line">b.NAND的写入速度比NOR快很多。</span><br><span class="line">c.NAND的<span class="number">4</span>ms擦除速度远比NOR的<span class="number">5</span>s快。</span><br><span class="line">d.大多数写入操作需要先进行擦除操作。</span><br><span class="line">e.NAND的擦除单元更小，相应的擦除电路更少。</span><br></pre></td></tr></table></figure>
-
-<h3 id="s3c2440启动过程详解"><a href="#s3c2440启动过程详解" class="headerlink" title="s3c2440启动过程详解"></a>s3c2440启动过程详解</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a.地址空间的分配</span><br><span class="line">b.开发板上一般都用SDRAM做内存，flash（nor、nand）来当做ROM。其中nand flash没有地址线，一次至少要读一页(<span class="number">512B</span>).其他两个有地址线</span><br><span class="line">c.nandflash不用来运行代码，只用来存储代码，NORflash，SDRAM可以直接运行代码）</span><br><span class="line">d.s3c2440总共有<span class="number">8</span>个内存banks</span><br><span class="line">  <span class="number">6</span>个内存bank可以当作ROM或者SRAM来使用</span><br><span class="line">  留下的<span class="number">2</span>个bank除了当作ROM 或者SRAM，还可以用SDRAM(各种内存的读写方式不一样)</span><br><span class="line">  <span class="number">7</span>个bank的起始地址是固定的，还有一个灵活的bank的内存地址，并且bank大小也可以改变</span><br><span class="line">e.s3c2440支持两种启动模式：NAND和非NAND（这里是nor flash）。</span><br><span class="line">  具体采用的方式取决于OM0、OM1两个引脚</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>所决定的启动方式</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">00</span>时，处理器从NAND Flash启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">01</span>时，处理器从<span class="number">16</span>位宽度的ROM启动</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">10</span>时，处理器从<span class="number">32</span>位宽度的ROM启动。</span><br><span class="line">  OM[<span class="number">1</span>:<span class="number">0</span>]=<span class="number">11</span>时，处理器从Test Mode启动。</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>当从NAND启动时</strong></em><br>cpu会自动从NAND flash中读取前4KB的数据放置在片内SRAM里（s3c2440是soc），同时把这段片内SRAM映射到nGCS0片选的空间（即0x00000000）。cpu是从0x00000000开始执行，也就是NAND flash里的前4KB内容。因为NAND FLASH连地址线都没有，不能直接把NAND映射到0x00000000，只好使用片内SRAM做一个载体。通过这个载体把nandflash中大代码复制到RAM(一般是SDRAM)中去执行。</p>
-<p><em><strong>当从非NAND flash启动时</strong></em><br>nor flash被映射到0x00000000地址（就是nGCS0，这里就不需要片内SRAM来辅助了，所以片内SRAM的起始地址还是0x40000000）. 然后cpu从0x00000000开始执行（也就是在Norfalsh中执行）。</p>
+    <title>static作用</title>
+    <url>/2021/12/16/static%E4%BD%9C%E7%94%A8/</url>
+    <content><![CDATA[<p>static修饰的函数叫做静态函数，静态函数有两种，根据其出现的地方来分类：</p>
+<p>如果这个静态函数出现在类里，那么它是一个静态成员函数；</p>
+<p>静态成员函数的作用在于：调用这个函数不会访问或者修改任何对象（非static）数据成员。</p>
+<p>其实很好理解，类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。</p>
+<p>如果它不是出现在类中，那么它是一个普通的全局的静态函数。</p>
+<p>这样的static函数与普通函数的区别是：用static修饰的函数，限定在本源码文件中，不能被本源码文件以外的代码文件调用。而普通的函数，默认是extern的，也就是说它可以被其它代码文件调用。</p>
+<p>在函数的返回类型前加上关键字static，函数就被定义成为静态函数。普通 函数的定义和声明默认情况下是extern的，但静态函数只是在声明他的文件当中可见，不能被其他文件所用。因此定义静态函数有以下好处：</p>
+<p>（1） 其他文件中可以定义相同名字的函数，不会发生冲突。</p>
+<p>（2） 静态函数不能被其他文件所用。</p>
+<p><strong>关键字static的作用是什么？</strong></p>
+<p>这个简单的问题很少有人能回答完全。在C语言中，关键字static有三个明显的作用：<br>（1） 在函数体，一个被声明为静态的变量在这一函数被调用过程中维持其值不变。<br>（2）在模块内（但在函数体外），一个被声明为静态的变量可以被模块内所用函数访问，但不能被模块外其它函数访问。它是一个本地的全局变量。<br>（3）在模块内，一个被声明为静态的函数只可被这一模块内的其它函数调用。那就是，这个函数被限制在声明它的模块的本地范围内使用。<br>大多数应试者能正确回答第一部分，一部分能正确回答第二部分，同是很少的人能懂得第三部分。这是一个应试者的严重的缺点，因为他显然不懂得本地化数据和代码范围的好处和重要性。</p>
 ]]></content>
       <tags>
-        <tag>嵌入式</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -458,25 +696,6 @@
 ]]></content>
       <tags>
         <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>static作用</title>
-    <url>/2021/12/16/static%E4%BD%9C%E7%94%A8/</url>
-    <content><![CDATA[<p>static修饰的函数叫做静态函数，静态函数有两种，根据其出现的地方来分类：</p>
-<p>如果这个静态函数出现在类里，那么它是一个静态成员函数；</p>
-<p>静态成员函数的作用在于：调用这个函数不会访问或者修改任何对象（非static）数据成员。</p>
-<p>其实很好理解，类的静态成员(变量和方法)属于类本身，在类加载的时候就会分配内存，可以通过类名直接去访问；非静态成员（变量和方法）属于类的对象，所以只有在类的对象产生（创建类的实例）时才会分配内存，然后通过类的对象（实例）去访问。</p>
-<p>如果它不是出现在类中，那么它是一个普通的全局的静态函数。</p>
-<p>这样的static函数与普通函数的区别是：用static修饰的函数，限定在本源码文件中，不能被本源码文件以外的代码文件调用。而普通的函数，默认是extern的，也就是说它可以被其它代码文件调用。</p>
-<p>在函数的返回类型前加上关键字static，函数就被定义成为静态函数。普通 函数的定义和声明默认情况下是extern的，但静态函数只是在声明他的文件当中可见，不能被其他文件所用。因此定义静态函数有以下好处：</p>
-<p>（1） 其他文件中可以定义相同名字的函数，不会发生冲突。</p>
-<p>（2） 静态函数不能被其他文件所用。</p>
-<p><strong>关键字static的作用是什么？</strong></p>
-<p>这个简单的问题很少有人能回答完全。在C语言中，关键字static有三个明显的作用：<br>（1） 在函数体，一个被声明为静态的变量在这一函数被调用过程中维持其值不变。<br>（2）在模块内（但在函数体外），一个被声明为静态的变量可以被模块内所用函数访问，但不能被模块外其它函数访问。它是一个本地的全局变量。<br>（3）在模块内，一个被声明为静态的函数只可被这一模块内的其它函数调用。那就是，这个函数被限制在声明它的模块的本地范围内使用。<br>大多数应试者能正确回答第一部分，一部分能正确回答第二部分，同是很少的人能懂得第三部分。这是一个应试者的严重的缺点，因为他显然不懂得本地化数据和代码范围的好处和重要性。</p>
-]]></content>
-      <tags>
-        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -554,6 +773,53 @@
       <tags>
         <tag>C</tag>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>经典C内存管理疑难杂例</title>
+    <url>/2021/12/16/%E7%BB%8F%E5%85%B8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%96%91%E9%9A%BE%E6%9D%82%E4%BE%8B/</url>
+    <content><![CDATA[<h3 id="一定要弄懂GetMemory"><a href="#一定要弄懂GetMemory" class="headerlink" title="一定要弄懂GetMemory"></a>一定要弄懂GetMemory</h3><h3 id="堆栈"><a href="#堆栈" class="headerlink" title="堆栈"></a><strong>堆栈</strong></h3><p>栈中分配局部变量空间，是系统自动分配空间。定义一个 char a；系统会自动在栈上为其开辟空间。由于栈上的空间是自动分配自动回收的，所以栈上的数据的生存周期只是在函数的运行过程中，运行后就释放掉，不可以再访问。</p>
+<p>堆区分配程序员申请的内存空间，堆上的数据只要程序员不释放空间，就一直可以访问到，不过缺点是一旦忘记释放会造成内存泄露。</p>
+<p>静态区是分配静态变量，全局变量空间的。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">inta = <span class="number">0</span>; 全局初始化区  </span><br><span class="line"><span class="keyword">char</span>*p1; 全局未初始化区  </span><br><span class="line">main()&#123;  </span><br><span class="line">  <span class="keyword">int</span> b;      <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> s[] = <span class="string">&quot;abc&quot;</span>;    <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> *p2;      <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> *p3 = <span class="string">&quot;123456&quot;</span>;   <span class="comment">// 123456\0在常量区，p3在栈上。  </span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> c =<span class="number">0</span>；      <span class="comment">//全局（静态）初始化区  </span></span><br><span class="line">  p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);    <span class="comment">//堆  </span></span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<h3 id="GetMemory1"><a href="#GetMemory1" class="headerlink" title="GetMemory1"></a><strong>GetMemory1</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory1(<span class="keyword">char</span> *p)    </span><br><span class="line">&#123;</span><br><span class="line">  p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">100</span>);    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest1(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  GetMemory1(str);      </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello world&quot;</span>);    </span><br><span class="line">  <span class="built_in">printf</span>(str);  <span class="comment">//str一直是空，程序崩溃     </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果： </p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118195523563-1384916852.png" alt="img"></p>
+<p>分析：</p>
+<p>毛病出在函数GetMemory1 中。<strong>编译器总是要为函数的每个参数制作临时副本</strong>，指针参数p的副本是 _p，编译器使 _p = p。如果函数体内的程序修改了_p的内容，就导致参数p的内容作相应的修改。这就是指针可以用作输出参数的原因。在本例中，_p申请了新的内存，只是把 _p所指的内存地址改变了，但是p丝毫未变。所以函数GetMemory并不能输出任何东西。事实上，每执行一次GetMemory1就会泄露一块内存，因为没有用free释放内存。<strong>Test1中调用GetMemory1时，函数参数为str的副本不是str本身</strong>。</p>
+<h3 id="GetMemory2"><a href="#GetMemory2" class="headerlink" title="GetMemory2"></a><strong>GetMemory2</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory2(<span class="keyword">char</span> **p, <span class="keyword">int</span> num)    </span><br><span class="line">&#123;</span><br><span class="line">  *p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(num);    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest2(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  GetMemory2(&amp;str, <span class="number">100</span>);    </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello&quot;</span>);      </span><br><span class="line">  <span class="built_in">printf</span>(str);        </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+
+<p>结果：输出hello </p>
+<p>分析：动态分配的内存不会自动释放；</p>
+<p>没有测试是否成功分配了内存，应该有if (*p == NULL) { ……} 之类的语句处理内存分配失败的其情况。</p>
+<h3 id="GetMemory3"><a href="#GetMemory3" class="headerlink" title="GetMemory3"></a><strong>GetMemory3</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">GetMemory3</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;      </span><br><span class="line">  <span class="keyword">char</span> p[] = <span class="string">&quot;hello world&quot;</span>;    </span><br><span class="line">  <span class="keyword">return</span> p;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest3(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory3();        </span><br><span class="line">  <span class="built_in">printf</span>(str);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：输出乱码。 </p>
+<p>分析：字符数组p存在于<strong>栈空间，是局部变量，函数返回后，内存空间被释放</strong>，因此输出无效值。字符数组的值是可以修改的，例如p[0] = ‘t‘。</p>
+<h3 id="GetMemory4"><a href="#GetMemory4" class="headerlink" title="GetMemory4"></a><strong>GetMemory4</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>*<span class="title">GetMemory4</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;    </span><br><span class="line">  <span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>;    </span><br><span class="line">  <span class="keyword">return</span> p;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest4(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory4();   </span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt; str &lt;&lt; <span class="built_in">endl</span>;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：输出hello<br>分析：p指向的是字符串常量，字符串常量保存在只读的数据段，是全局区域，但不是像全局变量那样保存在普通数据段（静态存储区）。无法对p所指的内存的内容修改，例如p[0] = ‘y;这样的修改是错误的。</p>
+<h3 id="GetMemory5"><a href="#GetMemory5" class="headerlink" title="GetMemory5"></a><strong>GetMemory5</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>*<span class="title">GetMemory5</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;     </span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest3(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory5();     </span><br><span class="line">  <span class="built_in">printf</span>(str);    </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+
+<p>结果：输出hello</p>
+<p>分析：直接返回常量区。</p>
+<h3 id="GetMemory6"><a href="#GetMemory6" class="headerlink" title="GetMemory6"></a><strong>GetMemory6</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory6(<span class="keyword">void</span>) &#123;  </span><br><span class="line">  <span class="keyword">char</span> *str = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(<span class="number">100</span>);  </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello&quot;</span>);  </span><br><span class="line">  <span class="built_in">free</span>(str);  </span><br><span class="line">  <span class="comment">//str = NULL，加上这句程序才不会有野指针  </span></span><br><span class="line">  <span class="keyword">if</span> (str != <span class="literal">NULL</span>) &#123;  </span><br><span class="line">    <span class="built_in">strcpy</span>(str, <span class="string">&quot;world&quot;</span>);  </span><br><span class="line">    <span class="built_in">printf</span>(str);  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">voidmain()&#123;    </span><br><span class="line">  GetMemory6();  </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>结果：能够输出world，但程序存在问题。</p>
+<p>分析：程序出现了<strong>野指针</strong>。</p>
+<p><strong>野指针</strong>只会出现在像C和C++这种没有自动内存垃圾回收功能的高级语言中, 所以java或c#肯定不会有野指针的概念. <strong>当我们用malloc为一个指针分配一个空间后, 用完这个指针，把它free掉，但是没有让这个指针指向NULL或某一个特定的空间</strong>。如上面程序一样，将str进行free后，只是释放了指针所指的内存，但指针并没有释放掉，此时指针所指的是垃圾内存；这样的话，if语句永为真，if判断无效。delete也存在同样的问题。</p>
+<p><strong>防止产生野指针</strong>：</p>
+<ul>
+<li>指针变量一定要初始化为NULL，因为任何指针变量刚被创建时不会自动成为NULL指针，它的缺省值是随机的。</li>
+<li>当free或delete后，将指针指向NULL。通常判断一个指针是否合法，都是使用if语句测试该指针是否为NULL。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -699,53 +965,6 @@
 ]]></content>
       <tags>
         <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>经典C内存管理疑难杂例</title>
-    <url>/2021/12/16/%E7%BB%8F%E5%85%B8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%96%91%E9%9A%BE%E6%9D%82%E4%BE%8B/</url>
-    <content><![CDATA[<h3 id="一定要弄懂GetMemory"><a href="#一定要弄懂GetMemory" class="headerlink" title="一定要弄懂GetMemory"></a>一定要弄懂GetMemory</h3><h3 id="堆栈"><a href="#堆栈" class="headerlink" title="堆栈"></a><strong>堆栈</strong></h3><p>栈中分配局部变量空间，是系统自动分配空间。定义一个 char a；系统会自动在栈上为其开辟空间。由于栈上的空间是自动分配自动回收的，所以栈上的数据的生存周期只是在函数的运行过程中，运行后就释放掉，不可以再访问。</p>
-<p>堆区分配程序员申请的内存空间，堆上的数据只要程序员不释放空间，就一直可以访问到，不过缺点是一旦忘记释放会造成内存泄露。</p>
-<p>静态区是分配静态变量，全局变量空间的。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">inta = <span class="number">0</span>; 全局初始化区  </span><br><span class="line"><span class="keyword">char</span>*p1; 全局未初始化区  </span><br><span class="line">main()&#123;  </span><br><span class="line">  <span class="keyword">int</span> b;      <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> s[] = <span class="string">&quot;abc&quot;</span>;    <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> *p2;      <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> *p3 = <span class="string">&quot;123456&quot;</span>;   <span class="comment">// 123456\0在常量区，p3在栈上。  </span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> c =<span class="number">0</span>；      <span class="comment">//全局（静态）初始化区  </span></span><br><span class="line">  p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);    <span class="comment">//堆  </span></span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
-
-<h3 id="GetMemory1"><a href="#GetMemory1" class="headerlink" title="GetMemory1"></a><strong>GetMemory1</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory1(<span class="keyword">char</span> *p)    </span><br><span class="line">&#123;</span><br><span class="line">  p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">100</span>);    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest1(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  GetMemory1(str);      </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello world&quot;</span>);    </span><br><span class="line">  <span class="built_in">printf</span>(str);  <span class="comment">//str一直是空，程序崩溃     </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果： </p>
-<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118195523563-1384916852.png" alt="img"></p>
-<p>分析：</p>
-<p>毛病出在函数GetMemory1 中。<strong>编译器总是要为函数的每个参数制作临时副本</strong>，指针参数p的副本是 _p，编译器使 _p = p。如果函数体内的程序修改了_p的内容，就导致参数p的内容作相应的修改。这就是指针可以用作输出参数的原因。在本例中，_p申请了新的内存，只是把 _p所指的内存地址改变了，但是p丝毫未变。所以函数GetMemory并不能输出任何东西。事实上，每执行一次GetMemory1就会泄露一块内存，因为没有用free释放内存。<strong>Test1中调用GetMemory1时，函数参数为str的副本不是str本身</strong>。</p>
-<h3 id="GetMemory2"><a href="#GetMemory2" class="headerlink" title="GetMemory2"></a><strong>GetMemory2</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory2(<span class="keyword">char</span> **p, <span class="keyword">int</span> num)    </span><br><span class="line">&#123;</span><br><span class="line">  *p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(num);    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest2(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  GetMemory2(&amp;str, <span class="number">100</span>);    </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello&quot;</span>);      </span><br><span class="line">  <span class="built_in">printf</span>(str);        </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
-
-
-<p>结果：输出hello </p>
-<p>分析：动态分配的内存不会自动释放；</p>
-<p>没有测试是否成功分配了内存，应该有if (*p == NULL) { ……} 之类的语句处理内存分配失败的其情况。</p>
-<h3 id="GetMemory3"><a href="#GetMemory3" class="headerlink" title="GetMemory3"></a><strong>GetMemory3</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">GetMemory3</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;      </span><br><span class="line">  <span class="keyword">char</span> p[] = <span class="string">&quot;hello world&quot;</span>;    </span><br><span class="line">  <span class="keyword">return</span> p;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest3(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory3();        </span><br><span class="line">  <span class="built_in">printf</span>(str);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：输出乱码。 </p>
-<p>分析：字符数组p存在于<strong>栈空间，是局部变量，函数返回后，内存空间被释放</strong>，因此输出无效值。字符数组的值是可以修改的，例如p[0] = ‘t‘。</p>
-<h3 id="GetMemory4"><a href="#GetMemory4" class="headerlink" title="GetMemory4"></a><strong>GetMemory4</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>*<span class="title">GetMemory4</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;    </span><br><span class="line">  <span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>;    </span><br><span class="line">  <span class="keyword">return</span> p;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest4(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory4();   </span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt; str &lt;&lt; <span class="built_in">endl</span>;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：输出hello<br>分析：p指向的是字符串常量，字符串常量保存在只读的数据段，是全局区域，但不是像全局变量那样保存在普通数据段（静态存储区）。无法对p所指的内存的内容修改，例如p[0] = ‘y;这样的修改是错误的。</p>
-<h3 id="GetMemory5"><a href="#GetMemory5" class="headerlink" title="GetMemory5"></a><strong>GetMemory5</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>*<span class="title">GetMemory5</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;     </span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest3(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory5();     </span><br><span class="line">  <span class="built_in">printf</span>(str);    </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
-
-
-<p>结果：输出hello</p>
-<p>分析：直接返回常量区。</p>
-<h3 id="GetMemory6"><a href="#GetMemory6" class="headerlink" title="GetMemory6"></a><strong>GetMemory6</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory6(<span class="keyword">void</span>) &#123;  </span><br><span class="line">  <span class="keyword">char</span> *str = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(<span class="number">100</span>);  </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello&quot;</span>);  </span><br><span class="line">  <span class="built_in">free</span>(str);  </span><br><span class="line">  <span class="comment">//str = NULL，加上这句程序才不会有野指针  </span></span><br><span class="line">  <span class="keyword">if</span> (str != <span class="literal">NULL</span>) &#123;  </span><br><span class="line">    <span class="built_in">strcpy</span>(str, <span class="string">&quot;world&quot;</span>);  </span><br><span class="line">    <span class="built_in">printf</span>(str);  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">voidmain()&#123;    </span><br><span class="line">  GetMemory6();  </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
-
-<p>结果：能够输出world，但程序存在问题。</p>
-<p>分析：程序出现了<strong>野指针</strong>。</p>
-<p><strong>野指针</strong>只会出现在像C和C++这种没有自动内存垃圾回收功能的高级语言中, 所以java或c#肯定不会有野指针的概念. <strong>当我们用malloc为一个指针分配一个空间后, 用完这个指针，把它free掉，但是没有让这个指针指向NULL或某一个特定的空间</strong>。如上面程序一样，将str进行free后，只是释放了指针所指的内存，但指针并没有释放掉，此时指针所指的是垃圾内存；这样的话，if语句永为真，if判断无效。delete也存在同样的问题。</p>
-<p><strong>防止产生野指针</strong>：</p>
-<ul>
-<li>指针变量一定要初始化为NULL，因为任何指针变量刚被创建时不会自动成为NULL指针，它的缺省值是随机的。</li>
-<li>当free或delete后，将指针指向NULL。通常判断一个指针是否合法，都是使用if语句测试该指针是否为NULL。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -978,29 +1197,6 @@
       </tags>
   </entry>
   <entry>
-    <title>重定位知识点总结</title>
-    <url>/2021/12/01/%E9%87%8D%E5%AE%9A%E4%BD%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p><strong>什么是重定位？为什么需要重定位？</strong></p>
-<h3 id="一、必须知道的几个概念。"><a href="#一、必须知道的几个概念。" class="headerlink" title="一、必须知道的几个概念。"></a><strong>一、必须知道的几个概念。</strong></h3><p><strong>1、链接地址和运行地址。</strong></p>
-<p>a.运行地址，顾名思义就是程序运行的时候的地址，也就是你用工具将代码下载到RAM的那个地址，也叫加载地址。</p>
-<p>b.链接地址，由链接脚本指定的地址。为什么需要链接脚本指定地址呢？你想一下，在c语言编程中，当我们需要调用一个A函数的时候，编译器是怎么找到这个A函数？编译器肯定是知道它被放在哪里才可以找到它。那就是链接脚本的作用，链接脚本其实在程序被执行之前都已经指定A函数一个地址编号，以后所有的函数调用我们都会去这个地址编号那里寻找A函数。有点类似于c语言的指针变量。</p>
-<p><strong>2、位置有关码与位置无关码。</strong></p>
-<p>a.位置有关码，就是这句代码的执行正确与否还需要取决于当前的地址，也就是说跟地址已经绑定了的，例如：ldr PC, _main，就是PC指针必须跳转到_main（函数名就是一个地址）这个地址去，代码执行成功与否就相当于受到了这个地址的约束，假如这个地址的内容不存放_main这个函数，就会出错了。</p>
-<p>b.位置无关码，就是这句代码在哪里运行都可以的，跟所处的地址无关，跟位置有关码相反。</p>
-<h3 id="二、重定位需要理解的一些问题。"><a href="#二、重定位需要理解的一些问题。" class="headerlink" title="二、重定位需要理解的一些问题。"></a><strong>二、重定位需要理解的一些问题。</strong></h3><p><strong>1、链接地址跟运行地址不同的情况下会出现什么情况？</strong></p>
-<p>答：以上面举的函数A为例，当链接地址跟运行地址不同的时候，假如链接地址是0x1000，运行地址（加载地址）是0x0000，链接脚本指定函数A将来是要存放到（基地址+偏移量）=0x1000+0x0001=0x1001地址的，但是程序在下载的时候却把这个程序下载到0x0000，所以函数A的地址实际上是存放在（基地址+偏移量）=0x0000+0x0001=0x0001这个地址的。当程序运行到一行位置有关码例如：ldr PC, A ，编译器首先就会按照链接脚本指定的A的那个地址0x1001寻找A函数，但是因为加载地址跟链接地址不同的原因，实际上A函数已经被放到了0x0001，所以执行就会出错。所以，当这两个地址不同的时候，执行一段位置有关码的时候就会发生不可预估的错误。</p>
-<p><strong>2、为什么会出现链接地址跟运行地址不同的情况？</strong></p>
-<p>答：当一块芯片启动的时候，依靠内部的SRAM，可以运行一小段代码，而因为DDR还没初始化，注定了开始的运行地址是在内部SRAM中的。当我们需要运行一个操作系统，那么点的内存怎么够运行呢？所以这时候就需要初始化DDR才可，而因为我们知道这代码将来都是在DDR上面运行的，所以链接脚本指定的链接地址肯定是DDR上面的地址，所以这就出现了链接地址跟运行地址不同的情况了。</p>
-<p><strong>3、什么是重定位？</strong></p>
-<p>答：由于出现1这样的问题，就需要使用重定位这种方式解决上面的问题了。那什么是重定位呢？重定位就是在链接地址跟运行地址不同的情况下，执行一段位置无关码，这段位置无关码的作用就是将原来的那份代码全部复制到链接地址那里去，然后自己再长跳转到新的那份代码的刚刚执行的那个位置。这样就实现了链接地址跟运行地址一致的情况了。</p>
-<p><strong>4、为什么需要重定位？</strong></p>
-<p>答：就是链接地址跟运行地址不同，在这个情况下我们可以有两种方案：<br>a.全部使用位置无关码。<br>b.进行重定位让这两个地址相同。<br>我们知道，如果是一个小代码，使用a时可以的，但是一个大的代码文件很难保证全部都使用位置无关码的，这也是不现实的，所以必须使用重定位解决这个问题。</p>
-]]></content>
-      <tags>
-        <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>静态存储区、堆、栈区别</title>
     <url>/2021/12/16/%E9%9D%99%E6%80%81%E5%AD%98%E5%82%A8%E5%8C%BA%E3%80%81%E5%A0%86%E3%80%81%E6%A0%88%E5%8C%BA%E5%88%AB/</url>
     <content><![CDATA[<h3 id="一、内存基本构成"><a href="#一、内存基本构成" class="headerlink" title="一、内存基本构成"></a>一、内存基本构成</h3><p>可编程内存在基本上分为这样的几大部分：<strong>静态存储区、堆区和栈区</strong>。他们的功能不同，对他们使用方式也就不同。</p>
@@ -1042,6 +1238,29 @@
 ]]></content>
       <tags>
         <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>重定位知识点总结</title>
+    <url>/2021/12/01/%E9%87%8D%E5%AE%9A%E4%BD%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p><strong>什么是重定位？为什么需要重定位？</strong></p>
+<h3 id="一、必须知道的几个概念。"><a href="#一、必须知道的几个概念。" class="headerlink" title="一、必须知道的几个概念。"></a><strong>一、必须知道的几个概念。</strong></h3><p><strong>1、链接地址和运行地址。</strong></p>
+<p>a.运行地址，顾名思义就是程序运行的时候的地址，也就是你用工具将代码下载到RAM的那个地址，也叫加载地址。</p>
+<p>b.链接地址，由链接脚本指定的地址。为什么需要链接脚本指定地址呢？你想一下，在c语言编程中，当我们需要调用一个A函数的时候，编译器是怎么找到这个A函数？编译器肯定是知道它被放在哪里才可以找到它。那就是链接脚本的作用，链接脚本其实在程序被执行之前都已经指定A函数一个地址编号，以后所有的函数调用我们都会去这个地址编号那里寻找A函数。有点类似于c语言的指针变量。</p>
+<p><strong>2、位置有关码与位置无关码。</strong></p>
+<p>a.位置有关码，就是这句代码的执行正确与否还需要取决于当前的地址，也就是说跟地址已经绑定了的，例如：ldr PC, _main，就是PC指针必须跳转到_main（函数名就是一个地址）这个地址去，代码执行成功与否就相当于受到了这个地址的约束，假如这个地址的内容不存放_main这个函数，就会出错了。</p>
+<p>b.位置无关码，就是这句代码在哪里运行都可以的，跟所处的地址无关，跟位置有关码相反。</p>
+<h3 id="二、重定位需要理解的一些问题。"><a href="#二、重定位需要理解的一些问题。" class="headerlink" title="二、重定位需要理解的一些问题。"></a><strong>二、重定位需要理解的一些问题。</strong></h3><p><strong>1、链接地址跟运行地址不同的情况下会出现什么情况？</strong></p>
+<p>答：以上面举的函数A为例，当链接地址跟运行地址不同的时候，假如链接地址是0x1000，运行地址（加载地址）是0x0000，链接脚本指定函数A将来是要存放到（基地址+偏移量）=0x1000+0x0001=0x1001地址的，但是程序在下载的时候却把这个程序下载到0x0000，所以函数A的地址实际上是存放在（基地址+偏移量）=0x0000+0x0001=0x0001这个地址的。当程序运行到一行位置有关码例如：ldr PC, A ，编译器首先就会按照链接脚本指定的A的那个地址0x1001寻找A函数，但是因为加载地址跟链接地址不同的原因，实际上A函数已经被放到了0x0001，所以执行就会出错。所以，当这两个地址不同的时候，执行一段位置有关码的时候就会发生不可预估的错误。</p>
+<p><strong>2、为什么会出现链接地址跟运行地址不同的情况？</strong></p>
+<p>答：当一块芯片启动的时候，依靠内部的SRAM，可以运行一小段代码，而因为DDR还没初始化，注定了开始的运行地址是在内部SRAM中的。当我们需要运行一个操作系统，那么点的内存怎么够运行呢？所以这时候就需要初始化DDR才可，而因为我们知道这代码将来都是在DDR上面运行的，所以链接脚本指定的链接地址肯定是DDR上面的地址，所以这就出现了链接地址跟运行地址不同的情况了。</p>
+<p><strong>3、什么是重定位？</strong></p>
+<p>答：由于出现1这样的问题，就需要使用重定位这种方式解决上面的问题了。那什么是重定位呢？重定位就是在链接地址跟运行地址不同的情况下，执行一段位置无关码，这段位置无关码的作用就是将原来的那份代码全部复制到链接地址那里去，然后自己再长跳转到新的那份代码的刚刚执行的那个位置。这样就实现了链接地址跟运行地址一致的情况了。</p>
+<p><strong>4、为什么需要重定位？</strong></p>
+<p>答：就是链接地址跟运行地址不同，在这个情况下我们可以有两种方案：<br>a.全部使用位置无关码。<br>b.进行重定位让这两个地址相同。<br>我们知道，如果是一个小代码，使用a时可以的，但是一个大的代码文件很难保证全部都使用位置无关码的，这也是不现实的，所以必须使用重定位解决这个问题。</p>
+]]></content>
+      <tags>
+        <tag>嵌入式</tag>
       </tags>
   </entry>
 </search>

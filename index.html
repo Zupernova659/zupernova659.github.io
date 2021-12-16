@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -206,6 +206,371 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/16/C%E8%AF%AD%E8%A8%80%E5%A4%9A%E8%AF%AD%E5%8F%A5%E5%AE%8F%E7%9A%84%E5%A6%99%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zupernova">
+      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zupernova's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/12/16/C%E8%AF%AD%E8%A8%80%E5%A4%9A%E8%AF%AD%E5%8F%A5%E5%AE%8F%E7%9A%84%E5%A6%99%E7%94%A8/" class="post-title-link" itemprop="url">C语言多语句宏的妙用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-12-16 16:20:50 / 修改时间：16:21:21" itemprop="dateCreated datePublished" datetime="2021-12-16T16:20:50+08:00">2021-12-16</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>986</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>#define do{…}while(0)这种奇怪形式的宏定义经常在实际工程中应用，它的意义如下：</p>
+<h3 id="1-增加代码的适应性"><a href="#1-增加代码的适应性" class="headerlink" title="1. 增加代码的适应性"></a><strong>1. 增加代码的适应性</strong></h3><p>下面的宏定义没有使用do{…}while(0)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x) foo(x); bar(x);</span></span><br></pre></td></tr></table></figure>
+
+<p>这样宏定义，单独调用不会出现问题，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FOO(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+<p>宏扩展后变成：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foo(x);bar(x);</span><br></pre></td></tr></table></figure>
+
+<p>这样调用FOO没有任何问题，但是FOO（x）不能放入控制语句中，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) FOO(x); </span><br><span class="line"><span class="keyword">else</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>经过宏扩展后，变成了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) </span><br><span class="line">    foo(x);</span><br><span class="line">    bar(x);</span><br><span class="line"><span class="keyword">else</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>这样就导致了<strong>语法错误</strong>，语法错误并不可怕，在编译阶段就能发现，更致命的是他有可能导致<strong>逻辑错误，</strong>例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">    FOO(x);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码经过扩展后变成：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">    foo(x); bar(x);</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，无论condition是true还是false，bar(x)都会被调用。</p>
+<p>这时候do{…}while(0)的价值就体现出来了，修改一下FOO的定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x) do &#123;</span></span><br><span class="line">        foo(x); </span><br><span class="line">        bar(x); </span><br><span class="line">    &#125; <span class="keyword">while</span> (<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样FOO,放入控制语句中就没有问题了。</p>
+<p>也许有人说：把foo(x);bar(x)用大括号括起来不就行了吗？比如这样定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x)&#123;</span></span><br><span class="line">                foo(x); </span><br><span class="line">                bar(x); </span><br><span class="line">              &#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看下面代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition) </span><br><span class="line">    FOO(x); </span><br><span class="line"><span class="keyword">else</span> ...;</span><br></pre></td></tr></table></figure>
+
+<p>扩展后：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (condition)</span><br><span class="line">&#123;</span><br><span class="line">    foo(x);</span><br><span class="line">    bar(x);</span><br><span class="line">&#125; ; <span class="comment">//注意最后这个分号，语法错误 else ...;</span></span><br></pre></td></tr></table></figure>
+
+<p>照样语法错误；</p>
+<h3 id="2-增加代码的扩展性"><a href="#2-增加代码的扩展性" class="headerlink" title="2.增加代码的扩展性"></a><strong>2.增加代码的扩展性</strong></h3><p>我理解的扩展性，主要是宏定义中还可以引用其他宏，比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x) do&#123;</span></span><br><span class="line">    OTHER_FOO(x)</span><br><span class="line">&#125; <span class="keyword">while</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样我们不用管OTHER_FOO是但语句还是符合语句，都不会出现问题</p>
+<h3 id="3-增加代码的灵活性"><a href="#3-增加代码的灵活性" class="headerlink" title="3.增加代码的灵活性"></a><strong>3.增加代码的灵活性</strong></h3><p> 灵活性主要体现在，我们可以从宏中break出来，例如下面的定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FOO(x)  do&#123; \</span></span><br><span class="line"><span class="meta">    foo(x);  \</span></span><br><span class="line"><span class="meta">    <span class="meta-keyword">if</span>(condition(x)) \</span></span><br><span class="line"><span class="meta">        break; \</span></span><br><span class="line"><span class="meta">    bar(x) \</span></span><br><span class="line"><span class="meta">    ..... \&#125; while(0)</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zupernova">
+      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zupernova's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/" class="post-title-link" itemprop="url">c编译器预定义宏</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-12-16 16:15:55 / 修改时间：16:18:26" itemprop="dateCreated datePublished" datetime="2021-12-16T16:15:55+08:00">2021-12-16</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>为了方便处理一些有用的信息，预处理器定义了一些预处理标识符，也就是预定义宏。预定义宏的名称都是以&ldquo;__&rdquo;（两条下划线）开头和结尾的，如果宏名是由两个单词组成，那么中间以&ldquo;_&rdquo;（一条下划线）进行连接。并且，宏名称一般都由大写字符组成。<br />在日常项目编程中，预定义宏尤其对多目标平台代码的编写通常具有重大意义。通过预定义宏，程序员使用&ldquo;#ifdef&rdquo;与&ldquo;#endif&rdquo;等预处理指令，就可使平台相关代码只在适合于当前平台的代码上编译，从而在同一套代码中完成对多平台的支持。从这个意义上讲，平台信息相关的宏越丰富，代码的多平台支持越准确。<br />标准 C 语言提供的一些标准预定义宏如表 1 所示。</p>
+<table><caption>表 1 常用的标准预定义宏</caption>
+<tbody>
+<tr>
+<th>宏</th>
+<th>描&nbsp;述</th>
+</tr>
+<tr>
+<td>__DATE__</td>
+<td>丐前源文件的编泽口期，用&nbsp;&ldquo;Mmm dd yyy&rdquo;形式的字符串常量表示</td>
+</tr>
+<tr>
+<td>__FILE__</td>
+<td>当前源文件的名称，用字符串常量表示</td>
+</tr>
+<tr>
+<td>__LINE__</td>
+<td>当前源义件中的行号，用十进制整数常量表示，它可以随#line指令改变</td>
+</tr>
+<tr>
+<td>__TIME__</td>
+<td>当前源文件的最新编译吋间，用&ldquo;hh:mm:ss&rdquo;形式的宁符串常量表示</td>
+</tr>
+<tr>
+<td>__STDC__</td>
+<td>如果今前编泽器符合ISO标准，那么该宏的值为1，否则未定义</td>
+</tr>
+<tr>
+<td>__STDC_VERSION__</td>
+<td>如果当前编译器符合C89，那么它被定义为199409L;如果符合C99，那么它被定义为199901L:在其他情况下，该宏为宋定义</td>
+</tr>
+<tr>
+<td>__STDC_HOSTED__</td>
+<td>(C99)如果当前是宿主系统，则该宏的值为1;如果当前是独立系统，则该宏的值为0</td>
+</tr>
+<tr>
+<td>__STDC_IEC_559_</td>
+<td>(C99)如果浮点数的实现符合IEC 60559标准时，则该宏的值为1，否则为未定义</td>
+</tr>
+<tr>
+<td>__STDC_IEC_559_COMPLEX__</td>
+<td>(C99)如果复数运算实现符合IEC60559标准时，则该宏的伉为1,否则为未定义</td>
+</tr>
+<tr>
+<td>__STDC_ISO_10646__</td>
+<td>(C99 )定义为长整型常量，yyyymmL表示wchai_t值遵循ISO 10646标准及其指定年月的修订补充，否则该宏为未定义</td>
+</tr>
+</tbody>
+</table>
+<p>除标准 C 语言提供的标准宏之外，各种编译器也都提供了自己的自定义预定义宏。可以通过表 2 所示的指令来查看不同编译器对预定义宏的支持情况。</p>
+<table><caption>表 2 不同编译器的预定义宏查看指令</caption>
+<tbody>
+<tr>
+<th>编译器</th>
+<th>宏指令（c)</th>
+<th>宏指令（<a href="http://c.biancheng.net/cplus/" target="_blank" rel="noopener">C++</a>)</th>
+</tr>
+<tr>
+<td>Clang/LLVM</td>
+<td>clang -dM -E -x c /dev/null</td>
+<td>clang++ -dM -E -x C++ /dev/null</td>
+</tr>
+<tr>
+<td>GNU&nbsp;<a href="http://c.biancheng.net/gcc/" target="_blank" rel="noopener">GCC</a>/G++</td>
+<td>gcc -dM -E -x c /dev/null</td>
+<td>g++ -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
+</tr>
+<tr>
+<td>Hewlett-Packard C/aC++</td>
+<td>cc -dM -E -x c /clev/null</td>
+<td>aCC -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
+</tr>
+<tr>
+<td>IBM XL C/C++</td>
+<td>xlc -qshowmacros -E /dev/null</td>
+<td>xlc++ -qshowmacros -E /dev/null</td>
+</tr>
+<tr>
+<td>Intel ICC7ICPC</td>
+<td>icc -dM -E -x c /dev/null</td>
+<td>icpc -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
+</tr>
+<tr>
+<td>Oracle Solaris Studio</td>
+<td>cc -xduinpmacros -E /dev/null</td>
+<td>CC -xduinpmacros -E /clev/null</td>
+</tr>
+<tr>
+<td>Portland Group PGCC/PGCPP</td>
+<td>pgcc -dM -E</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>对于这些预定义宏的应用，基本上随处可见，下面举例介绍。<br />利用&ldquo;__DATE__&rdquo;和&ldquo;__TIME__&rdquo;宏可以用来确定程序编译的时间。如下面的示例代码所示：</p>
+<div class="snippet-container">
+<div class="sh_bright snippet-wrap">
+<pre class="language-c"><code>int main (void)
+&#123;
+  printf("Copyright (c) Powered by www.develhome.com\n");
+  printf("Compiled on %s at %s\n", __DATE__,__TIME__);
+  return 0;
+&#125;</code></pre>
+</div>
+</div>
+<p>利用&ldquo;__STDC__&rdquo;与&ldquo;__STDC_VERSION__&rdquo;宏可以编写那些需要兼容标准 C 和非标准 C 编译器的程序，如下面的示例代码所示：</p>
+<div class="snippet-container">
+<div class="sh_bright snippet-wrap">
+<pre class="language-c"><code>#ifdef __STDC__
+/* Some version of standard C */
+#if defined(__STDC__VERSION__)&amp;&amp;__STDC_VERSION__&gt;=199901L
+/* C99 */
+#elif defined(__STDC_VERSION__)&amp;&amp;__STDC_VERSION__&gt;=199409L
+/* C89 and amendment 1 */
+#else
+/* C89 but not amendment 1*/
+#endif
+#else /* __STDC__not defined */
+/*Not Standard C*/
+#endif</code></pre>
+</div>
+</div>
+<p>利用__FILE__、__LINE__与__FUNCTION__（或者__func__）预定义宏的组合，在调试程序的时候可以很简单地在程序运行期进行异常跟踪。如下面的示例代码所示：</p>
+<div class="snippet-container">
+<div class="sh_bright snippet-wrap">
+<pre class="language-c"><code>#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#define MESSAGE(message,assertion) \
+do&#123;\
+  if(!(assertion))&#123;\
+    printf("line %d in %s(%s)", __LINE__, __FILE__,__FUNCTION__);\
+    if(message)&#123;\
+      printf(":%s",message);\
+    &#125;\
+    printf("\n");\
+    abort();\
+  &#125;\
+&#125;while(0)
+int OpenFile(const char *filename)
+&#123;
+  int fd;
+  MESSAGE("文件名称不能够为空",filename);
+  MESSAGE("文件不存在",0==access(filename,F_OK));
+  fd = open(filename,O_RDONLY);
+  close(fd);
+  return 0;
+&#125;
+int main(int argc,char **argv)
+&#123;
+  MESSAGE("命令参数不能够为空",argc==2);
+  OpenFile(argv[1]);
+  return 0;
+&#125;</code></pre>
+</div>
+</div>
+<p>最后还需要注意的是，如果用户重定义&ldquo;#define&ldquo;或取消了&ldquo;#undef&rdquo;预定义宏，那么其结果是&ldquo;未定义&rdquo;的。因此，在代码编写中，应该尽量避免自定义宏与预定义宏名称相同的情况发生。</p>
+
+      
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1265,198 +1630,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zupernova">
-      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zupernova's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/12/03/%E5%85%B3%E4%BA%8Emalloc%E5%92%8Cfree%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">关于malloc和free链表节点遇到的问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-12-03 16:40:25 / 修改时间：18:34:24" itemprop="dateCreated datePublished" datetime="2021-12-03T16:40:25+08:00">2021-12-03</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>链表初始化代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Node* <span class="title">list_init</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    Node *head = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p1 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p2 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p3 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p4 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    Node *p5 = (Node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Node));</span><br><span class="line">    head-&gt;val = <span class="number">-1</span>;</span><br><span class="line">    p1-&gt;val = <span class="number">11</span>;</span><br><span class="line">    p2-&gt;val = <span class="number">5</span>;</span><br><span class="line">    p3-&gt;val = <span class="number">7</span>;</span><br><span class="line">    p4-&gt;val = <span class="number">10</span>;</span><br><span class="line">    p5-&gt;val = <span class="number">1</span>;</span><br><span class="line">    head-&gt;next = p1;</span><br><span class="line">    p1-&gt;next = p2;</span><br><span class="line">    p2-&gt;next = p3;</span><br><span class="line">    p3-&gt;next = p4;</span><br><span class="line">    p4-&gt;next = p5;</span><br><span class="line">    p5-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>链表删除代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_deinit</span><span class="params">(Node* head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(head)&#123;</span><br><span class="line">        Node* tmp = head;</span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(tmp);</span><br><span class="line">        tmp = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>链表打印代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_print</span><span class="params">(Node* head)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> first = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(first)&#123;</span><br><span class="line">            first=<span class="number">0</span>;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;head-&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;(%d)-&gt;&quot;</span>, head-&gt;val);</span><br><span class="line">        &#125;       </span><br><span class="line">        head = head-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;NULL\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这时，在主函数中：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Node *head = list_init();</span><br><span class="line">list_deinit(head);</span><br><span class="line">list_print(head);</span><br></pre></td></tr></table></figure>
-
-<p>运行程序会报段错误，疑问点在于：list_print函数中已经加入了head=NULL的特殊情况判断逻辑，但还是在deinit调用之后报错</p>
-<p>经过在init和deinit函数中打印链表各节点地址发现，deinit函数中传入的只是head指针的一个副本；因此，在deinit函数中，head指针的副本以及链表其他节点已经全部释放空间并指向了NULL</p>
-<p>但是在主函数中，head指针指向的结构体被释放了空间，但是并没有赋值为NULL，因此，在deinit之后再调用list_print,实际上是传入了一个野指针（此时的head），因此报了段错误。</p>
-<p>修改后的程序代码源文件如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">list_deinit</span><span class="params">(Node **head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (*head)</span><br><span class="line">    &#123;</span><br><span class="line">        Node** tmp = head;</span><br><span class="line">        *head = (*head)-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(*tmp);</span><br><span class="line">        *tmp = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="comment">//二级指针方法可以销毁head本身，并不是传入的副本</span></span><br><span class="line"></span><br><span class="line">list_deinit(&amp;head);<span class="comment">//采用此方法调用</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      
-
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/03/%E5%85%B3%E4%BA%8Egit-add%E6%93%8D%E4%BD%9C%E6%97%B6%E6%80%BB%E4%BC%9A%E4%B8%8A%E4%BC%A0mac%E7%B3%BB%E7%BB%9F%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6-DS-store%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zupernova">
-      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zupernova's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/12/03/%E5%85%B3%E4%BA%8Egit-add%E6%93%8D%E4%BD%9C%E6%97%B6%E6%80%BB%E4%BC%9A%E4%B8%8A%E4%BC%A0mac%E7%B3%BB%E7%BB%9F%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6-DS-store%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">关于git add操作时总会上传mac系统隐藏文件.DS_store的解决方案</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-12-03 16:38:56 / 修改时间：18:32:44" itemprop="dateCreated datePublished" datetime="2021-12-03T16:38:56+08:00">2021-12-03</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>384</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>.DS_Store是Mac OS保存文件夹的自定义属性的隐藏文件，如文件的图标位置或背景色，相当于Windows的desktop.ini。</p>
-<p>当git仓库中进行了多项文件修改时，传统的方法为了剔除大量的.DS_Store文件只能手动一项一项添加待加入的文件，很麻烦。</p>
-<p>为了解决这一问题，有如下两种方案：</p>
-<p><strong>方案一：禁止.DS_store生成</strong></p>
-<p>打开 “终端” ，复制黏贴下面的命令，回车执行，重启Mac即可生效。</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defaults <span class="keyword">write</span> com.apple.desktopservices DSDontWriteNetworkStores -<span class="type">bool</span> <span class="keyword">TRUE</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>方案二：设置git过滤规则</strong></p>
-<p>具体参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zupernova/p/15529106.html">Git过滤规则</a></p>
-<p>在根目录下创建文件.gitignore，写入内容</p>
-<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">.DS_Store</span></span><br><span class="line">*<span class="string">.code-workspace</span></span><br></pre></td></tr></table></figure>
-
-<p>即可让git在执行add操作时屏蔽所有符合条件的文件，使其不出现在未追踪文件列表中</p>
-
-      
-    </div>
-
-    
-    
-    
-      
-
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
@@ -1482,14 +1655,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">52k</span>
+    <span title="站点总字数">56k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">47 分钟</span>
+    <span title="站点阅读时长">51 分钟</span>
   </span>
 </div>
 <div class="busuanzi-count">
