@@ -14,27 +14,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Git过滤规则</title>
-    <url>/2021/12/03/Git%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99/</url>
-    <content><![CDATA[<p>一般我们总会有些文件无需纳入 Git 的管理，也不希望它们总出现在未跟踪文件列表。 通常都是些自动生成的文件，比如日志文件，或者编译过程中创建的临时文件等。</p>
-<p>在这种情况下，我们可以创建一个名为.gitignore的文件，列出要忽略的文件的模式。</p>
-<p>文件 .gitignore 的格式规范如下：</p>
-<p>• 所有空行或者以 # 开头的行都会被 Git 忽略。</p>
-<p>• 可以使用标准的 glob 模式匹配，它会递归地应用在整个工作区中。</p>
-<p>• 匹配模式可以以（/）开头防止递归。</p>
-<p>• 匹配模式可以以（/）结尾指定目录。</p>
-<p>• 要忽略指定模式以外的文件或目录，可以在模式前加上叹号（!）取反。</p>
-<p>所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。 星号（*）匹配零个或多个任意字符；[abc] 匹配任何一个列在方括号中的字符 （这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）；</p>
-<p>问号（?）只匹配一个任意字符；如果在方括号中使用短划线分隔两个字符， 表示所有在这两个字符范围内的都可以匹配（比如 [0-9] 表示匹配所有 0 到 9 的数字）。</p>
-<p>使用两个星号（<strong>）表示匹配任意中间目录，比如 a/</strong>/z 可以匹配 a/z 、 a/b/z 或 a/b/c/z 等。</p>
-<p><strong>.gitignore文件使用示例如下：</strong></p>
-<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 忽略所有的 .a 文件</span></span><br><span class="line">*<span class="string">.a</span></span><br><span class="line"><span class="comment"># 但跟踪所有的 lib.a，即便你在前面忽略了 .a 文件</span></span><br><span class="line">!lib.a</span><br><span class="line"><span class="comment"># 只忽略当前目录下的 TODO 文件，而不忽略 subdir/TODO</span></span><br><span class="line"><span class="string">/TODO</span></span><br><span class="line"><span class="comment"># 忽略任何目录下名为 build 的文件夹</span></span><br><span class="line">build/</span><br><span class="line"><span class="comment"># 忽略 doc/notes.txt，但不忽略 doc/server/arch.txt</span></span><br><span class="line">doc/*<span class="string">.txt</span></span><br><span class="line"><span class="comment"># 忽略 doc/ 目录及其所有子目录下的 .pdf 文件</span></span><br><span class="line">doc/**/*<span class="string">.pdf</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>I2C</title>
     <url>/2021/12/02/I2C/</url>
     <content><![CDATA[<h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a><strong>一、概述</strong></h3><p><strong>1、I2C总线只有两根双向信号线。一根是数据线SDA，另一根是时钟线SCL。</strong></p>
@@ -131,15 +110,24 @@
       </tags>
   </entry>
   <entry>
-    <title>Makefile通用模版</title>
-    <url>/2021/12/03/Makefile%E9%80%9A%E7%94%A8%E6%A8%A1%E7%89%88/</url>
-    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 编译一个或者多个.c（.cc）</span></span><br><span class="line"><span class="comment">#                            </span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CROSS_COMPILE := </span><br><span class="line"><span class="comment">#arm-linux-gnueabihf-</span></span><br><span class="line">CC = <span class="variable">$(CROSS_COMPILE)</span>gcc</span><br><span class="line">CPP = <span class="variable">$(CROSS_COMPILE)</span>g++</span><br><span class="line">LD = <span class="variable">$(CROSS_COMPILE)</span>ld</span><br><span class="line">AR = <span class="variable">$(CROSS_COMPILE)</span>ar</span><br><span class="line">RANLIB  = <span class="variable">$(CROSS_COMPILE)</span>ranlib</span><br><span class="line">STRIP   = <span class="variable">$(CROSS_COMPILE)</span>strip</span><br><span class="line"></span><br><span class="line"><span class="comment">##include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span>/librtmp</span><br><span class="line"></span><br><span class="line"><span class="comment">##lib</span></span><br><span class="line">LDFLAGS        += -L ./lib/ -lrtmp</span><br><span class="line">LDFLAGS        += -lm -lpthread -lz</span><br><span class="line"></span><br><span class="line">CFLAGS        += -Wall -O2 -Os</span><br><span class="line"></span><br><span class="line">SRC         += ./*.cc</span><br><span class="line">OBJ         = <span class="variable">$(<span class="built_in">patsubst</span> %.cc, %.o, $(<span class="built_in">wildcard</span> <span class="variable">$(SRC)</span>)</span>)</span><br><span class="line"><span class="comment">#SRC          = $(wildcard *.cc) </span></span><br><span class="line"><span class="comment">#OBJ          = $(SRC:%.cc=%.o)</span></span><br><span class="line"></span><br><span class="line">TARGET         = ./bin/rtmp_test</span><br><span class="line"></span><br><span class="line"><span class="comment">##make </span></span><br><span class="line"><span class="section">all: <span class="variable">$(TARGET)</span></span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJ)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> <span class="variable">$(CFLAGS)</span> -o <span class="variable">$(TARGET)</span> <span class="variable">$(OBJ)</span> <span class="variable">$(LDFLAGS)</span>    </span><br><span class="line">    @rm ./*.o</span><br><span class="line">    </span><br><span class="line"><span class="variable">$(OBJ)</span>:%.o:%.cc</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$(INCFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># c.cpp混合编译的makefile模板</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">BIN = foyerserver.exe</span><br><span class="line">CC = gcc</span><br><span class="line">CPP = g++</span><br><span class="line"><span class="comment">#这里只加入库头文件路径及库路径</span></span><br><span class="line">INCS = </span><br><span class="line">LIBS = </span><br><span class="line">SUBDIRS =</span><br><span class="line"><span class="comment">#生成依赖信息时的搜索目录，比如到下列目录中搜索一个依赖文件(比如.h文件)</span></span><br><span class="line">DEFINC = -I<span class="string">&quot;./../../base/&quot;</span> -I<span class="string">&quot;./../common&quot;</span> -I<span class="string">&quot;./../../lib/lxnet/&quot;</span> -I<span class="string">&quot;./../../lib/tinyxml/src/&quot;</span></span><br><span class="line"><span class="comment">#给INCS加上依赖搜索路径，分开写可能会产生不一致情况，而且繁琐</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#maintest.c tree/rbtree.c  多了子目录，那就直接添加 目录/*.c即可   所有的源文件--  .c文件列表</span></span><br><span class="line">CSRCS = <span class="variable">$(<span class="built_in">wildcard</span>  ./*.c ./../../base/log.c ./../../base/corsslib.c ./../../base/idmgr.c ./../../base/pool.c)</span></span><br><span class="line">CPPSRCS = <span class="variable">$(<span class="built_in">wildcard</span> ./*.cpp ./../common/backcommand.cpp ./../common/connector.cpp)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#所有的.o文件列表</span></span><br><span class="line">COBJS := $(CSRCS:.c=.o)</span><br><span class="line">CPPOBJS := $(CPPSRCS:.cpp=.o)</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#生成依赖信息 -MM是只生成自己的头文件信息，-M 包含了标准库头文件信息。</span></span><br><span class="line"><span class="comment">#-MT 或 -MQ都可以改变生成的依赖  xxx.o:src/xxx.h 为 src/xxx.o:src/xxx.h 当然。前面的 src/xxx.o需自己指定</span></span><br><span class="line"><span class="comment">#格式为 -MM 输入.c或.cpp  查找依赖路径  -MT或-MQ  生成规则，比如src/xxx.o </span></span><br><span class="line">MAKEDEPEND = gcc -MM -MT</span><br><span class="line">CFLAGS =</span><br><span class="line"><span class="comment">#CFLAGS += -Wall -ansi -DWIN32 -DNDEBUG -O2</span></span><br><span class="line">CPPFLAGS =</span><br><span class="line"><span class="comment">#CPPFLAGS += -Wall -DWIN32 -DNDEBUG -O2</span></span><br><span class="line"><span class="comment">#-g 生成调试信息</span></span><br><span class="line"><span class="comment">#-pedantic参数与-ansi一起使用 会自动拒绝编译非ANSI程序</span></span><br><span class="line"><span class="comment">#-fomit-frame-pointer 去除函数框架</span></span><br><span class="line"><span class="comment">#-Wmissing-prototypes -Wstrict-prototypes 检查函数原型</span></span><br><span class="line"><span class="comment">#针对每个.c文件的.d依赖文件列表</span></span><br><span class="line">CDEF = $(CSRCS:.c=.d)</span><br><span class="line">CPPDEF = $(CPPSRCS:.cpp=.d)</span><br><span class="line">PLATS = win32-debug win32-release linux-debug linux-release</span><br><span class="line"><span class="section">none:</span></span><br><span class="line">    @echo <span class="string">&quot;Please choose a platform:&quot;</span></span><br><span class="line">    @echo <span class="string">&quot; <span class="variable">$(PLATS)</span>&quot;</span></span><br><span class="line"><span class="section">win32-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">win32-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">linux-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">linux-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">all:<span class="variable">$(BIN)</span></span></span><br><span class="line"><span class="comment">#生成.o的对自己目录中.h .c的依赖信息.d文件到.c所在的路径中</span></span><br><span class="line"><span class="comment">#$(DEF)文件是.d文件名列表(含目录)，比如tree.d 匹配成功那么%就是tree，然后在尝试%.c，如果成功。则执行规则</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)是获取此.c文件的名字(含路径)，然后变为.o比如 src/xxx.o。 以形成如下</span></span><br><span class="line"><span class="comment"># src/xxx.o : src/xxx.c ***.h  ***.h  最前面！！注意。  </span></span><br><span class="line"><span class="comment"># 此做法是每个.d都和生成他的.c在一个目录里，所以需要这样做。</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)之类的 。此时的&lt;相当于变量$&lt; 。切记</span></span><br><span class="line"><span class="comment"># : : :  含义同下</span></span><br><span class="line"><span class="variable">$(CDEF)</span> : %.d : %.c</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.c=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="variable">$(CPPDEF)</span> : %.d : %.cpp</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.cpp=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="comment">#先删除依赖信息</span></span><br><span class="line"><span class="comment">#重新生成依赖信息</span></span><br><span class="line"><span class="comment">#这里出现了一个 $(MAKE) 没有定义的变量。这个变量是由 Make 自己定义的，它的值即为自己的位置，方便 Make 递归调用自己。</span></span><br><span class="line"><span class="section">depend:</span></span><br><span class="line">    -rm <span class="variable">$(CDEF)</span></span><br><span class="line">    -rm <span class="variable">$(CPPDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CPPDEF)</span></span><br><span class="line"><span class="comment">#$(OBJS):%.o :%.c  先用$(OBJS)中的一项，比如foo.o: %.o : %.c  含义为:试着用%.o匹配foo.o。如果成功%就等于foo。如果不成功，</span></span><br><span class="line"><span class="comment"># Make就会警告，然后。给foo.o添加依赖文件foo.c(用foo替换了%.c里的%)</span></span><br><span class="line"><span class="comment"># 也可以不要下面的这个生成规则，因为下面的 include $(DEF)  就隐含了。此处为了明了，易懂。故留着</span></span><br><span class="line"><span class="variable">$(COBJS)</span> : %.o: %.c</span><br><span class="line">    <span class="variable">$(CC)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CFLAGS)</span></span><br><span class="line"><span class="variable">$(CPPOBJS)</span> : %.o: %.cpp</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CPPFLAGS)</span></span><br><span class="line"><span class="comment"># $@--目标文件，$^--所有的依赖文件，$&lt;--第一个依赖文件。每次$&lt; $@ 代表的值就是列表中的</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="variable">$(BIN)</span> : <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> -o <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span> <span class="variable">$(LIBS)</span></span><br><span class="line">    -rm <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment"># 链接为最终目标</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#引入了.o文件对.c和.h的依赖情况。以后.h被修改也会重新生成，可看看.d文件内容即知道为何</span></span><br><span class="line"><span class="comment">#引入了依赖就相当于引入了一系列的规则，因为依赖内容例如： 目录/xxx.o:目录/xxx.c 目录/xxx.h 也相当于隐含的引入了生成规则</span></span><br><span class="line"><span class="comment">#故上面不能在出现如： $(OBJS) : $(DEF)之类。切记</span></span><br><span class="line"><span class="comment">#include $(CDEF) $(CPPDEF)</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>:clean cleanall</span></span><br><span class="line"><span class="comment">#清除所有目标文件以及生成的最终目标文件</span></span><br><span class="line"><span class="section">clean:            </span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment">#rm *.d</span></span><br><span class="line"><span class="section">cleanall:</span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br></pre></td></tr></table></figure>
-
+    <title>Git过滤规则</title>
+    <url>/2021/12/03/Git%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99/</url>
+    <content><![CDATA[<p>一般我们总会有些文件无需纳入 Git 的管理，也不希望它们总出现在未跟踪文件列表。 通常都是些自动生成的文件，比如日志文件，或者编译过程中创建的临时文件等。</p>
+<p>在这种情况下，我们可以创建一个名为.gitignore的文件，列出要忽略的文件的模式。</p>
+<p>文件 .gitignore 的格式规范如下：</p>
+<p>• 所有空行或者以 # 开头的行都会被 Git 忽略。</p>
+<p>• 可以使用标准的 glob 模式匹配，它会递归地应用在整个工作区中。</p>
+<p>• 匹配模式可以以（/）开头防止递归。</p>
+<p>• 匹配模式可以以（/）结尾指定目录。</p>
+<p>• 要忽略指定模式以外的文件或目录，可以在模式前加上叹号（!）取反。</p>
+<p>所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。 星号（*）匹配零个或多个任意字符；[abc] 匹配任何一个列在方括号中的字符 （这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）；</p>
+<p>问号（?）只匹配一个任意字符；如果在方括号中使用短划线分隔两个字符， 表示所有在这两个字符范围内的都可以匹配（比如 [0-9] 表示匹配所有 0 到 9 的数字）。</p>
+<p>使用两个星号（<strong>）表示匹配任意中间目录，比如 a/</strong>/z 可以匹配 a/z 、 a/b/z 或 a/b/c/z 等。</p>
+<p><strong>.gitignore文件使用示例如下：</strong></p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 忽略所有的 .a 文件</span></span><br><span class="line">*<span class="string">.a</span></span><br><span class="line"><span class="comment"># 但跟踪所有的 lib.a，即便你在前面忽略了 .a 文件</span></span><br><span class="line">!lib.a</span><br><span class="line"><span class="comment"># 只忽略当前目录下的 TODO 文件，而不忽略 subdir/TODO</span></span><br><span class="line"><span class="string">/TODO</span></span><br><span class="line"><span class="comment"># 忽略任何目录下名为 build 的文件夹</span></span><br><span class="line">build/</span><br><span class="line"><span class="comment"># 忽略 doc/notes.txt，但不忽略 doc/server/arch.txt</span></span><br><span class="line">doc/*<span class="string">.txt</span></span><br><span class="line"><span class="comment"># 忽略 doc/ 目录及其所有子目录下的 .pdf 文件</span></span><br><span class="line">doc/**/*<span class="string">.pdf</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
-        <tag>Makefile</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -153,6 +141,18 @@
 
 <p>例子：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">editor: editor.o screen.o keyboard.o</span><br><span class="line">    gcc -o editor editor.o screen.o keyboard.o</span><br><span class="line">editor.o : editor.c editor.h keyboard.h screen.h</span><br><span class="line">    gcc -c editor.c</span><br><span class="line">screen.o: screen.c screen.h</span><br><span class="line">    gcc -c screen.c</span><br><span class="line">keyboard.o : keyboard.c keyboard.h</span><br><span class="line">		gcc -c keyboard.c</span><br><span class="line">clean:</span><br><span class="line">		rm editor *.o</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>Makefile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Makefile通用模版</title>
+    <url>/2021/12/03/Makefile%E9%80%9A%E7%94%A8%E6%A8%A1%E7%89%88/</url>
+    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 编译一个或者多个.c（.cc）</span></span><br><span class="line"><span class="comment">#                            </span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CROSS_COMPILE := </span><br><span class="line"><span class="comment">#arm-linux-gnueabihf-</span></span><br><span class="line">CC = <span class="variable">$(CROSS_COMPILE)</span>gcc</span><br><span class="line">CPP = <span class="variable">$(CROSS_COMPILE)</span>g++</span><br><span class="line">LD = <span class="variable">$(CROSS_COMPILE)</span>ld</span><br><span class="line">AR = <span class="variable">$(CROSS_COMPILE)</span>ar</span><br><span class="line">RANLIB  = <span class="variable">$(CROSS_COMPILE)</span>ranlib</span><br><span class="line">STRIP   = <span class="variable">$(CROSS_COMPILE)</span>strip</span><br><span class="line"></span><br><span class="line"><span class="comment">##include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span></span><br><span class="line">INCFLAGS    += -I./<span class="keyword">include</span>/librtmp</span><br><span class="line"></span><br><span class="line"><span class="comment">##lib</span></span><br><span class="line">LDFLAGS        += -L ./lib/ -lrtmp</span><br><span class="line">LDFLAGS        += -lm -lpthread -lz</span><br><span class="line"></span><br><span class="line">CFLAGS        += -Wall -O2 -Os</span><br><span class="line"></span><br><span class="line">SRC         += ./*.cc</span><br><span class="line">OBJ         = <span class="variable">$(<span class="built_in">patsubst</span> %.cc, %.o, $(<span class="built_in">wildcard</span> <span class="variable">$(SRC)</span>)</span>)</span><br><span class="line"><span class="comment">#SRC          = $(wildcard *.cc) </span></span><br><span class="line"><span class="comment">#OBJ          = $(SRC:%.cc=%.o)</span></span><br><span class="line"></span><br><span class="line">TARGET         = ./bin/rtmp_test</span><br><span class="line"></span><br><span class="line"><span class="comment">##make </span></span><br><span class="line"><span class="section">all: <span class="variable">$(TARGET)</span></span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJ)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> <span class="variable">$(CFLAGS)</span> -o <span class="variable">$(TARGET)</span> <span class="variable">$(OBJ)</span> <span class="variable">$(LDFLAGS)</span>    </span><br><span class="line">    @rm ./*.o</span><br><span class="line">    </span><br><span class="line"><span class="variable">$(OBJ)</span>:%.o:%.cc</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$(INCFLAGS)</span> <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># c.cpp混合编译的makefile模板</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">BIN = foyerserver.exe</span><br><span class="line">CC = gcc</span><br><span class="line">CPP = g++</span><br><span class="line"><span class="comment">#这里只加入库头文件路径及库路径</span></span><br><span class="line">INCS = </span><br><span class="line">LIBS = </span><br><span class="line">SUBDIRS =</span><br><span class="line"><span class="comment">#生成依赖信息时的搜索目录，比如到下列目录中搜索一个依赖文件(比如.h文件)</span></span><br><span class="line">DEFINC = -I<span class="string">&quot;./../../base/&quot;</span> -I<span class="string">&quot;./../common&quot;</span> -I<span class="string">&quot;./../../lib/lxnet/&quot;</span> -I<span class="string">&quot;./../../lib/tinyxml/src/&quot;</span></span><br><span class="line"><span class="comment">#给INCS加上依赖搜索路径，分开写可能会产生不一致情况，而且繁琐</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#maintest.c tree/rbtree.c  多了子目录，那就直接添加 目录/*.c即可   所有的源文件--  .c文件列表</span></span><br><span class="line">CSRCS = <span class="variable">$(<span class="built_in">wildcard</span>  ./*.c ./../../base/log.c ./../../base/corsslib.c ./../../base/idmgr.c ./../../base/pool.c)</span></span><br><span class="line">CPPSRCS = <span class="variable">$(<span class="built_in">wildcard</span> ./*.cpp ./../common/backcommand.cpp ./../common/connector.cpp)</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#所有的.o文件列表</span></span><br><span class="line">COBJS := $(CSRCS:.c=.o)</span><br><span class="line">CPPOBJS := $(CPPSRCS:.cpp=.o)</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#生成依赖信息 -MM是只生成自己的头文件信息，-M 包含了标准库头文件信息。</span></span><br><span class="line"><span class="comment">#-MT 或 -MQ都可以改变生成的依赖  xxx.o:src/xxx.h 为 src/xxx.o:src/xxx.h 当然。前面的 src/xxx.o需自己指定</span></span><br><span class="line"><span class="comment">#格式为 -MM 输入.c或.cpp  查找依赖路径  -MT或-MQ  生成规则，比如src/xxx.o </span></span><br><span class="line">MAKEDEPEND = gcc -MM -MT</span><br><span class="line">CFLAGS =</span><br><span class="line"><span class="comment">#CFLAGS += -Wall -ansi -DWIN32 -DNDEBUG -O2</span></span><br><span class="line">CPPFLAGS =</span><br><span class="line"><span class="comment">#CPPFLAGS += -Wall -DWIN32 -DNDEBUG -O2</span></span><br><span class="line"><span class="comment">#-g 生成调试信息</span></span><br><span class="line"><span class="comment">#-pedantic参数与-ansi一起使用 会自动拒绝编译非ANSI程序</span></span><br><span class="line"><span class="comment">#-fomit-frame-pointer 去除函数框架</span></span><br><span class="line"><span class="comment">#-Wmissing-prototypes -Wstrict-prototypes 检查函数原型</span></span><br><span class="line"><span class="comment">#针对每个.c文件的.d依赖文件列表</span></span><br><span class="line">CDEF = $(CSRCS:.c=.d)</span><br><span class="line">CPPDEF = $(CPPSRCS:.cpp=.d)</span><br><span class="line">PLATS = win32-debug win32-release linux-debug linux-release</span><br><span class="line"><span class="section">none:</span></span><br><span class="line">    @echo <span class="string">&quot;Please choose a platform:&quot;</span></span><br><span class="line">    @echo <span class="string">&quot; <span class="variable">$(PLATS)</span>&quot;</span></span><br><span class="line"><span class="section">win32-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">win32-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;c:/mingw/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>c:/mingw/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lws2_32 -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DWIN32 -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">linux-debug:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DDEBUG -g&quot;</span></span><br><span class="line"><span class="section">linux-release:</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> all INCS=-I<span class="string">&quot;/usr/include&quot;</span> LIBS=<span class="string">&quot;-L&quot;</span>/usr/lib<span class="string">&quot; -L&quot;</span>./../../lib/lxnet<span class="string">&quot; -llxnet -lpthread -L&quot;</span>./../../lib/tinyxml<span class="string">&quot; -ltinyxml&quot;</span> CFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span> CPPFLAGS=<span class="string">&quot;-Wall -DNDEBUG -O2&quot;</span></span><br><span class="line"><span class="section">all:<span class="variable">$(BIN)</span></span></span><br><span class="line"><span class="comment">#生成.o的对自己目录中.h .c的依赖信息.d文件到.c所在的路径中</span></span><br><span class="line"><span class="comment">#$(DEF)文件是.d文件名列表(含目录)，比如tree.d 匹配成功那么%就是tree，然后在尝试%.c，如果成功。则执行规则</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)是获取此.c文件的名字(含路径)，然后变为.o比如 src/xxx.o。 以形成如下</span></span><br><span class="line"><span class="comment"># src/xxx.o : src/xxx.c ***.h  ***.h  最前面！！注意。  </span></span><br><span class="line"><span class="comment"># 此做法是每个.d都和生成他的.c在一个目录里，所以需要这样做。</span></span><br><span class="line"><span class="comment"># $(&lt;:.c=.o)之类的 。此时的&lt;相当于变量$&lt; 。切记</span></span><br><span class="line"><span class="comment"># : : :  含义同下</span></span><br><span class="line"><span class="variable">$(CDEF)</span> : %.d : %.c</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.c=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="variable">$(CPPDEF)</span> : %.d : %.cpp</span><br><span class="line">    <span class="variable">$(MAKEDEPEND)</span> $(&lt;:.cpp=.o) <span class="variable">$&lt;</span> <span class="variable">$(DEFINC)</span> &gt; <span class="variable">$@</span></span><br><span class="line"><span class="comment">#先删除依赖信息</span></span><br><span class="line"><span class="comment">#重新生成依赖信息</span></span><br><span class="line"><span class="comment">#这里出现了一个 $(MAKE) 没有定义的变量。这个变量是由 Make 自己定义的，它的值即为自己的位置，方便 Make 递归调用自己。</span></span><br><span class="line"><span class="section">depend:</span></span><br><span class="line">    -rm <span class="variable">$(CDEF)</span></span><br><span class="line">    -rm <span class="variable">$(CPPDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CDEF)</span></span><br><span class="line">    <span class="variable">$(MAKE)</span> <span class="variable">$(CPPDEF)</span></span><br><span class="line"><span class="comment">#$(OBJS):%.o :%.c  先用$(OBJS)中的一项，比如foo.o: %.o : %.c  含义为:试着用%.o匹配foo.o。如果成功%就等于foo。如果不成功，</span></span><br><span class="line"><span class="comment"># Make就会警告，然后。给foo.o添加依赖文件foo.c(用foo替换了%.c里的%)</span></span><br><span class="line"><span class="comment"># 也可以不要下面的这个生成规则，因为下面的 include $(DEF)  就隐含了。此处为了明了，易懂。故留着</span></span><br><span class="line"><span class="variable">$(COBJS)</span> : %.o: %.c</span><br><span class="line">    <span class="variable">$(CC)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CFLAGS)</span></span><br><span class="line"><span class="variable">$(CPPOBJS)</span> : %.o: %.cpp</span><br><span class="line">    <span class="variable">$(CPP)</span> -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span> <span class="variable">$(INCS)</span> <span class="variable">$(DEFINC)</span> <span class="variable">$(CPPFLAGS)</span></span><br><span class="line"><span class="comment"># $@--目标文件，$^--所有的依赖文件，$&lt;--第一个依赖文件。每次$&lt; $@ 代表的值就是列表中的</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="variable">$(BIN)</span> : <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line">    <span class="variable">$(CPP)</span> -o <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span> <span class="variable">$(LIBS)</span></span><br><span class="line">    -rm <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment"># 链接为最终目标</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#引入了.o文件对.c和.h的依赖情况。以后.h被修改也会重新生成，可看看.d文件内容即知道为何</span></span><br><span class="line"><span class="comment">#引入了依赖就相当于引入了一系列的规则，因为依赖内容例如： 目录/xxx.o:目录/xxx.c 目录/xxx.h 也相当于隐含的引入了生成规则</span></span><br><span class="line"><span class="comment">#故上面不能在出现如： $(OBJS) : $(DEF)之类。切记</span></span><br><span class="line"><span class="comment">#include $(CDEF) $(CPPDEF)</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>:clean cleanall</span></span><br><span class="line"><span class="comment">#清除所有目标文件以及生成的最终目标文件</span></span><br><span class="line"><span class="section">clean:            </span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br><span class="line"><span class="comment">#rm *.d</span></span><br><span class="line"><span class="section">cleanall:</span></span><br><span class="line">    -rm <span class="variable">$(BIN)</span> <span class="variable">$(COBJS)</span> <span class="variable">$(CPPOBJS)</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
       <tags>
         <tag>Makefile</tag>
       </tags>
@@ -196,6 +196,24 @@
       </tags>
   </entry>
   <entry>
+    <title>git同时拉取更新所有远程分支</title>
+    <url>/2021/12/03/git%E5%90%8C%E6%97%B6%E6%8B%89%E5%8F%96%E6%9B%B4%E6%96%B0%E6%89%80%E6%9C%89%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin master/git pull</span><br></pre></td></tr></table></figure>
+
+<p>只能更新当前所在分支</p>
+<p>想要一次性更新仓库所有分支，可以</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull --all</span><br></pre></td></tr></table></figure>
+
+<p>千万和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull -a</span><br></pre></td></tr></table></figure>
+
+<p>区分开</p>
+]]></content>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Vim常用命令</title>
     <url>/2021/12/02/Vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<p>vim 中有三种工作模式，分别是命令模式，输入模式，末行模式</p>
@@ -217,24 +235,6 @@
 ]]></content>
       <tags>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>git同时拉取更新所有远程分支</title>
-    <url>/2021/12/03/git%E5%90%8C%E6%97%B6%E6%8B%89%E5%8F%96%E6%9B%B4%E6%96%B0%E6%89%80%E6%9C%89%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</url>
-    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull origin master/git pull</span><br></pre></td></tr></table></figure>
-
-<p>只能更新当前所在分支</p>
-<p>想要一次性更新仓库所有分支，可以</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull --all</span><br></pre></td></tr></table></figure>
-
-<p>千万和</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull -a</span><br></pre></td></tr></table></figure>
-
-<p>区分开</p>
-]]></content>
-      <tags>
-        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -505,6 +505,16 @@
       </tags>
   </entry>
   <entry>
+    <title>同时批量编译同一文件夹里的.c文件为同名的目标文件</title>
+    <url>/2021/12/03/%E5%90%8C%E6%97%B6%E6%89%B9%E9%87%8F%E7%BC%96%E8%AF%91%E5%90%8C%E4%B8%80%E6%96%87%E4%BB%B6%E5%A4%B9%E9%87%8C%E7%9A%84-c%E6%96%87%E4%BB%B6%E4%B8%BA%E5%90%8C%E5%90%8D%E7%9A%84%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">SRC=<span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> //同时将文件夹内所有.c编译为同名的目标文件</span><br><span class="line">OBJ=<span class="variable">$(<span class="built_in">patsubst</span> %.c,%,<span class="variable">$(SRC)</span>)</span></span><br><span class="line"><span class="section">%:%.c//此处使用了内建隐含规则</span></span><br><span class="line">    cc -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">all:<span class="variable">$(OBJ)</span></span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Makefile</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>嵌入c&amp;linux书籍介绍</title>
     <url>/2021/12/01/%E5%B5%8C%E5%85%A5c-linux%E4%B9%A6%E7%B1%8D%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h3 id="一、入门系列"><a href="#一、入门系列" class="headerlink" title="一、入门系列"></a>一、入门系列</h3><p><strong>1.《C语言程序设计：现代方法》（第2版）</strong><br>推荐理由：时至今日， C语言仍然是计算机领域的通用语言之一，但今天的 C语言已经和最初的时候大不相同了。本书最主要的一个目的就是通过一种“现代方法”来介绍 C语言，书中强调标准 C，强调软件工程，不再强调“手工优化”。这一版中紧密结合了 C99标准，并与 C89标准进行对照，补充了 C99中的最新特性。本书分为 C语言的基础特性、 C语言的高级特性、 C语言标准库和参考资料 4个部分。每章末尾都有一个“问与答”小节给出一系列与该章内容相关的问题及答案，此外还包含适量的习题。<br>本书是为大学本科阶段的 C语言课程编写的教材，同时也非常适合作为其他课程的辅助用书。</p>
@@ -544,16 +554,6 @@
       <tags>
         <tag>C</tag>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>同时批量编译同一文件夹里的.c文件为同名的目标文件</title>
-    <url>/2021/12/03/%E5%90%8C%E6%97%B6%E6%89%B9%E9%87%8F%E7%BC%96%E8%AF%91%E5%90%8C%E4%B8%80%E6%96%87%E4%BB%B6%E5%A4%B9%E9%87%8C%E7%9A%84-c%E6%96%87%E4%BB%B6%E4%B8%BA%E5%90%8C%E5%90%8D%E7%9A%84%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">SRC=<span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> //同时将文件夹内所有.c编译为同名的目标文件</span><br><span class="line">OBJ=<span class="variable">$(<span class="built_in">patsubst</span> %.c,%,<span class="variable">$(SRC)</span>)</span></span><br><span class="line"><span class="section">%:%.c//此处使用了内建隐含规则</span></span><br><span class="line">    cc -c <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">all:<span class="variable">$(OBJ)</span></span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>Makefile</tag>
       </tags>
   </entry>
   <entry>
@@ -702,6 +702,80 @@
       </tags>
   </entry>
   <entry>
+    <title>经典C内存管理疑难杂例</title>
+    <url>/2021/12/16/%E7%BB%8F%E5%85%B8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%96%91%E9%9A%BE%E6%9D%82%E4%BE%8B/</url>
+    <content><![CDATA[<h3 id="一定要弄懂GetMemory"><a href="#一定要弄懂GetMemory" class="headerlink" title="一定要弄懂GetMemory"></a>一定要弄懂GetMemory</h3><h3 id="堆栈"><a href="#堆栈" class="headerlink" title="堆栈"></a><strong>堆栈</strong></h3><p>栈中分配局部变量空间，是系统自动分配空间。定义一个 char a；系统会自动在栈上为其开辟空间。由于栈上的空间是自动分配自动回收的，所以栈上的数据的生存周期只是在函数的运行过程中，运行后就释放掉，不可以再访问。</p>
+<p>堆区分配程序员申请的内存空间，堆上的数据只要程序员不释放空间，就一直可以访问到，不过缺点是一旦忘记释放会造成内存泄露。</p>
+<p>静态区是分配静态变量，全局变量空间的。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">inta = <span class="number">0</span>; 全局初始化区  </span><br><span class="line"><span class="keyword">char</span>*p1; 全局未初始化区  </span><br><span class="line">main()&#123;  </span><br><span class="line">  <span class="keyword">int</span> b;      <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> s[] = <span class="string">&quot;abc&quot;</span>;    <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> *p2;      <span class="comment">//栈  </span></span><br><span class="line">  <span class="keyword">char</span> *p3 = <span class="string">&quot;123456&quot;</span>;   <span class="comment">// 123456\0在常量区，p3在栈上。  </span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> c =<span class="number">0</span>；      <span class="comment">//全局（静态）初始化区  </span></span><br><span class="line">  p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);    <span class="comment">//堆  </span></span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<h3 id="GetMemory1"><a href="#GetMemory1" class="headerlink" title="GetMemory1"></a><strong>GetMemory1</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory1(<span class="keyword">char</span> *p)    </span><br><span class="line">&#123;</span><br><span class="line">  p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">100</span>);    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest1(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  GetMemory1(str);      </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello world&quot;</span>);    </span><br><span class="line">  <span class="built_in">printf</span>(str);  <span class="comment">//str一直是空，程序崩溃     </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果： </p>
+<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118195523563-1384916852.png" alt="img"></p>
+<p>分析：</p>
+<p>毛病出在函数GetMemory1 中。<strong>编译器总是要为函数的每个参数制作临时副本</strong>，指针参数p的副本是 _p，编译器使 _p = p。如果函数体内的程序修改了_p的内容，就导致参数p的内容作相应的修改。这就是指针可以用作输出参数的原因。在本例中，_p申请了新的内存，只是把 _p所指的内存地址改变了，但是p丝毫未变。所以函数GetMemory并不能输出任何东西。事实上，每执行一次GetMemory1就会泄露一块内存，因为没有用free释放内存。<strong>Test1中调用GetMemory1时，函数参数为str的副本不是str本身</strong>。</p>
+<h3 id="GetMemory2"><a href="#GetMemory2" class="headerlink" title="GetMemory2"></a><strong>GetMemory2</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory2(<span class="keyword">char</span> **p, <span class="keyword">int</span> num)    </span><br><span class="line">&#123;</span><br><span class="line">  *p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(num);    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest2(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  GetMemory2(&amp;str, <span class="number">100</span>);    </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello&quot;</span>);      </span><br><span class="line">  <span class="built_in">printf</span>(str);        </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+
+<p>结果：输出hello </p>
+<p>分析：动态分配的内存不会自动释放；</p>
+<p>没有测试是否成功分配了内存，应该有if (*p == NULL) { ……} 之类的语句处理内存分配失败的其情况。</p>
+<h3 id="GetMemory3"><a href="#GetMemory3" class="headerlink" title="GetMemory3"></a><strong>GetMemory3</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">GetMemory3</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;      </span><br><span class="line">  <span class="keyword">char</span> p[] = <span class="string">&quot;hello world&quot;</span>;    </span><br><span class="line">  <span class="keyword">return</span> p;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest3(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory3();        </span><br><span class="line">  <span class="built_in">printf</span>(str);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：输出乱码。 </p>
+<p>分析：字符数组p存在于<strong>栈空间，是局部变量，函数返回后，内存空间被释放</strong>，因此输出无效值。字符数组的值是可以修改的，例如p[0] = ‘t‘。</p>
+<h3 id="GetMemory4"><a href="#GetMemory4" class="headerlink" title="GetMemory4"></a><strong>GetMemory4</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>*<span class="title">GetMemory4</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;    </span><br><span class="line">  <span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>;    </span><br><span class="line">  <span class="keyword">return</span> p;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest4(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory4();   </span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt; str &lt;&lt; <span class="built_in">endl</span>;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：输出hello<br>分析：p指向的是字符串常量，字符串常量保存在只读的数据段，是全局区域，但不是像全局变量那样保存在普通数据段（静态存储区）。无法对p所指的内存的内容修改，例如p[0] = ‘y;这样的修改是错误的。</p>
+<h3 id="GetMemory5"><a href="#GetMemory5" class="headerlink" title="GetMemory5"></a><strong>GetMemory5</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span>*<span class="title">GetMemory5</span><span class="params">(<span class="keyword">void</span>)</span>    </span></span><br><span class="line"><span class="function"></span>&#123;     </span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;    </span><br><span class="line">&#125;    </span><br><span class="line">voidTest3(<span class="keyword">void</span>)    </span><br><span class="line">&#123;    </span><br><span class="line">  <span class="keyword">char</span> *str = <span class="literal">NULL</span>;    </span><br><span class="line">  str = GetMemory5();     </span><br><span class="line">  <span class="built_in">printf</span>(str);    </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+
+<p>结果：输出hello</p>
+<p>分析：直接返回常量区。</p>
+<h3 id="GetMemory6"><a href="#GetMemory6" class="headerlink" title="GetMemory6"></a><strong>GetMemory6</strong></h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">voidGetMemory6(<span class="keyword">void</span>) &#123;  </span><br><span class="line">  <span class="keyword">char</span> *str = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(<span class="number">100</span>);  </span><br><span class="line">  <span class="built_in">strcpy</span>(str, <span class="string">&quot;hello&quot;</span>);  </span><br><span class="line">  <span class="built_in">free</span>(str);  </span><br><span class="line">  <span class="comment">//str = NULL，加上这句程序才不会有野指针  </span></span><br><span class="line">  <span class="keyword">if</span> (str != <span class="literal">NULL</span>) &#123;  </span><br><span class="line">    <span class="built_in">strcpy</span>(str, <span class="string">&quot;world&quot;</span>);  </span><br><span class="line">    <span class="built_in">printf</span>(str);  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">voidmain()&#123;    </span><br><span class="line">  GetMemory6();  </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>结果：能够输出world，但程序存在问题。</p>
+<p>分析：程序出现了<strong>野指针</strong>。</p>
+<p><strong>野指针</strong>只会出现在像C和C++这种没有自动内存垃圾回收功能的高级语言中, 所以java或c#肯定不会有野指针的概念. <strong>当我们用malloc为一个指针分配一个空间后, 用完这个指针，把它free掉，但是没有让这个指针指向NULL或某一个特定的空间</strong>。如上面程序一样，将str进行free后，只是释放了指针所指的内存，但指针并没有释放掉，此时指针所指的是垃圾内存；这样的话，if语句永为真，if判断无效。delete也存在同样的问题。</p>
+<p><strong>防止产生野指针</strong>：</p>
+<ul>
+<li>指针变量一定要初始化为NULL，因为任何指针变量刚被创建时不会自动成为NULL指针，它的缺省值是随机的。</li>
+<li>当free或delete后，将指针指向NULL。通常判断一个指针是否合法，都是使用if语句测试该指针是否为NULL。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络面试</title>
+    <url>/2021/12/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<p>OSI:物理层,数据链路层,网络层,传输层,会话层,表示层和应用层</p>
+<p>TCP/IP:数据链路层,网络层,传输层,应用层</p>
+<p>TCP与UDP区别：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、基于连接与无连接；</span><br><span class="line"><span class="number">2</span>、对系统资源的要求（TCP较多，UDP少）；</span><br><span class="line"><span class="number">3</span>、UDP程序结构较简单；</span><br><span class="line"><span class="number">4</span>、流模式与数据报模式 ；</span><br><span class="line"><span class="number">5</span>、TCP保证数据正确性，UDP可能丢包；</span><br><span class="line"><span class="number">6</span>、TCP保证数据顺序，UDP不保证。</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reno：一种TCP拥塞控制算法"><a href="#Reno：一种TCP拥塞控制算法" class="headerlink" title="Reno：一种TCP拥塞控制算法"></a><strong>Reno：一种TCP拥塞控制算法</strong></h3><p><strong><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118190939824-2142245455.png" alt="img"></strong></p>
+<p>Reno 被许多教材（例如：《计算机网络——自顶向下的方法》）所介绍，适用于低延时、低带宽的网络，它将拥塞控制的过程分为四个阶段：<strong>慢启动、拥塞避免、快重传和快恢复</strong>，对应的状态如下所示：</p>
+<ul>
+<li>慢启动阶段思路是不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小，在没有出现丢包时每收到一个 ACK 就将拥塞窗口大小加一（单位是 MSS，最大单个报文段长度），每轮次发送窗口增加一倍，呈指数增长，若出现丢包，则将拥塞窗口减半，进入拥塞避免阶段；</li>
+<li>当窗口达到慢启动阈值或出现丢包时，进入拥塞避免阶段，窗口每轮次加一，呈线性增长；当收到对一个报文的三个重复的 ACK 时，认为这个报文的下一个报文丢失了，进入快重传阶段，要求接收方在收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方，可提高网络吞吐量约20%）而不要等到自己发送数据时捎带确认；</li>
+<li>快重传完成后进入快恢复阶段，将慢启动阈值修改为当前拥塞窗口值的一半，同时拥塞窗口值等于慢启动阈值，然后进入拥塞避免阶段，重复上述过程。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>目前有非常多的 TCP 的拥塞控制协议，例如：</p>
+<ul>
+<li><strong>基于丢包的拥塞控制</strong>：将丢包视为出现拥塞，采取缓慢探测的方式，逐渐增大拥塞窗口，当出现丢包时，将拥塞窗口减小，如 Reno、Cubic 等。</li>
+<li><strong>基于时延的拥塞控制</strong>：将时延增加视为出现拥塞，延时增加时增大拥塞窗口，延时减小时减小拥塞窗口，如 Vegas、FastTCP 等。</li>
+<li><strong>基于链路容量的拥塞控制</strong>：实时测量网络带宽和时延，认为网络上报文总量大于带宽时延乘积时出现了拥塞，如 BBR。</li>
+<li><strong>基于学习的拥塞控制</strong>：没有特定的拥塞信号，而是借助评价函数，基于训练数据，使用机器学习的方法形成一个控制策略，如 Remy。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>网络</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>进程间通信方式</title>
     <url>/2021/12/02/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/</url>
     <content><![CDATA[<p><strong>1、无名管道通信</strong></p>
@@ -735,33 +809,6 @@
 ]]></content>
       <tags>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机网络面试</title>
-    <url>/2021/12/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/</url>
-    <content><![CDATA[<p>OSI:物理层,数据链路层,网络层,传输层,会话层,表示层和应用层</p>
-<p>TCP/IP:数据链路层,网络层,传输层,应用层</p>
-<p>TCP与UDP区别：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、基于连接与无连接；</span><br><span class="line"><span class="number">2</span>、对系统资源的要求（TCP较多，UDP少）；</span><br><span class="line"><span class="number">3</span>、UDP程序结构较简单；</span><br><span class="line"><span class="number">4</span>、流模式与数据报模式 ；</span><br><span class="line"><span class="number">5</span>、TCP保证数据正确性，UDP可能丢包；</span><br><span class="line"><span class="number">6</span>、TCP保证数据顺序，UDP不保证。</span><br></pre></td></tr></table></figure>
-
-<h3 id="Reno：一种TCP拥塞控制算法"><a href="#Reno：一种TCP拥塞控制算法" class="headerlink" title="Reno：一种TCP拥塞控制算法"></a><strong>Reno：一种TCP拥塞控制算法</strong></h3><p><strong><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211118190939824-2142245455.png" alt="img"></strong></p>
-<p>Reno 被许多教材（例如：《计算机网络——自顶向下的方法》）所介绍，适用于低延时、低带宽的网络，它将拥塞控制的过程分为四个阶段：<strong>慢启动、拥塞避免、快重传和快恢复</strong>，对应的状态如下所示：</p>
-<ul>
-<li>慢启动阶段思路是不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小，在没有出现丢包时每收到一个 ACK 就将拥塞窗口大小加一（单位是 MSS，最大单个报文段长度），每轮次发送窗口增加一倍，呈指数增长，若出现丢包，则将拥塞窗口减半，进入拥塞避免阶段；</li>
-<li>当窗口达到慢启动阈值或出现丢包时，进入拥塞避免阶段，窗口每轮次加一，呈线性增长；当收到对一个报文的三个重复的 ACK 时，认为这个报文的下一个报文丢失了，进入快重传阶段，要求接收方在收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方，可提高网络吞吐量约20%）而不要等到自己发送数据时捎带确认；</li>
-<li>快重传完成后进入快恢复阶段，将慢启动阈值修改为当前拥塞窗口值的一半，同时拥塞窗口值等于慢启动阈值，然后进入拥塞避免阶段，重复上述过程。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>目前有非常多的 TCP 的拥塞控制协议，例如：</p>
-<ul>
-<li><strong>基于丢包的拥塞控制</strong>：将丢包视为出现拥塞，采取缓慢探测的方式，逐渐增大拥塞窗口，当出现丢包时，将拥塞窗口减小，如 Reno、Cubic 等。</li>
-<li><strong>基于时延的拥塞控制</strong>：将时延增加视为出现拥塞，延时增加时增大拥塞窗口，延时减小时减小拥塞窗口，如 Vegas、FastTCP 等。</li>
-<li><strong>基于链路容量的拥塞控制</strong>：实时测量网络带宽和时延，认为网络上报文总量大于带宽时延乘积时出现了拥塞，如 BBR。</li>
-<li><strong>基于学习的拥塞控制</strong>：没有特定的拥塞信号，而是借助评价函数，基于训练数据，使用机器学习的方法形成一个控制策略，如 Remy。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>网络</tag>
       </tags>
   </entry>
   <entry>
