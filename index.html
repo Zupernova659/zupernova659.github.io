@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -206,6 +206,123 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/27/VMware%E7%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%B5%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zupernova">
+      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zupernova's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/12/27/VMware%E7%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%B5%B7/" class="post-title-link" itemprop="url">VMware禁用虚拟机自动挂起</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-12-27 09:56:51 / 修改时间：09:58:30" itemprop="dateCreated datePublished" datetime="2021-12-27T09:56:51+08:00">2021-12-27</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>466</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>当MAC和虚拟机有文件共享时，VMware自动挂起特性导致一段时间不操作就需要重新连接共享文件服务器，很麻烦，解决方法如下（摘自官网）：</p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>本文提供了在 VMware Fusion 和 VMware Workstation 中禁用和启用虚拟机挂起功能的步骤。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p><strong>要在 VMware Fusion 中禁用虚拟机的挂起功能：</strong></p>
+<ol>
+<li><p>关闭虚拟机。</p>
+</li>
+<li><p>找到虚拟机包。</p>
+</li>
+<li><p>按 Ctrl 并单击虚拟机包，然后单击<strong>显示包内容。</strong></p>
+</li>
+<li><p>打开.vmx文件以在文本编辑器中进行编辑。</p>
+</li>
+<li><p>将此行添加到.vmx文件：</p>
+ <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">suspend.disabled</span> = <span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>保存并关闭.vmx文件。</p>
+</li>
+<li><p>重新启动虚拟机。</p>
+</li>
+</ol>
+<p><strong>要在 VMware Workstation 中禁用虚拟机的挂起功能：</strong></p>
+<ol>
+<li><p>关闭虚拟机。</p>
+</li>
+<li><p>找到虚拟机文件夹。</p>
+</li>
+<li><p>打开.vmx文件以在文本编辑器中进行编辑。</p>
+</li>
+<li><p>将此行添加到.vmx文件：</p>
+ <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sus pend.<span class="keyword">disabled </span>= <span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>保存并关闭.vmx文件。</p>
+</li>
+<li><p>重新启动虚拟机。</p>
+</li>
+</ol>
+<p><strong>要启用挂起功能，请从.vmx文件中删除以下行：</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">suspend.disabled</span> = <span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1520,96 +1637,6 @@ int main(int argc,char **argv)
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull -a</span><br></pre></td></tr></table></figure>
 
 <p>区分开</p>
-
-      
-    </div>
-
-    
-    
-    
-      
-
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/03/macos%E4%BB%85%E6%94%B9%E5%8F%98%E9%BC%A0%E6%A0%87%E6%BB%9A%E5%8A%A8%E6%96%B9%E5%90%91%E5%90%8C%E6%97%B6%E4%B8%8D%E6%94%B9%E5%8F%98%E8%A7%A6%E6%8E%A7%E6%9D%BF%E4%BD%BF%E5%85%B6%E7%AC%A6%E5%90%88windows%E4%BD%BF%E7%94%A8%E4%B9%A0%E6%83%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zupernova">
-      <meta itemprop="description" content="只是一个兴趣使然的无名小站">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zupernova's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/12/03/macos%E4%BB%85%E6%94%B9%E5%8F%98%E9%BC%A0%E6%A0%87%E6%BB%9A%E5%8A%A8%E6%96%B9%E5%90%91%E5%90%8C%E6%97%B6%E4%B8%8D%E6%94%B9%E5%8F%98%E8%A7%A6%E6%8E%A7%E6%9D%BF%E4%BD%BF%E5%85%B6%E7%AC%A6%E5%90%88windows%E4%BD%BF%E7%94%A8%E4%B9%A0%E6%83%AF/" class="post-title-link" itemprop="url">macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-12-03 16:42:50 / 修改时间：18:33:08" itemprop="dateCreated datePublished" datetime="2021-12-03T16:42:50+08:00">2021-12-03</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>167</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在网址<a target="_blank" rel="noopener" href="https://pilotmoon.com/scrollreverser/%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%ACscroll">https://pilotmoon.com/scrollreverser/下载最新版本scroll</a> reverser</p>
-<p>该文件免安装，下载后先将文件手动拖动到系统application文件夹中再打开运行</p>
-<ol>
-<li>授予两项系统权限</li>
-<li>设置登录自启动</li>
-<li>软件其他详细设置见下图：</li>
-</ol>
-<p><img src="https://img2020.cnblogs.com/blog/1943620/202111/1943620-20211129102500448-1773687420.png" alt="img"></p>
-<p>修改成功后即可在您的mac上获得同windows系统相同的鼠标与触控板使用体验</p>
 
       
     </div>

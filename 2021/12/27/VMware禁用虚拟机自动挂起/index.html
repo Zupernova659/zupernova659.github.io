@@ -20,28 +20,28 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.8.1","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="为了方便处理一些有用的信息，预处理器定义了一些预处理标识符，也就是预定义宏。预定义宏的名称都是以&amp;ldquo;__&amp;rdquo;（两条下划线）开头和结尾的，如果宏名是由两个单词组成，那么中间以&amp;ldquo;_&amp;rdquo;（一条下划线）进行连接。并且，宏名称一般都由大写字符组成。在日常项目编程中，预定义宏尤其对多目标平台代码的编写通常具有重大意义。通过预定义宏，程序员使用&amp;ldquo;#ifdef">
+<meta name="description" content="当MAC和虚拟机有文件共享时，VMware自动挂起特性导致一段时间不操作就需要重新连接共享文件服务器，很麻烦，解决方法如下（摘自官网）： 目的本文提供了在 VMware Fusion 和 VMware Workstation 中禁用和启用虚拟机挂起功能的步骤。 解决要在 VMware Fusion 中禁用虚拟机的挂起功能：  关闭虚拟机。  找到虚拟机包。  按 Ctrl 并单击虚拟机包，然后单击">
 <meta property="og:type" content="article">
-<meta property="og:title" content="c编译器预定义宏">
-<meta property="og:url" content="http://example.com/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/index.html">
+<meta property="og:title" content="VMware禁用虚拟机自动挂起">
+<meta property="og:url" content="http://example.com/2021/12/27/VMware%E7%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%B5%B7/index.html">
 <meta property="og:site_name" content="Zupernova&#39;s Blog">
-<meta property="og:description" content="为了方便处理一些有用的信息，预处理器定义了一些预处理标识符，也就是预定义宏。预定义宏的名称都是以&amp;ldquo;__&amp;rdquo;（两条下划线）开头和结尾的，如果宏名是由两个单词组成，那么中间以&amp;ldquo;_&amp;rdquo;（一条下划线）进行连接。并且，宏名称一般都由大写字符组成。在日常项目编程中，预定义宏尤其对多目标平台代码的编写通常具有重大意义。通过预定义宏，程序员使用&amp;ldquo;#ifdef">
+<meta property="og:description" content="当MAC和虚拟机有文件共享时，VMware自动挂起特性导致一段时间不操作就需要重新连接共享文件服务器，很麻烦，解决方法如下（摘自官网）： 目的本文提供了在 VMware Fusion 和 VMware Workstation 中禁用和启用虚拟机挂起功能的步骤。 解决要在 VMware Fusion 中禁用虚拟机的挂起功能：  关闭虚拟机。  找到虚拟机包。  按 Ctrl 并单击虚拟机包，然后单击">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-12-16T08:15:55.000Z">
-<meta property="article:modified_time" content="2021-12-16T08:18:26.398Z">
+<meta property="article:published_time" content="2021-12-27T01:56:51.000Z">
+<meta property="article:modified_time" content="2021-12-27T01:58:30.568Z">
 <meta property="article:author" content="Zupernova">
-<meta property="article:tag" content="C">
+<meta property="article:tag" content="mac">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/">
+<link rel="canonical" href="http://example.com/2021/12/27/VMware%E7%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%B5%B7/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/","path":"2021/12/16/c编译器预定义宏/","title":"c编译器预定义宏"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/12/27/VMware%E7%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%B5%B7/","path":"2021/12/27/VMware禁用虚拟机自动挂起/","title":"VMware禁用虚拟机自动挂起"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>c编译器预定义宏 | Zupernova's Blog</title>
+<title>VMware禁用虚拟机自动挂起 | Zupernova's Blog</title>
   
 
 
@@ -133,7 +133,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -146,6 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">2.</span> <span class="nav-text">解决</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -219,7 +220,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/16/c%E7%BC%96%E8%AF%91%E5%99%A8%E9%A2%84%E5%AE%9A%E4%B9%89%E5%AE%8F/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/27/VMware%E7%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%B5%B7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -232,7 +233,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          c编译器预定义宏
+          VMware禁用虚拟机自动挂起
         </h1>
 
         <div class="post-meta-container">
@@ -244,7 +245,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-12-16 16:15:55 / 修改时间：16:18:26" itemprop="dateCreated datePublished" datetime="2021-12-16T16:15:55+08:00">2021-12-16</time>
+      <time title="创建时间：2021-12-27 09:56:51 / 修改时间：09:58:30" itemprop="dateCreated datePublished" datetime="2021-12-27T09:56:51+08:00">2021-12-27</time>
     </span>
 
   
@@ -261,14 +262,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
+      <span>466</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>1 分钟</span>
     </span>
 </div>
 
@@ -279,166 +280,42 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>为了方便处理一些有用的信息，预处理器定义了一些预处理标识符，也就是预定义宏。预定义宏的名称都是以&ldquo;__&rdquo;（两条下划线）开头和结尾的，如果宏名是由两个单词组成，那么中间以&ldquo;_&rdquo;（一条下划线）进行连接。并且，宏名称一般都由大写字符组成。<br />在日常项目编程中，预定义宏尤其对多目标平台代码的编写通常具有重大意义。通过预定义宏，程序员使用&ldquo;#ifdef&rdquo;与&ldquo;#endif&rdquo;等预处理指令，就可使平台相关代码只在适合于当前平台的代码上编译，从而在同一套代码中完成对多平台的支持。从这个意义上讲，平台信息相关的宏越丰富，代码的多平台支持越准确。<br />标准 C 语言提供的一些标准预定义宏如表 1 所示。</p>
-<table><caption>表 1 常用的标准预定义宏</caption>
-<tbody>
-<tr>
-<th>宏</th>
-<th>描&nbsp;述</th>
-</tr>
-<tr>
-<td>__DATE__</td>
-<td>丐前源文件的编泽口期，用&nbsp;&ldquo;Mmm dd yyy&rdquo;形式的字符串常量表示</td>
-</tr>
-<tr>
-<td>__FILE__</td>
-<td>当前源文件的名称，用字符串常量表示</td>
-</tr>
-<tr>
-<td>__LINE__</td>
-<td>当前源义件中的行号，用十进制整数常量表示，它可以随#line指令改变</td>
-</tr>
-<tr>
-<td>__TIME__</td>
-<td>当前源文件的最新编译吋间，用&ldquo;hh:mm:ss&rdquo;形式的宁符串常量表示</td>
-</tr>
-<tr>
-<td>__STDC__</td>
-<td>如果今前编泽器符合ISO标准，那么该宏的值为1，否则未定义</td>
-</tr>
-<tr>
-<td>__STDC_VERSION__</td>
-<td>如果当前编译器符合C89，那么它被定义为199409L;如果符合C99，那么它被定义为199901L:在其他情况下，该宏为宋定义</td>
-</tr>
-<tr>
-<td>__STDC_HOSTED__</td>
-<td>(C99)如果当前是宿主系统，则该宏的值为1;如果当前是独立系统，则该宏的值为0</td>
-</tr>
-<tr>
-<td>__STDC_IEC_559_</td>
-<td>(C99)如果浮点数的实现符合IEC 60559标准时，则该宏的值为1，否则为未定义</td>
-</tr>
-<tr>
-<td>__STDC_IEC_559_COMPLEX__</td>
-<td>(C99)如果复数运算实现符合IEC60559标准时，则该宏的伉为1,否则为未定义</td>
-</tr>
-<tr>
-<td>__STDC_ISO_10646__</td>
-<td>(C99 )定义为长整型常量，yyyymmL表示wchai_t值遵循ISO 10646标准及其指定年月的修订补充，否则该宏为未定义</td>
-</tr>
-</tbody>
-</table>
-<p>除标准 C 语言提供的标准宏之外，各种编译器也都提供了自己的自定义预定义宏。可以通过表 2 所示的指令来查看不同编译器对预定义宏的支持情况。</p>
-<table><caption>表 2 不同编译器的预定义宏查看指令</caption>
-<tbody>
-<tr>
-<th>编译器</th>
-<th>宏指令（c)</th>
-<th>宏指令（<a href="http://c.biancheng.net/cplus/" target="_blank" rel="noopener">C++</a>)</th>
-</tr>
-<tr>
-<td>Clang/LLVM</td>
-<td>clang -dM -E -x c /dev/null</td>
-<td>clang++ -dM -E -x C++ /dev/null</td>
-</tr>
-<tr>
-<td>GNU&nbsp;<a href="http://c.biancheng.net/gcc/" target="_blank" rel="noopener">GCC</a>/G++</td>
-<td>gcc -dM -E -x c /dev/null</td>
-<td>g++ -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
-</tr>
-<tr>
-<td>Hewlett-Packard C/aC++</td>
-<td>cc -dM -E -x c /clev/null</td>
-<td>aCC -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
-</tr>
-<tr>
-<td>IBM XL C/C++</td>
-<td>xlc -qshowmacros -E /dev/null</td>
-<td>xlc++ -qshowmacros -E /dev/null</td>
-</tr>
-<tr>
-<td>Intel ICC7ICPC</td>
-<td>icc -dM -E -x c /dev/null</td>
-<td>icpc -dM -E -x&nbsp;C++&nbsp;/dev/null</td>
-</tr>
-<tr>
-<td>Oracle Solaris Studio</td>
-<td>cc -xduinpmacros -E /dev/null</td>
-<td>CC -xduinpmacros -E /clev/null</td>
-</tr>
-<tr>
-<td>Portland Group PGCC/PGCPP</td>
-<td>pgcc -dM -E</td>
-<td>&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<p>对于这些预定义宏的应用，基本上随处可见，下面举例介绍。<br />利用&ldquo;__DATE__&rdquo;和&ldquo;__TIME__&rdquo;宏可以用来确定程序编译的时间。如下面的示例代码所示：</p>
-<div class="snippet-container">
-<div class="sh_bright snippet-wrap">
-<pre class="language-c"><code>int main (void)
-&#123;
-  printf("Copyright (c) Powered by www.develhome.com\n");
-  printf("Compiled on %s at %s\n", __DATE__,__TIME__);
-  return 0;
-&#125;</code></pre>
-</div>
-</div>
-<p>利用&ldquo;__STDC__&rdquo;与&ldquo;__STDC_VERSION__&rdquo;宏可以编写那些需要兼容标准 C 和非标准 C 编译器的程序，如下面的示例代码所示：</p>
-<div class="snippet-container">
-<div class="sh_bright snippet-wrap">
-<pre class="language-c"><code>#ifdef __STDC__
-/* Some version of standard C */
-#if defined(__STDC__VERSION__)&amp;&amp;__STDC_VERSION__&gt;=199901L
-/* C99 */
-#elif defined(__STDC_VERSION__)&amp;&amp;__STDC_VERSION__&gt;=199409L
-/* C89 and amendment 1 */
-#else
-/* C89 but not amendment 1*/
-#endif
-#else /* __STDC__not defined */
-/*Not Standard C*/
-#endif</code></pre>
-</div>
-</div>
-<p>利用__FILE__、__LINE__与__FUNCTION__（或者__func__）预定义宏的组合，在调试程序的时候可以很简单地在程序运行期进行异常跟踪。如下面的示例代码所示：</p>
-<div class="snippet-container">
-<div class="sh_bright snippet-wrap">
-<pre class="language-c"><code>#include &lt;stdio.h&gt;
-#include &lt;sys/types.h&gt;
-#include &lt;sys/stat.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;stdlib.h&gt;
-#define MESSAGE(message,assertion) \
-do&#123;\
-  if(!(assertion))&#123;\
-    printf("line %d in %s(%s)", __LINE__, __FILE__,__FUNCTION__);\
-    if(message)&#123;\
-      printf(":%s",message);\
-    &#125;\
-    printf("\n");\
-    abort();\
-  &#125;\
-&#125;while(0)
-int OpenFile(const char *filename)
-&#123;
-  int fd;
-  MESSAGE("文件名称不能够为空",filename);
-  MESSAGE("文件不存在",0==access(filename,F_OK));
-  fd = open(filename,O_RDONLY);
-  close(fd);
-  return 0;
-&#125;
-int main(int argc,char **argv)
-&#123;
-  MESSAGE("命令参数不能够为空",argc==2);
-  OpenFile(argv[1]);
-  return 0;
-&#125;</code></pre>
-</div>
-</div>
-<p>最后还需要注意的是，如果用户重定义&ldquo;#define&ldquo;或取消了&ldquo;#undef&rdquo;预定义宏，那么其结果是&ldquo;未定义&rdquo;的。因此，在代码编写中，应该尽量避免自定义宏与预定义宏名称相同的情况发生。</p>
+        <p>当MAC和虚拟机有文件共享时，VMware自动挂起特性导致一段时间不操作就需要重新连接共享文件服务器，很麻烦，解决方法如下（摘自官网）：</p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>本文提供了在 VMware Fusion 和 VMware Workstation 中禁用和启用虚拟机挂起功能的步骤。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p><strong>要在 VMware Fusion 中禁用虚拟机的挂起功能：</strong></p>
+<ol>
+<li><p>关闭虚拟机。</p>
+</li>
+<li><p>找到虚拟机包。</p>
+</li>
+<li><p>按 Ctrl 并单击虚拟机包，然后单击<strong>显示包内容。</strong></p>
+</li>
+<li><p>打开.vmx文件以在文本编辑器中进行编辑。</p>
+</li>
+<li><p>将此行添加到.vmx文件：</p>
+ <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">suspend.disabled</span> = <span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>保存并关闭.vmx文件。</p>
+</li>
+<li><p>重新启动虚拟机。</p>
+</li>
+</ol>
+<p><strong>要在 VMware Workstation 中禁用虚拟机的挂起功能：</strong></p>
+<ol>
+<li><p>关闭虚拟机。</p>
+</li>
+<li><p>找到虚拟机文件夹。</p>
+</li>
+<li><p>打开.vmx文件以在文本编辑器中进行编辑。</p>
+</li>
+<li><p>将此行添加到.vmx文件：</p>
+ <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sus pend.<span class="keyword">disabled </span>= <span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>保存并关闭.vmx文件。</p>
+</li>
+<li><p>重新启动虚拟机。</p>
+</li>
+</ol>
+<p><strong>要启用挂起功能，请从.vmx文件中删除以下行：</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">suspend.disabled</span> = <span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -449,40 +326,28 @@ int main(int argc,char **argv)
   <div class="popular-posts-header">相关文章</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/16/C语言多语句宏的妙用/" rel="bookmark">C语言多语句宏的妙用</a></div>
+      <div class="popular-posts-title"><a href="/2021/12/03/macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯/" rel="bookmark">macos仅改变鼠标滚动方向同时不改变触控板使其符合windows使用习惯</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/16/C语言面试基础/" rel="bookmark">C语言面试基础</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/16/new与malloc的10点区别/" rel="bookmark">new与malloc的10点区别</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/16/static作用/" rel="bookmark">static作用</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2021/12/03/关于malloc和free链表节点遇到的问题/" rel="bookmark">关于malloc和free链表节点遇到的问题</a></div>
+      <div class="popular-posts-title"><a href="/2021/11/30/macos新版本系统brew-install报错问题/" rel="bookmark">macos新版本系统brew install报错问题</a></div>
     </li>
   </ul>
 
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C</a>
+              <a href="/tags/mac/" rel="tag"><i class="fa fa-tag"></i> mac</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/12/16/%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" rel="prev" title="编译选项学习总结">
-                  <i class="fa fa-chevron-left"></i> 编译选项学习总结
+                <a href="/2021/12/16/C%E8%AF%AD%E8%A8%80%E5%A4%9A%E8%AF%AD%E5%8F%A5%E5%AE%8F%E7%9A%84%E5%A6%99%E7%94%A8/" rel="prev" title="C语言多语句宏的妙用">
+                  <i class="fa fa-chevron-left"></i> C语言多语句宏的妙用
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/12/16/C%E8%AF%AD%E8%A8%80%E5%A4%9A%E8%AF%AD%E5%8F%A5%E5%AE%8F%E7%9A%84%E5%A6%99%E7%94%A8/" rel="next" title="C语言多语句宏的妙用">
-                  C语言多语句宏的妙用 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
